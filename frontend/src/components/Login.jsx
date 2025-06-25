@@ -1,18 +1,19 @@
 import React, { useState, useMemo } from "react";
 
 const styles = {
-  container: {
-    minHeight: "100vh",
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundImage: "url('https://cdn.wallpapersafari.com/3/12/w09t6B.jpg')",
-    backgroundSize: "cover",
-    backgroundPosition: "center",
-    backgroundRepeat: "no-repeat",
-    fontFamily: "sans-serif",
-    padding: "1rem",
-  },
+ container: {
+  height: "100vh", 
+  overflow: "hidden",
+  display: "flex",
+  justifyContent: "center",
+  alignItems: "center",
+  backgroundImage: "url('https://cdn.wallpapersafari.com/3/12/w09t6B.jpg')",
+  backgroundSize: "cover",
+  backgroundPosition: "center",
+  backgroundRepeat: "no-repeat",
+  fontFamily: "sans-serif",
+  padding: 0,
+},
   innerWrapper: {
     display: "flex",
     flexDirection: "row",
@@ -32,11 +33,11 @@ const styles = {
     justifyContent: "center",
   },
   title: {
-    fontSize: "2rem",
+    fontSize: "2.3rem",
     fontWeight: "bold",
     color: "#1f2937",
     textAlign: "center",
-    marginBottom: "0.1rem",
+    marginBottom: "0rem",
   },
   highlight: {
     color: "#749cc9",
@@ -64,6 +65,7 @@ const styles = {
     border: "1px solid #d1d5db",
     borderRadius: "0.5rem",
     fontSize: "1rem",
+    boxSizing: "border-box", 
   },
   button: {
     backgroundColor: "#416b9f",
