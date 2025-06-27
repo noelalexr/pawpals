@@ -1,4 +1,5 @@
 import React, { useState, useMemo } from "react";
+import { Link } from "react-router-dom";
 
 const styles = {
  container: {
@@ -37,7 +38,7 @@ const styles = {
     fontWeight: "bold",
     color: "#1f2937",
     textAlign: "center",
-    marginBottom: "0rem",
+    marginBottom: "0.1rem",
   },
   highlight: {
     color: "#749cc9",
@@ -218,18 +219,17 @@ export default function Login() {
             </button>
           </form>
           <p style={styles.signupText}>
-            Don't have an account?{" "}
-            <a href="#" style={styles.highlight}>
-              Sign up
-            </a>
-          </p>
+  Don't have an account?{" "}
+  <Link to="/signup" style={styles.highlight}>
+    Sign up
+  </Link>
+</p>
           <footer style={styles.footer}>
             ©2025 PawPal | <a href="#">Privacy Policy</a> |{" "}
             <a href="#">Sitemap</a>
           </footer>
         </div>
 
-        {/* Hide image on small screens */}
         <div
           style={{
             ...styles.imageContainer,
