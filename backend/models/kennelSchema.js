@@ -15,7 +15,13 @@ const kennelSchema = new mongoose.Schema({
         instagram: { type: String },
         tiktok: { type: String }
     },
-    documents: [{ type: String, required: true }],
+    documents: [
+        { 
+            type: String, 
+            required: true 
+        }
+    ],
+    isApproved: { type: Boolean, default: false },
     createdAt: { type: Date, required: true, default: Date.now }
 });
 

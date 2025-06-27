@@ -7,9 +7,14 @@ const petSchema = new mongoose.Schema({
     breed: { type: String, required: true },
     species: { type: String, required: true },
     description: { type: String, required: true },
-    images: [{ type: String, required: true }],
+    images: [
+        { 
+            url: String,
+            public_id: String,
+            required: true
+        }
+    ],
     isAdopted: { type: Boolean, required: true, default: false },
-    isDeleted: { type: Boolean, required: true, default: false },
     adoptionFee: { type: Number, required: true },
     medical: {
         vaccinated: { type: Boolean, required: true, default: false },
