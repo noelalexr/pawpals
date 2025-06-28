@@ -1,4 +1,5 @@
 import React, { useState, useMemo } from "react";
+import { Link } from "react-router-dom";
 
 const styles = {
  container: {
@@ -20,24 +21,23 @@ const styles = {
     borderRadius: "0.5rem",
     boxShadow: "0 8px 16px rgba(0,0,0,0.1)",
     overflow: "hidden",
-    maxWidth: "1200px",
+    maxWidth: "1700px",
     width: "100%",
     backgroundColor: "rgba(255,255,255,0.95)", // optional overlay
   },
   box: {
     backgroundColor: "#fff",
-    width: "400px",
+    width: "500px",
     padding: "2rem",
     display: "flex",
     flexDirection: "column",
     justifyContent: "center",
   },
   title: {
-    fontSize: "2.3rem",
+    fontSize: "3rem",
     fontWeight: "bold",
     color: "#1f2937",
     textAlign: "center",
-    marginBottom: "0rem",
   },
   highlight: {
     color: "#749cc9",
@@ -46,6 +46,7 @@ const styles = {
     color: "#4b5563",
     textAlign: "center",
     marginBottom: "1.5rem",
+    fontSize: "1.2rem",
   },
   form: {
     display: "flex",
@@ -90,8 +91,9 @@ const styles = {
     textAlign: "center",
   },
   imageContainer: {
-    width: "800px",
+    width: "1200px",
     display: "block",
+    height: "600px",
   },
   image: {
     width: "100%",
@@ -182,7 +184,7 @@ export default function Login() {
       <div style={styles.innerWrapper}>
         <div style={styles.box}>
           <h1 style={styles.title}>
-            Welcome to <span style={styles.highlight}>PawPal</span>
+            Welcome to <span><span style={{ color: "#749CC9" }}>Paw</span><span style={{ color: "black" }}>Pals</span></span>
           </h1>
           <p style={styles.subtitle}>{randomQuote}</p>
           <form style={styles.form} onSubmit={handleSubmit}>
@@ -218,18 +220,17 @@ export default function Login() {
             </button>
           </form>
           <p style={styles.signupText}>
-            Don't have an account?{" "}
-            <a href="#" style={styles.highlight}>
-              Sign up
-            </a>
-          </p>
+  Don't have an account?{" "}
+  <Link to="/signup" style={styles.highlight}>
+    Sign up
+  </Link>
+</p>
           <footer style={styles.footer}>
-            ©2025 PawPal | <a href="#">Privacy Policy</a> |{" "}
+            ©2025 PawPals | <a href="#">Privacy Policy</a> |{" "}
             <a href="#">Sitemap</a>
           </footer>
         </div>
 
-        {/* Hide image on small screens */}
         <div
           style={{
             ...styles.imageContainer,
