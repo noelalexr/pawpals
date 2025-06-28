@@ -21,24 +21,23 @@ const styles = {
     borderRadius: "0.5rem",
     boxShadow: "0 8px 16px rgba(0,0,0,0.1)",
     overflow: "hidden",
-    maxWidth: "1200px",
+    maxWidth: "1700px",
     width: "100%",
     backgroundColor: "rgba(255,255,255,0.95)", // optional overlay
   },
   box: {
     backgroundColor: "#fff",
-    width: "400px",
+    width: "500px",
     padding: "2rem",
     display: "flex",
     flexDirection: "column",
     justifyContent: "center",
   },
   title: {
-    fontSize: "2.3rem",
+    fontSize: "3rem",
     fontWeight: "bold",
     color: "#1f2937",
     textAlign: "center",
-    marginBottom: "0.1rem",
   },
   highlight: {
     color: "#749cc9",
@@ -47,6 +46,7 @@ const styles = {
     color: "#4b5563",
     textAlign: "center",
     marginBottom: "1.5rem",
+    fontSize: "1.2rem",
   },
   form: {
     display: "flex",
@@ -91,8 +91,9 @@ const styles = {
     textAlign: "center",
   },
   imageContainer: {
-    width: "800px",
+    width: "1200px",
     display: "block",
+    height: "600px",
   },
   image: {
     width: "100%",
