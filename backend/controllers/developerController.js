@@ -31,21 +31,6 @@ const registerDev = async (req, res) => {
         //save to db
         await newDeveloper.save();
 
-        //generate JWT token for the new dev
-        const token = jwt.sign(
-            { id: newDeveloper._id, role: "developer", userType: "developer" },
-            process.env.JWT_SECRET,
-            { expiresIn: "1d"}
-        );
-
-        // store token in httpOnly cookie
-        res.cookie("token", token, {
-            httpOnly: true,
-            secure: true,
-            sameSite: "strict",
-            maxAge: 24 * 60 * 60 * 1000, //1 day
-        });
-
         res.status(201).json({ message: "Developer registered successfully" });
     }catch(err){
         res.status(500).json({ message: "Server error", error: err.message });
@@ -77,7 +62,7 @@ const loginDev = async (req, res) => {
 
         res.cookie("token", token, {
             httpOnly: true,
-            secure: true,
+            secure: process.env.NODE_ENV === "production",
             sameSite: "strict",
             maxAge: 24 * 60 * 60 * 1000, //1 day
         });
@@ -88,33 +73,4 @@ const loginDev = async (req, res) => {
     }
 };
 
-//approve or reject a kennel
-const reviewKennel = async (req, res) => {
-    try{
-        const kennelID = req.params.id;
-        const { isApproved } = req.body; //from the kennel data
-
-        if(typeof isApproved !== "boolean"){
-            return res.status(400).json({ message: "isApproved must be a boolean." });
-        }
-
-        const kennel = await Kennel.findById(kennelID);
-        if(!kennel){
-            return res.status(404).json({ message: "Kennel not found" });
-        }
-
-        // update isApproved from the kennel schema
-        kennel.isApproved = isApproved;
-        await kennel.save();
-
-        return res.status(200).json({
-            message: `Kennel has been ${isApproved ? "approved" : "not approved"}.`,
-            kennelId: kennel._id,
-            isApproved: kennel.isApproved
-        });
-    }catch(err){
-        return res.status(500).json({ message: "Server error", error: err.message });
-    }
-};
-
-export { registerDev, loginDev, reviewKennel };
+export { registerDev, loginDev };

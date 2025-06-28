@@ -1,21 +1,24 @@
 import express from "express";
 
 //controllers
-import { registerDeveloper, loginDeveloper, reviewKennel } from "../controllers/developerController.js";
-
+import { registerDev, loginDev } from "../controllers/developerController.js";
+import { approveKennel, rejectKennel } from "../controllers/approvalController.js";
 //middlewares
-import auth from "../middlewares/authMiddleware.js";
-import verifyDeveloper from "../middlewares/verifyDeveloperMiddleware.js";
+import {auth} from "../middlewares/authMiddleware.js";
+import {verifyDeveloper} from "../middlewares/verifyDeveloperMiddleware.js";
 
 const router = express.Router();
 
 //dev registration
-router.post("/register", registerDeveloper);
+router.post("/register", registerDev);
 
 //dev login
-router.post("/login", loginDeveloper);
+router.post("/login", loginDev);
 
-//approving/rejecting a kennel (for devs only)
-router.patch("/kennel/:id/verify", auth, verifyDeveloper, reviewKennel);
+// Approve kennel
+router.patch("/kennel/:id/approve", auth, verifyDeveloper, approveKennel);
+
+// Reject & delete kennel
+router.delete("/kennel/:id/reject", auth, verifyDeveloper, rejectKennel);
 
 export default router;
