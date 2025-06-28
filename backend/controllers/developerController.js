@@ -38,7 +38,15 @@ const registerDev = async (req, res) => {
             { expiresIn: "1d"}
         );
 
-        res.status(201).json({ token }); //res will be the token logic above
+        // store token in httpOnly cookie
+        res.cookie("token", token, {
+            httpOnly: true,
+            secure: true,
+            sameSite: "strict",
+            maxAge: 24 * 60 * 60 * 1000, //1 day
+        });
+
+        res.status(201).json({ message: "Developer registered successfully" });
     }catch(err){
         res.status(500).json({ message: "Server error", error: err.message });
     }
@@ -67,7 +75,14 @@ const loginDev = async (req, res) => {
             { expiresIn: "1d" }
         );
 
-        res.status(200).json({ token }); //output token as res   
+        res.cookie("token", token, {
+            httpOnly: true,
+            secure: true,
+            sameSite: "strict",
+            maxAge: 24 * 60 * 60 * 1000, //1 day
+        });
+
+        res.status(200).json({ message: "Login successful" });   
     }catch(err){
         res.status(500).json({ message: "Server error", error: err.message });
     }

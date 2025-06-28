@@ -1,23 +1,30 @@
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
 
-const auth = (req, res, next) => {
-    const authHeader = req.headers.authorization;
-    if(!authHeader?.startsWith("Bearer ")){
-        return res.status(401).json({ message: "Unauthorized" });
-    }
+dotenv.config();
 
-    try {
-        const token = authHeader.split(" ")[1];
+const auth = (req, res, next) => {
+    try{
+        if(!req.cookies.token) {
+            return res.status(401).json({ error: "Unauthorized Access" });
+        }
+
+        const token = req.cookies.token;
+
+        if(!token){
+            return res.status(401).json({ error: "Unauthorized Access" });
+        }
+
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
         
-        req.userId = decoded.id; //userId from JWT
-        req.userType = decoded.userType; //either developer or kennel
+        //user info
+        req.userId = decoded.id;
+        req.userType = decoded.userType;
 
-        next(); // moves on to the next middleware or route
-    }catch(err) {
-        return res.status(401).json({ message: "Invalid token" });
+        next();
+    }catch(err){
+        res.status(500).json({ error: err.message });
     }
 };
 
-export default auth;
+export { auth };
