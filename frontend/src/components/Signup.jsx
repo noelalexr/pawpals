@@ -1,7 +1,6 @@
 import React, { useState, useMemo } from "react";
 import { Link } from "react-router-dom";
 import signupImage from "../assets/pawpal_signup.jpg";
-import emailjs from "@emailjs/browser";
 
 const styles = {
   container: {
@@ -33,7 +32,11 @@ const styles = {
     padding: "2rem",
     display: "flex",
     flexDirection: "column",
-    justifyContent: "center",
+    justifyContent: "flex-start",
+    height: "90vh",
+    overflowY: "auto",
+    scrollbarWidth: "thin",
+    scrollbarColor: "#ccc #fff",
   },
   title: {
     fontSize: "2.3rem",
@@ -71,6 +74,11 @@ const styles = {
     fontSize: "1rem",
     boxSizing: "border-box",
   },
+  errorText: {
+    color: "red",
+    fontSize: "0.75rem",
+    marginTop: "0.25rem",
+  },
   instruction: {
     fontSize: "0.85rem",
     color: "#4b5563",
@@ -101,6 +109,7 @@ const styles = {
 
 export default function Signup() {
   const [formData, setFormData] = useState({});
+  const [errors, setErrors] = useState({});
 
   const quotes = [
     "Give Love a Home — Adopt from the Pound.",
@@ -115,25 +124,80 @@ export default function Signup() {
   }, []);
 
   const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+
+    if (name.includes(".")) {
+      const [parent, child] = name.split(".");
+      setFormData((prev) => ({
+        ...prev,
+        [parent]: {
+          ...prev[parent],
+          [child]: value,
+        },
+      }));
+      setErrors((prev) => ({ ...prev, [`${parent}.${child}`]: "" }));
+    } else {
+      setFormData((prev) => ({ ...prev, [name]: value }));
+      setErrors((prev) => ({ ...prev, [name]: "" }));
+    }
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
+  const validateForm = () => {
+    const newErrors = {};
+    const requiredFields = [
+      "name",
+      "email",
+      "password",
+      "location.fullAddress",
+      "location.citySort",
+      "contact",
+    ];
 
-    emailjs.send(
-      "service_tenbebt",
-      "template_0rpmb44",
-      formData,
-      "JoGqE1mRi5hnh1eUz"
-    )
-    .then(() => {
-      alert("Your signup application has been submitted and emailed to PawPal. Please monitor your email and contact number for updates.");
-    })
-    .catch((error) => {
-      console.error("EmailJS error:", error);
-      alert("There was an issue submitting your application. Please try again later.");
+    requiredFields.forEach((field) => {
+      const value = field.includes(".")
+        ? formData[field.split(".")[0]]?.[field.split(".")[1]]
+        : formData[field];
+
+      if (!value || value.trim() === "") {
+        newErrors[field] = "This field is required.";
+      }
+
+      if (field === "email" && value && !/\S+@\S+\.\S+/.test(value)) {
+        newErrors.email = "Invalid email format.";
+      }
+
+      if (field === "password" && value && value.length < 6) {
+        newErrors.password = "Password must be at least 6 characters.";
+      }
     });
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (!validateForm()) return;
+
+    try {
+      const response = await fetch("http://localhost:3000/api/kennels", { //insert this the exact backend once ready.
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
+
+      if (response.ok) {
+        alert("Signup successful! Please wait for approval.");
+      } else {
+        const data = await response.json();
+        alert(data.message || "Signup failed. Please try again.");
+      }
+    } catch (err) {
+      console.error(err);
+      alert("An error occurred. Please try again later.");
+    }
   };
 
   return (
@@ -141,27 +205,57 @@ export default function Signup() {
       <div style={styles.innerWrapper}>
         <div style={styles.box}>
           <h1 style={styles.title}>
-            Register with <span style={styles.highlight}>PawPal</span>
+            Register with <span><span style={{ color: "#749CC9" }}>Paw</span><span style={{ color: "black" }}>Pals</span></span>
           </h1>
           <p style={styles.subtitle}>{randomQuote}</p>
 
           <form style={styles.form} onSubmit={handleSubmit}>
             {[
-              { label: "Name of Authorized Representative", name: "representative" },
-              { label: "Name of Kennel/Pound", name: "kennel" },
-              { label: "Address", name: "address" },
-              { label: "Email", name: "email" },
+              { label: "Kennel Name", name: "name" },
+              { label: "Email", name: "email", type: "email" },
+              { label: "Password", name: "password", type: "password" },
+              { label: "Full Address", name: "location.fullAddress" },
+              { label: "City", name: "location.citySort" },
               { label: "Contact Number", name: "contact" },
-              { label: "Landline", name: "landline" },
-            ].map(({ label, name }) => (
+              { label: "Website", name: "website" },
+              { label: "Facebook Link", name: "socialLinks.facebook" },
+              { label: "Instagram Link", name: "socialLinks.instagram" },
+              { label: "TikTok Link", name: "socialLinks.tiktok" },
+            ].map(({ label, name, type = "text" }) => (
               <div key={name}>
                 <label style={styles.label}>{label}</label>
-                <input type="text" name={name} required style={styles.input} onChange={handleChange} />
+                <input
+                  type={type}
+                  name={name}
+                  style={styles.input}
+                  onChange={handleChange}
+                />
+                {errors[name] && (
+                  <div style={styles.errorText}>{errors[name]}</div>
+                )}
               </div>
             ))}
 
+            <div>
+              <label style={styles.label}>Documents Upload (Please review the required documents listed below and provide the Google Drive link to your submission):</label>
+              <input
+                type="text"
+                name="documents"
+                style={styles.input}
+                onChange={(e) =>
+                  setFormData({
+                    ...formData,
+                    documents: e.target.value
+                      .split(",")
+                      .map((doc) => doc.trim()),
+                  })
+                }
+              />
+            </div>
+
             <p style={styles.instruction}>
-              Please send the following requirements to <b>pawpal@gmail.com</b>:
+              <b>Please upload the scanned copy of the following requirements to a google drive</b>:
+              <br />
               <br />
               - Government-Issued ID<br />
               - Business Permit/Mayor's Permit<br />
@@ -172,14 +266,21 @@ export default function Signup() {
             </p>
 
             <p style={styles.instruction}>
-              A member from PawPal will notify you if your application is approved. Kindly ensure your contact details are active and up to date.
+              A member from PawPals will notify you if your application is
+              approved. Kindly ensure your contact details are active and up to
+              date.
             </p>
 
-            <button type="submit" style={styles.button}>Submit Application</button>
+            <button type="submit" style={styles.button}>
+              Submit Application
+            </button>
           </form>
 
           <p style={styles.instruction}>
-            Already have an account? <Link to="/" style={styles.highlight}>Go to Login</Link>
+            Already have an account?{" "}
+            <Link to="/" style={styles.highlight}>
+              Go to Login
+            </Link>
           </p>
         </div>
 

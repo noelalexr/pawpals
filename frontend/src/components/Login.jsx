@@ -183,7 +183,7 @@ export default function Login() {
       <div style={styles.innerWrapper}>
         <div style={styles.box}>
           <h1 style={styles.title}>
-            Welcome to <span style={styles.highlight}>PawPal</span>
+            Welcome to <span><span style={{ color: "#749CC9" }}>Paw</span><span style={{ color: "black" }}>Pals</span></span>
           </h1>
           <p style={styles.subtitle}>{randomQuote}</p>
           <form style={styles.form} onSubmit={handleSubmit}>
@@ -225,7 +225,7 @@ export default function Login() {
   </Link>
 </p>
           <footer style={styles.footer}>
-            ©2025 PawPal | <a href="#">Privacy Policy</a> |{" "}
+            ©2025 PawPals | <a href="#">Privacy Policy</a> |{" "}
             <a href="#">Sitemap</a>
           </footer>
         </div>
