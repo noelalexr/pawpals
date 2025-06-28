@@ -29,14 +29,14 @@ const register = async (req, res) => {
         });
 
         await sendEmail(
-            `PawPal Tech Team`,
+            `PawPals Tech Team`,
             savedUser.email,
-            `Request to Join PawPal`,
-            `Hello ${savedUser.name},\n\nThank you for your request to join us at PawPal. Your account information and documents will need to verified before we can officially welcome you. Please give us 2-5 business days to verify and create your account.\nWe'll send you an email about your status within that timeframe.\nThank you again for your request to join,\nPawPal Tech Team`
+            `Request to Join PawPals`,
+            `Hello ${savedUser.name},\n\nThank you for your request to join us at PawPals. Your account information and documents will need to verified before we can officially welcome you. Please give us 2-5 business days to verify and create your account.\nWe'll send you an email about your status within that timeframe.\nThank you again for your request to join,\nPawPals Tech Team`
         );
 
         await sendEmail(
-            `PawPal Tech Team`,
+            `PawPals Tech Team`,
             process.env.EMAIL_USER,
             `${savedUser.name} from ${savedUser.location.citySort} Needs Approval`,
             `Hi team,\n\nWe have a new request to join from ${savedUser.name} that needs verification and approval!`
