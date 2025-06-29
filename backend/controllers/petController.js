@@ -5,7 +5,10 @@ const createPet = async (req, res) => {
     try {
         const newData = req.body;
         if (req.files && req.files.length > 0) {
-            newData.images = req.files.map(file => ({
+            if (req.files.length > 3) {
+                return res.status(400).json({ error: "Maximum of 3 images allowed." });
+            }
+            newData.images = req.files.map(file, index => ({
                 url: file.path,
                 public_id: file.filename,
             }));
@@ -32,6 +35,10 @@ const listPet = async (req, res) => {
             })
         };
         const records = await petModel.find(query)
+            .populate({
+                path: "kennel",
+                select: "name location email contact website socialLinks"
+            });
         res.json(records);
     } catch (error) {
         res.status(500).json({error: error.message})
@@ -42,10 +49,10 @@ const readPet = async (req, res) => {
     try{
         const id = req.params.id;
         const record = await petModel.findById(id)
-                .populate({
-            path: "kennel",
-            select: "name location email contact website socialLinks"
-        });
+            .populate({
+                path: "kennel",
+                select: "name location email contact website socialLinks"
+            });
         if (!record) {
             return res.status(404).json({error: "Pet not found"})
         }
@@ -59,18 +66,32 @@ const patchPet = async (req, res) => {
     try {
         const id = req.params.id;
         const newData = req.body;
-        if (req.files && req.files.length > 0) {
-            newData.images = req.files.map(file => ({
-                url: file.path,
-                public_id: file.filename,
-            }));
-        }
-        const record = await petModel.findByIdAndUpdate(id, newData, { new: true });
-        if (!record) {
+        const existingPet = await petModel.findById(id);
+
+        if (!existingPet) {
             return res.status(404).json({ error: "Pet not found" });
         }
 
-        res.status(200).json(record);
+        if (req.files && req.files.length > 0) {
+            if (req.files.length > 3) {
+                return res.status(400).json({ error: "Maximum of 3 images allowed." });
+            }
+            if ((existingPet.images.length + req.files.length) > 3) {
+                return res.status(400).json({ error: "Cannot have more than 3 images." });
+            }
+            
+            const newImages = req.files.map(file, index => ({
+                url: file.path,
+                public_id: file.filename,
+            }));
+
+            existingPet.images.push(...newImages);
+        }
+        
+        Object.assign(existingPet, newData);
+        await existingPet.save();
+
+        res.status(200).json(existingPet);
     } catch (error) {
         res.status(500).json({ error: error.message });
     }
@@ -90,7 +111,7 @@ const deletePet = async (req, res) => {
             }
         }
 
-        await petModel.findOneAndDelete(id);
+        await petModel.findByIdAndDelete(id);
         res.status(200).json({ message: "Pet and associated images have been deleted" });
     } catch (error) {
         res.status(500).json({ error: error.message });
