@@ -26,11 +26,10 @@ const listPet = async (req, res) => {
     try {
         const search = req.query.search?.toString().trim()
         const query = {
-            isDeleted: false,
             ...(search && {
                 $or: [
-                    {name: {$regex: search, $options: "i"}},
-                    {breed: {$regex: search, $options: "i"}}
+                    { name: { $regex: search, $options: "i" } },
+                    { breed: { $regex: search, $options: "i" } }
                 ]
             })
         };
@@ -41,12 +40,12 @@ const listPet = async (req, res) => {
             });
         res.json(records);
     } catch (error) {
-        res.status(500).json({error: error.message})
+        res.status(500).json({ error: error.message })
     }
 };
 
 const readPet = async (req, res) => {
-    try{
+    try {
         const id = req.params.id;
         const record = await petModel.findById(id)
             .populate({
@@ -54,11 +53,11 @@ const readPet = async (req, res) => {
                 select: "name location email contact website socialLinks"
             });
         if (!record) {
-            return res.status(404).json({error: "Pet not found"})
+            return res.status(404).json({ error: "Pet not found" })
         }
         res.status(200).json(record);
-    } catch(error) {
-        res.status(500).json({error: error.message})
+    } catch (error) {
+        res.status(500).json({ error: error.message })
     }
 };
 
@@ -79,7 +78,7 @@ const patchPet = async (req, res) => {
             if ((existingPet.images.length + req.files.length) > 3) {
                 return res.status(400).json({ error: "Cannot have more than 3 images." });
             }
-            
+
             const newImages = req.files.map(file, index => ({
                 url: file.path,
                 public_id: file.filename,
@@ -87,7 +86,7 @@ const patchPet = async (req, res) => {
 
             existingPet.images.push(...newImages);
         }
-        
+
         Object.assign(existingPet, newData);
         await existingPet.save();
 
@@ -136,4 +135,4 @@ const deletePetPhoto = async (req, res) => {
     }
 };
 
-export {createPet, listPet, readPet, patchPet, deletePet, deletePetPhoto}
+export { createPet, listPet, readPet, patchPet, deletePet, deletePetPhoto }

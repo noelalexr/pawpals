@@ -7,6 +7,7 @@ import Signup from "./components/Signup";
 //PAGES
 import PublicDashboard from "./pages/PublicDashboard";
 import PrivateDashboard from "./pages/PrivateDashboard";
+import PetDetails from "./pages/PetDetails";
 
 //
 async function checkAuth() {
@@ -37,11 +38,18 @@ const router = createBrowserRouter(
         {
             path: "/public-dashboard",
             element: <PublicDashboard />,
+            // loader: dashboardLoader,
         },
         {
             path: "/private-dashboard",
             // loader: checkAuth,
             element: <PrivateDashboard />,
+            // loader: dashboardLoader,
+        },
+        {
+            path: "/pets/:id",
+            // loader: checkAuth,
+            element: <PetDetails />,
         },
     ]
 )
