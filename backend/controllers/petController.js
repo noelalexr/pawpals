@@ -22,36 +22,35 @@ const createPet = async (req, res) => {
 const listPet = async (req, res) => {
     try {
         const search = req.query.search?.toString().trim()
-        const query = {
-            isDeleted: false,
-            ...(search && {
+        const query = search
+            ? {
                 $or: [
-                    {name: {$regex: search, $options: "i"}},
-                    {breed: {$regex: search, $options: "i"}}
+                    { name: { $regex: search, $options: "i" } },
+                    { breed: { $regex: search, $options: "i" } }
                 ]
-            })
-        };
+            }
+            : {};
         const records = await petModel.find(query)
         res.json(records);
     } catch (error) {
-        res.status(500).json({error: error.message})
+        res.status(500).json({ error: error.message })
     }
 };
 
 const readPet = async (req, res) => {
-    try{
+    try {
         const id = req.params.id;
         const record = await petModel.findById(id)
-                .populate({
-            path: "kennel",
-            select: "name location email contact website socialLinks"
-        });
+            .populate({
+                path: "kennel",
+                select: "name location email contact website socialLinks"
+            });
         if (!record) {
-            return res.status(404).json({error: "Pet not found"})
+            return res.status(404).json({ error: "Pet not found" })
         }
         res.status(200).json(record);
-    } catch(error) {
-        res.status(500).json({error: error.message})
+    } catch (error) {
+        res.status(500).json({ error: error.message })
     }
 };
 
@@ -115,4 +114,4 @@ const deletePetPhoto = async (req, res) => {
     }
 };
 
-export {createPet, listPet, readPet, patchPet, deletePet, deletePetPhoto}
+export { createPet, listPet, readPet, patchPet, deletePet, deletePetPhoto }

@@ -1,17 +1,17 @@
 import mongoose from "mongoose";
 
 const petSchema = new mongoose.Schema({
-    name: { type: String, required: true},
+    name: { type: String, required: true },
     age: { type: Number, required: true },
     arrivalDate: { type: Date, required: true },
     breed: { type: String, required: true },
     species: { type: String, required: true },
+    gender: { type: String, required: true },
     description: { type: String, required: true },
     images: [
-        { 
+        {
             url: String,
-            public_id: String,
-            required: true
+            public_id: { type: String, required: true }
         }
     ],
     isAdopted: { type: Boolean, required: true, default: false },
@@ -26,6 +26,7 @@ const petSchema = new mongoose.Schema({
     },
     specialAssistance: { type: Boolean, required: true, default: false },
     views: { type: Number, required: true, default: 0 },
+    isDeleted: { type: Boolean, required: true, default: false },
     createdAt: { type: Date, required: true, default: Date.now },
     kennel: {
         type: mongoose.Schema.Types.ObjectId,
