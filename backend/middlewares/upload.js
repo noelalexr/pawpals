@@ -26,7 +26,7 @@ const storage = new CloudinaryStorage({
 
         return {
             folder: `pets/${petId}`,
-            allowed_formats: ['jpg', 'png', 'jpeg', 'webp'],
+            allowed_formats: ['jpg', 'png', 'jpeg', 'webp', `heic`, `avif`],
             public_id: `${petName}-${petId}-${availableSlot}`,
         };
     },
