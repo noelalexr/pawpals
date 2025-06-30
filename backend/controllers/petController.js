@@ -25,14 +25,14 @@ const createPet = async (req, res) => {
 const listPet = async (req, res) => {
     try {
         const search = req.query.search?.toString().trim()
-        const query = search
-            ? {
+        const query = {
+            ...(search && {
                 $or: [
                     { name: { $regex: search, $options: "i" } },
                     { breed: { $regex: search, $options: "i" } }
                 ]
-            }
-            : {};
+            })
+        };
         const records = await petModel.find(query)
             .populate({
                 path: "kennel",
@@ -78,7 +78,7 @@ const patchPet = async (req, res) => {
             if ((existingPet.images.length + req.files.length) > 3) {
                 return res.status(400).json({ error: "Cannot have more than 3 images." });
             }
-            
+
             const newImages = req.files.map(file, index => ({
                 url: file.path,
                 public_id: file.filename,
@@ -86,7 +86,7 @@ const patchPet = async (req, res) => {
 
             existingPet.images.push(...newImages);
         }
-        
+
         Object.assign(existingPet, newData);
         await existingPet.save();
 
