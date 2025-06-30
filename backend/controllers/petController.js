@@ -44,6 +44,16 @@ const listPet = async (req, res) => {
     }
 };
 
+const listMyPets = async (req, res) => {
+  try {
+    const kennelId = req.user.userId;
+    const pets = await petModel.find({ kennel: kennelId });
+    res.json(pets);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
 const readPet = async (req, res) => {
     try {
         const id = req.params.id;
@@ -135,4 +145,4 @@ const deletePetPhoto = async (req, res) => {
     }
 };
 
-export { createPet, listPet, readPet, patchPet, deletePet, deletePetPhoto }
+export { createPet, listPet, listMyPets, readPet, patchPet, deletePet, deletePetPhoto }
