@@ -1,28 +1,138 @@
-import { useState } from "react";
-import { Link } from "react-router";
+import { useState, useEffect, useContext } from "react";
+import { useNavigate, Link } from "react-router";
 
+//ICONS
+import pawIcon from "../assets/images/icons/paw.png";
+import dogsIcon from "../assets/images/icons/dog.png"
+import catsIcon from "../assets/images/icons/cat.png"
+import birdsIcon from "../assets/images/icons/bird.png"
+import maleIcon from "../assets/images/icons/male.png"
+import femaleIcon from "../assets/images/icons/female.png"
+import downArrowIcon from "../assets/images/icons/down-arrow.png"
+
+//CONTEXTS
+import { DataContext } from "../contexts/DataContext.jsx";
+
+//PAGES
+import LoaderPage from "./LoaderPage.jsx";
 
 
 const PrivateDashboard = () => {
     const [search, setSearch] = useState("");
+    const [selectedSpecies, setSelectedSpecies] = useState("");
+    const [selectedGender, setSelectedGender] = useState("");
+    const [selectedAgeRange, setSelectedAgeRange] = useState("");
+    const [selectedCity, setSelectedCity] = useState("")
+    const [filteredPets, setFilteredPets] = useState([]);
+    const navigate = useNavigate();
+    const { pets, loading, error } = useContext(DataContext);
 
-    const handleRemoveFilter = () => {
-        setSelectedBrand("");
-        setSelectedCategory("");
-        setSearch("");
-        setFiltered(products);
+    const ageRanges = [
+        { label: "All Ages", value: "" },
+        { label: "Puppy (0-2 years old)", value: "0-2" },
+        { label: "Young adult (3-5 years old)", value: "3-5" },
+        { label: "Adult (6-10 years old)", value: "6-10" },
+        { label: "Senior (11+ years old)", value: "11+" },
+    ];
+
+    const uniqueCities = [
+        ...new Set(pets.map(pet => pet.kennel.citySort).filter(Boolean))
+    ];
+
+    const handleSpeciesClick = (species) => {
+        setSelectedSpecies(prev => prev === species ? "" : species);
     };
 
+    const handleGenderClick = (gender) => {
+        setSelectedGender(prev => prev === gender ? "" : gender);
+    };
+
+    const applyFilters = (searchText, species, gender, ageRange, city) => {
+        let filteredData = [...pets];
+
+        if (species) {
+            filteredData = filteredData.filter(
+                (pet) => pet.species.toLowerCase() === species.toLowerCase()
+            );
+        }
+
+        if (gender) {
+            filteredData = filteredData.filter(
+                (pet) => pet.gender.toLowerCase() === gender.toLowerCase()
+            );
+        }
+
+        if (searchText.trim() !== "") {
+            filteredData = filteredData.filter((pet) =>
+                pet.name.toLowerCase().includes(searchText.toLowerCase()) ||
+                pet.breed.toLowerCase().includes(searchText)
+            );
+        }
+
+        if (ageRange) {
+            filteredData = filteredData.filter((pet) => {
+                const age = pet.age;
+                if (ageRange === "0-2") return age <= 2;
+                if (ageRange === "3-5") return age >= 3 && age <= 5;
+                if (ageRange === "6-10") return age >= 6 && age <= 10;
+                if (ageRange === "11+") return age >= 11;
+                return true;
+            });
+        }
+
+        if (city) {
+            filteredData = filteredData.filter(
+                pet => pet.kennel.citySort.toLowerCase() === city.toLowerCase()
+            );
+        }
+
+        setFilteredPets(filteredData);
+    };
+
+    useEffect(() => {
+        applyFilters(search, selectedSpecies, selectedGender, selectedAgeRange, selectedCity);
+    }, [search, selectedSpecies, selectedGender, selectedAgeRange, selectedCity, pets]);
+
+    const handleRemoveFilter = () => {
+        setSearch("");
+        setFilteredPets(pets);
+    };
+
+    if (loading) {
+        return <LoaderPage />;
+    }
+
     return (
-        <div className='min-h-screen bg-gradient-to-b from-white to-gray-200'>
+        <div className='min-h-screen bg-gradient-to-b from-white to-gray-200 bg-fixed'>
             <div className='flex justify-between py-3 md:px-[15%] px-2 bg-white border-1 border-b-[#4b7fbb42]'>
                 <div className='flex gap-1'>
                     <h1 className='outfit text-lg font-bold my-auto'><span className='text-[#3B6FA1]'>Paw</span><span className='text-gray-700'>Pals</span></h1>
-                    <img src="/images/icons/paw.png" alt="paw" className='w-5 h-5 m-auto' />
+                    <img src={pawIcon} alt="paw" className='w-5 h-5 m-auto' />
                 </div>
-                <button className='py-2 px-3 text-xs rounded-lg text-white font-semibold bg-[#4B7FBB] hover:bg-[#416da0] active:bg-[#416da0] transition-colors ease-in-out duration-300 cursor-pointer'>Kennel Login</button>
+                <button onClick={() => navigate("/login")} className='py-2 px-3 text-xs rounded-lg text-white font-semibold bg-[#4B7FBB] hover:bg-[#416da0] active:bg-[#416da0] transition-colors ease-in-out duration-300 cursor-pointer'>Kennel Login</button>
             </div>
-            <div className="relative flex gap-5 justify-center items-center md:w-[65%] md:mx-auto bg-[#eef2f7] rounded-lg py-2 px-3 mb-3 mt-4 mx-5 border-2 border-[#eef2f7] focus-within:border-[#4B7FBB] focus-within:bg-white transition-colors duration-300 text-xs">
+            <div className="flex flex-col md:mx-[18%] mx-5 mt-3">
+                <div className="flex gap-2">
+                    <p className="text-sm text-[#4B7FBB] text-center">Location</p>
+                    <img src={downArrowIcon} alt="arrow-down" className="w-3 my-auto" />
+                </div>
+                <select
+                    className="px-3 py-1 rounded-lg appearance-none focus:outline-none focus:bg-[#dce3ee] hover:bg-[#dce3ee] cursor-pointer transition-colors duration-300 text-xl"
+                    value={selectedCity}
+                    onChange={(e) => {
+                        const value = e.target.value;
+                        setSelectedCity(value);
+                    }}
+                >
+                    <option value="" className="appearance-none">All Cities</option>
+                    {uniqueCities.map((city, idx) => (
+                        <option key={idx} value={city}>
+                            {city}
+                        </option>
+                    ))}
+                </select>
+            </div>
+            <div className="relative flex gap-5 justify-center items-center md:w-[65%] md:mx-auto bg-[#e7eef7] rounded-lg py-2 px-3 mb-3 mt-2 mx-5 border-2 border-[#e7eef7] focus-within:border-[#4B7FBB] focus-within:bg-white transition-colors duration-300 text-xs">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6 text-gray-400">
                     <path strokeLinecap="round" strokeLinejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
                 </svg>
@@ -45,17 +155,12 @@ const PrivateDashboard = () => {
             </div>
             <div className="py-2 md:px-[12vw] mb-3 text-center">
                 <div className="flex justify-center">
-                    <div className="flex relative overflow-hidden">
-                        {/* {brands.map((brand) => ( */}
+                    <div className="flex relative overflow-hidden md:mx-2 my-auto ">
                         <div className="flex flex-col gap-1 md:mx-2 mx-[5px] my-2">
                             <button
-                                // key={brand._id}
-                                // onClick={() => handleBrandClick(brand.name)}
-                                // className={`outline-5 flex-none rounded-xl md:mx-2 mx-[5px] my-2 bg-white w-20 h-20 cursor-pointer duration-300 ease-in-out hover:scale-105
-                                //                 ${selectedBrand === brand.name ? "outline-[#990000]" : "outline-white/0"}`}
-
-                                //TEMPORARY
-                                className='flex-none rounded-xl bg-[#eef2f7] w-17 h-17 cursor-pointer duration-300 ease-in-out hover:bg-[#dce3ee]'
+                                onClick={() => handleSpeciesClick("Dog")}
+                                className={`flex-none rounded-xl md:w-17 md:h-17 w-15 h-15 cursor-pointer duration-300 ease-in-out
+                                    ${selectedSpecies === "Dog" ? "bg-[#4B7FBB]" : "bg-[#e7eef7] hover:bg-[#dce3ee]"}`}
                             >
                                 <img
                                     // src={brand.logo?.url.replace("/upload/", "/upload/w_500,/")}
@@ -63,146 +168,143 @@ const PrivateDashboard = () => {
                                     // className="w-[50px] mx-auto"
 
                                     //TEMPORARY
-                                    src="/images/icons/dog.png"
-                                    className="w-[35px] mx-auto"
+                                    src={dogsIcon}
+                                    className="md:w-[35px] w-[30px] mx-auto"
                                 />
                             </button>
                             <p className="text-xs text-gray-600">Dogs</p>
                         </div>
-                        {/* ))} */}
-
-
-                        {/* TEMPORARY */}
                         <div className="flex flex-col gap-1 mx-[5px] my-2">
                             <button
-                                className='flex-none rounded-xl md:mx-2 bg-[#4B7FBB] w-17 h-17 cursor-pointer duration-300 ease-in-out hover:bg-[#dce3ee]'
+                                onClick={() => handleSpeciesClick("Cat")}
+                                className={`flex-none rounded-xl md:w-17 md:h-17 w-15 h-15 cursor-pointer duration-300 ease-in-out
+                                    ${selectedSpecies === "Cat" ? "bg-[#4B7FBB]" : "bg-[#e7eef7] hover:bg-[#dce3ee]"}`}
                             >
                                 <img
-                                    src="/images/icons/cat.png"
-                                    className="w-[35px] mx-auto"
+                                    src={catsIcon}
+                                    className="md:w-[35px] w-[30px] mx-auto"
                                 />
                             </button>
                             <p className="text-xs text-gray-600">Cats</p>
                         </div>
                         <div className="flex flex-col gap-1 mx-[5px] my-2">
                             <button
-                                className='flex-none rounded-xl md:mx-2 bg-[#eef2f7] w-17 h-17 cursor-pointer duration-300 ease-in-out hover:bg-[#dce3ee]'
+                                onClick={() => handleSpeciesClick("Bird")}
+                                className={`flex-none rounded-xl md:w-17 md:h-17 w-15 h-15 cursor-pointer duration-300 ease-in-out
+                                    ${selectedSpecies === "Bird" ? "bg-[#4B7FBB]" : "bg-[#e7eef7] hover:bg-[#dce3ee]"}`}
                             >
                                 <img
-                                    src="/images/icons/bird.png"
-                                    className="w-[35px] mx-auto"
+                                    src={birdsIcon}
+                                    className="md:w-[35px] w-[30px] mx-auto"
                                 />
                             </button>
                             <p className="text-xs text-gray-600">Birds</p>
                         </div>
                     </div>
 
-                    <div className="w-[3px] h-22 my-auto bg-gray-300 rounded-full mx-2"></div>
+                    <div className="w-[3px] h-23 my-auto bg-gray-300 rounded-full mx-2"></div>
 
 
 
-                    {/* GENDER - TEMPORARY */}
-                    <div className="flex flex-col justify-center gap-3 items-center py-2 md:mx-3 mx-[5px]">
-                        <div className="flex justify-center py-[3px] px-[4px] text-xs bg-[#eef2f7] w-25 rounded-md hover:bg-[#dce3ee] cursor-pointer transition-colors duration-300">
-                            <p className="m-auto text-gray-600">Male</p>
-                            <img src="/images/icons/male.png" alt="male" className="w-6" />.
-                        </div>
-                        <div className="flex justify-center py-[3px] px-[4px] text-xs bg-[#eef2f7] w-25 rounded-md hover:bg-[#dce3ee] cursor-pointer transition-colors duration-300">
-                            <p className="m-auto text-gray-600">Female</p>
-                            <img src="/images/icons/female.png" alt="female" className="w-6" />
-                        </div>
+                    <div className="flex flex-col justify-center gap-2 items-center py-2 md:mx-3 mx-[5px]">
+                        <button
+                            onClick={() => handleGenderClick("Male")}
+                            className={`flex justify-center gap-3 py-[3px] px-[4px] text-xs w-25 rounded-md cursor-pointer transition-colors duration-300
+                            ${selectedGender === "Male" ? "bg-[#4B7FBB] text-white" : "bg-[#e7eef7] hover:bg-[#dce3ee] text-gray-600"}`}
+                        >
+                            <p className="my-auto pl-1">Male</p>
+                            <img src={maleIcon} alt="male" className="w-5" />
+                        </button>
+                        <button
+                            onClick={() => handleGenderClick("Female")}
+                            className={`flex justify-center gap-3 py-[3px] px-[4px] text-xs w-25 rounded-md cursor-pointer transition-colors duration-300
+                            ${selectedGender === "Female" ? "bg-[#4B7FBB] text-white" : "bg-[#e7eef7] hover:bg-[#dce3ee] text-gray-600"}`}
+                        >
+                            <p className="my-auto pl-1">Female</p>
+                            <img src={femaleIcon} alt="female" className="w-5" />
+                        </button>
+                        <button
+                            onClick={() => handleGenderClick("Unknown")}
+                            className={`flex justify-center gap-3 py-[5px] px-[4px] text-xs w-25 rounded-md cursor-pointer transition-colors duration-300
+                            ${selectedGender === "Unknown" ? "bg-[#4B7FBB] text-white" : "bg-[#e7eef7] hover:bg-[#dce3ee] text-gray-600"}`}
+                        >
+                            <p className="my-auto">Unknown Sex</p>
+                        </button>
                     </div>
 
                 </div>
 
 
 
+
+                <div className="flex gap-2 justify-center mt-3">
+                    <p className="text-sm text-[#4B7FBB] my-auto">Filter by Age:</p>
+                    <select
+                        className="px-3 py-2 rounded-lg appearance-none focus:outline-none my-auto text-gray-600 text-sm focus:bg-[#dce3ee] hover:bg-[#dce3ee] cursor-pointer transition-colors duration-300 text-center bg-[#e7eef7]"
+                        value={selectedAgeRange}
+                        onChange={(e) => setSelectedAgeRange(e.target.value)}
+                    >
+                        {ageRanges.map((range) => (
+                            <option key={range.value} value={range.value}>
+                                {range.label}
+                            </option>
+                        ))}
+                    </select>
+                </div>
+
+
             </div>
 
 
+            {filteredPets.length === 0 ? (
+                <p className="text-center text-gray-400 mt-20">No pet available</p>
+            ) : (
 
-            <div className="flex flex-wrap justify-center ">
-                {/* {filtered.map((product) => ( */}
-                <Link
-                    // to={`/products/${product._id}`}
-                    // key={product._id}
-                    className="md:m-5 m-3"
-                >
-                    <div className="group">
-                        <div className="overflow-hidden rounded-t-lg bg-black">
-                            <img
-                                // src={product.image.url.replace("/upload/", "/upload/c_fill,w_1000,h_563/")}
-                                // alt={product.name}
-                                className="md:w-[300px] md:h-[300px] w-[150px] h-[150px] object-cover rounded-t-lg group-hover:scale-115 group-active:scale-115 ease-in-out duration-500"
+                <div className="flex flex-wrap justify-center md:px-[15%]">
+                    {/* {filtered.map((product) => ( */}
+                    {filteredPets.map((pet) => (
+                        <Link
+                            to={`/pets/${pet._id}`}
+                            key={pet._id}
+                            className="md:m-5 m-3"
+                        >
+                            <div className="group">
+                                <div className="overflow-hidden rounded-t-lg bg-black">
+                                    <img
+                                        src={pet.images[0].url}
+                                        // alt={product.name}
+                                        className="md:w-[300px] md:h-[300px] w-[150px] h-[150px] object-cover rounded-t-lg group-hover:scale-115 group-active:scale-115 ease-in-out duration-500"
 
-                                // TEMPORARY
-                                src="https://images.unsplash.com/photo-1583511655826-05700d52f4d9?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTh8fHBldHN8ZW58MHx8MHx8fDA%3D"
-                            />
-                        </div>
-                        <div className="bg-white p-3 md:px-5 rounded-b-lg z-1 group-hover:bg-[#4B7FBB] group-active:bg-[#4B7FBB] transition-colors duration-300 flex justify-between">
-                            {/* <h3 className="text-lg font-bold group-hover:text-white group-active:text-white">{product.name}</h3>
-                                <p className="text-sm [#4B7FBB] group-active:text-white">{formatPeso(product.price)}</p> */}
+                                    // TEMPORARY
+                                    // src="https://images.unsplash.com/photo-1583511655826-05700d52f4d9?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTh8fHBldHN8ZW58MHx8MHx8fDA%3D"
+                                    />
+                                </div>
+                                <div className="bg-white p-2 md:px-5 rounded-b-lg z-1 group-hover:bg-[#4B7FBB] group-active:bg-[#4B7FBB] transition-colors duration-300 flex justify-between">
+                                    {/* <h3 className="text-lg font-bold group-hover:text-white group-active:text-white">{pet.name}</h3>
+                                <p className="text-sm [#4B7FBB] group-active:text-white">{pet.breed}</p> */}
 
-                            {/* TEMPORARY */}
-                            <div>
-                                <p className="font-semibold group-active:text-white group-hover:text-white transition-colors duration-300">Name</p>
-                                <p className="text-sm group-active:text-white group-hover:text-white transition-colors duration-300 text-gray-400">Breed</p>
+                                    {/* TEMPORARY */}
+                                    <div>
+                                        <p className="font-semibold group-active:text-white group-hover:text-white transition-colors duration-300">{pet.name}</p>
+                                        <p className="md:text-sm text-xs group-active:text-white group-hover:text-white transition-colors duration-300 text-gray-400">{pet.breed}</p>
+                                    </div>
+
+                                    <div className="flex items-center space-x-2">
+                                        {pet.gender.toLowerCase() === "male" ? (
+                                            <img src={maleIcon} alt="male" className="w-6 h-6" />
+                                        ) : pet.gender.toLowerCase() === "female" ? (
+                                            <img src={femaleIcon} alt="female" className="w-6 h-6" />
+                                        ) : (
+                                            <span className="text-xs text-red-400 text-center font-semibold group-hover:text-white transition-colors duration-300">Unknown<br />Gender</span>
+                                        )}
+                                    </div>
+                                </div>
                             </div>
-                            <img src="/images/icons/female.png" alt="female" className="w-6 h-6 my-auto" />
-                        </div>
-                    </div>
-                </Link>
-                {/* ))} */}
-
-
-                {/* TEMPORARY */}
-                <Link
-                    className="md:m-5 m-3"
-                >
-                    <div className="group">
-                        <div className="overflow-hidden rounded-t-lg bg-black">
-                            <img
-
-                                className="md:w-[300px] md:h-[300px] w-[150px] h-[150px] object-cover rounded-t-lg group-hover:scale-115 group-active:scale-115 ease-in-out duration-500"
-
-                                // TEMPORARY
-                                src="https://images.unsplash.com/photo-1583337130417-3346a1be7dee?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Nnx8cGV0c3xlbnwwfHwwfHx8MA%3D%3D"
-                            />
-                        </div>
-                        <div className="bg-white p-3 md:px-5 rounded-b-lg z-1 group-hover:bg-[#4B7FBB] group-active:bg-[#4B7FBB] transition-colors duration-300 flex justify-between">
-
-                            <div>
-                                <p className="font-semibold group-active:text-white group-hover:text-white transition-colors duration-300">Name</p>
-                                <p className="text-sm group-active:text-white group-hover:text-white transition-colors duration-300 text-gray-400">Breed</p>
-                            </div>
-                            <img src="/images/icons/male.png" alt="male" className="w-6 h-6 my-auto" />
-                        </div>
-                    </div>
-                </Link>
-                <Link
-                    className="md:m-5 m-3"
-                >
-                    <div className="group">
-                        <div className="overflow-hidden rounded-t-lg bg-black">
-                            <img
-
-                                className="md:w-[300px] md:h-[300px] w-[150px] h-[150px] object-cover rounded-t-lg group-hover:scale-115 group-active:scale-115 ease-in-out duration-500"
-
-                                // TEMPORARY
-                                src="https://images.unsplash.com/photo-1592194996308-7b43878e84a6?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTl8fHBldHN8ZW58MHx8MHx8fDA%3D"
-                            />
-                        </div>
-                        <div className="bg-white p-3 md:px-5 rounded-b-lg z-1 group-hover:bg-[#4B7FBB] group-active:bg-[#4B7FBB] transition-colors duration-300 flex justify-between">
-
-                            <div>
-                                <p className="font-semibold group-active:text-white group-hover:text-white transition-colors duration-300">Name</p>
-                                <p className="text-sm group-active:text-white group-hover:text-white transition-colors duration-300 text-gray-400">Breed</p>
-                            </div>
-                            <img src="/images/icons/male.png" alt="male" className="w-6 h-6 my-auto" />
-                        </div>
-                    </div>
-                </Link>
-            </div>
+                        </Link>
+                    ))}
+                    {/* ))} */}
+                </div>
+            )}
         </div>
 
     )
