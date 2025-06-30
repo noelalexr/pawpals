@@ -4,11 +4,11 @@ import {auth} from "../middlewares/authMiddleware.js"
 
 const router = express.Router()
 
-router.post("/", auth, createPet)
+router.post("/", auth, upload.array("images", 3), createPet)
 router.get("/", listPet)
 router.get("/:id", readPet)
-router.patch("/:id", auth, patchPet)
+router.patch("/:id", auth, upload.array("images", 3), patchPet)
 router.delete("/:id", auth, deletePet)
-router.delete("/:id/photos/:publicId", auth, deletePetPhoto)
+router.delete("/:id/photos/:publicId(*)", auth, deletePetPhoto)
 
 export default router

@@ -1,6 +1,7 @@
 import mongoose from "mongoose";
 
 const petSchema = new mongoose.Schema({
+<<<<<<< HEAD
     name: { type: String, required: true },
     age: { type: Number, required: true },
     arrivalDate: { type: Date, required: true },
@@ -12,18 +13,41 @@ const petSchema = new mongoose.Schema({
         {
             url: String,
             public_id: { type: String, required: true }
-        }
-    ],
-    isAdopted: { type: Boolean, required: true, default: false },
-    adoptionFee: { type: Number, required: true },
-    medical: {
-        vaccinated: { type: Boolean, required: true, default: false },
-        parasiteControl: {
-            tickAndFlea: { type: Boolean, required: true, default: false },
-            heartworm: { type: Boolean, required: true, default: false },
-            neutered: { type: Boolean, required: true, default: false }
+=======
+        name: { type: String, required: true},
+        age: { type: Number, required: true },
+        arrivalDate: { type: Date, required: true },
+        breed: { type: String, required: true },
+        species: { type: String, required: true, enum: ["dog", "cat", "bird"] },
+        gender: {type: String, required: true, enum: ["male", "female", "undetermined"]},
+        description: { type: String, required: true },
+        images: [
+            { 
+                url: String,
+                public_id: String,
+                required: true
+            }
+        ],
+        isAdopted: { type: Boolean, required: true, default: false },
+        adoptionFee: { type: Number, required: true },
+        medical: {
+            vaccinated: { type: Boolean, required: true, default: false },
+            parasiteControl: {
+                tickAndFlea: { type: Boolean, required: true, default: false },
+                heartworm: { type: Boolean, required: true, default: false },
+                neutered: { type: Boolean, required: true, default: false }
+            }
+        },
+        specialAssistance: { type: Boolean, required: true, default: false },
+        views: { type: Number, required: true, default: 0 },
+        kennel: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "Kennel",
+            required: true
+>>>>>>> 93a2dd085ef8afe96970fd3d3a95e2db8f6290fc
         }
     },
+<<<<<<< HEAD
     specialAssistance: { type: Boolean, required: true, default: false },
     views: { type: Number, required: true, default: 0 },
     isDeleted: { type: Boolean, required: true, default: false },
@@ -34,6 +58,10 @@ const petSchema = new mongoose.Schema({
         required: true
     }
 });
+=======
+    { timestamps: true }
+);
+>>>>>>> 93a2dd085ef8afe96970fd3d3a95e2db8f6290fc
 
 const petModel = mongoose.model("Pet", petSchema);
 
