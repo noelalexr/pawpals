@@ -1,6 +1,7 @@
 import express from "express";
 import {createPet, listPet, readPet, patchPet, deletePet, deletePetPhoto} from "../controllers/petController.js"
 import {auth} from "../middlewares/authMiddleware.js"
+import upload from "../middlewares/upload.js";
 
 const router = express.Router()
 
