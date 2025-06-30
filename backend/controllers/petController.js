@@ -47,8 +47,12 @@ const listPet = async (req, res) => {
 const listMyPets = async (req, res) => {
   try {
     const kennelId = req.user.userId;
-    const pets = await petModel.find({ kennel: kennelId });
-    res.json(pets);
+    const record = await petModel.find({ kennel: kennelId })
+        .populate({
+        path: "kennel",
+        select: "name location email contact website socialLinks"
+            });
+    res.json(record);
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
