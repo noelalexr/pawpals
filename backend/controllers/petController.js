@@ -46,8 +46,8 @@ const listPet = async (req, res) => {
 
 const listMyPets = async (req, res) => {
   try {
-    const kennelId = req.user.userId;
-    const record = await petModel.find({ kennel: kennelId })
+    const id = req.user.userId;
+    const record = await petModel.find({ kennel: id })
         .populate({
         path: "kennel",
         select: "name location email contact website socialLinks"

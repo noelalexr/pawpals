@@ -19,7 +19,6 @@ const auth = (req, res, next) => {
         
         //user info
         req.userId = decoded.id;
-        req.userType = decoded.userType;
 
         next();
     }catch(err){
