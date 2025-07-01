@@ -1,10 +1,11 @@
 import jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs";
-import dotEnv from "dotenv";
+import dotenv from "dotenv";
 
 //schemas
 import Developer from "../models/developerSchema.js";
-import Kennel from "../models/kennelSchema.js";
+
+dotenv.config();
 
 //registration
 const registerDev = async (req, res) => {
@@ -55,7 +56,7 @@ const loginDev = async (req, res) => {
 
         //JWT token for the dev login
         const token = jwt.sign(
-            { id: developer._id, role: "developer", userType: "developer" },
+            { id: developer._id, role: developer.role },
             process.env.JWT_SECRET,
             { expiresIn: "1d" }
         );
