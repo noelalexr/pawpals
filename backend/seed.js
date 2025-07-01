@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 import dotenv from "dotenv";
-import bcrypt from "bcryptjs"
+import bcrypt from "bcrypt"
 
 import Developer from "./models/developerSchema.js";
 import Kennel from "./models/kennelSchema.js";
@@ -20,6 +20,9 @@ const connectDB = async () => {
 
 const seed = async () => {
     await connectDB();
+    await Kennel.deleteMany();
+    await Pet.deleteMany();
+    await Developer.deleteMany();
 
     try{
         const hashedPassword = await bcrypt.hash("password123", 10);
