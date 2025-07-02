@@ -11,7 +11,6 @@ createRoot(document.getElementById('root')).render(
     <StrictMode>
         <PublicPetProvider>
             <PrivatePetProvider>
-
                 <RouterProvider router={router} />
             </PrivatePetProvider>
         </PublicPetProvider>
