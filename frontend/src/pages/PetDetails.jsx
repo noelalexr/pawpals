@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import { useParams, useNavigate } from "react-router";
 
 //ICONS
@@ -6,47 +6,32 @@ import facebookIcon from "../assets/images/icons/facebook.png";
 import instagramIcon from "../assets/images/icons/instagram.png";
 import tiktokIcon from "../assets/images/icons/tiktok.png";
 
-//PAGES
-import LoaderPage from "./LoaderPage";
+//CONTEXTS
+import { PublicPetContext } from "../contexts/PublicPetContext";
+
 
 const PetDetails = () => {
-    const [petDetails, setPetDetails] = useState([]);
     const navigate = useNavigate();
-    const [loading, setLoading] = useState(true);
     const { id } = useParams();
 
-    useEffect(() => {
-        const fetchData = async () => {
-            try {
-                const response = await fetch(`${import.meta.env.VITE_API_URL}/api/pets/${id}`, {
-                    method: "GET",
-                    credentials: "include",
-                });
-                const data = await response.json();
-                setPetDetails(data);
-            } catch (error) {
-                console.error("Error fetching data:", error);
-            } finally {
-                setLoading(false);
-            }
-        };
+    const { pets } = useContext(PublicPetContext);
 
-        fetchData();
-    }, [id]);
-
-    if (loading) {
-        return <LoaderPage />;
-    }
+    const petDetails = pets.find((pet) => String(pet._id) === id);
+    if (!petDetails) return <p className="text-center text-red-600">Pet not found.</p>;
 
     return (
         <div className="min-h-screen bg-gradient-to-b from-[#c1d4e9] to-[#4B7FBB] p-15 bg-fixed">
 
             <div className="flex justify-center gap-2">
-                <img src={petDetails.images[0].url} alt={petDetails.name} className="rotate-6 rounded-2xl w-130 h-130 object-cover shadow-gray-700 shadow-lg z-1 hover:scale-103 transition-all duration-300" />
+                <img src={petDetails.images[0].url} alt={petDetails.name} className="rotate-4 rounded-2xl w-130 h-130 object-cover shadow-gray-700 shadow-lg z-1 hover:scale-105 hover:rotate-0 transition-all duration-300" />
                 <div className="flex flex-col gap-5 justify-center items-center my-auto">
                     <div className="flex justify-center gap-3">
-                        <img src={petDetails.images[1]?.url} alt={petDetails.name} className="-rotate-5 mt-8 rounded-2xl w-50 h-50 object-cover shadow-gray-700 shadow-lg hover:scale-120 transition-all duration-300 hover:z-1" />
-                        <img src={petDetails.images[2]?.url} alt={petDetails.name} className="rotate-8 mb-3 rounded-2xl w-50 h-50 object-cover shadow-gray-700 shadow-lg hover:scale-120 transition-all duration-300 hover:z-1" />
+                        {petDetails.images[1]?.url && (
+                            <img src={petDetails.images[1].url} alt={petDetails.name} className="-rotate-5 mt-8 rounded-2xl w-50 h-50 object-cover shadow-gray-700 shadow-lg hover:scale-120 hover:rotate-0 transition-all duration-300 hover:z-1" />
+                        )}
+                        {petDetails.images[2]?.url && (
+                            <img src={petDetails.images[2].url} alt={petDetails.name} className="rotate-8 mb-3 rounded-2xl w-50 h-50 object-cover shadow-gray-700 shadow-lg hover:scale-120 hover:rotate-0 transition-all duration-300 hover:z-1" />
+                        )}
                     </div>
                     <div className="bg-white w-110 my-auto px-10 py-7 rounded-4xl -rotate-2 shadow-gray-700 shadow-xs">
                         <div className="flex justify-between">

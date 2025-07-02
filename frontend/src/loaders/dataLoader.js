@@ -12,16 +12,16 @@ export const fetchPets = async () => {
     }
 };
 
-// export const fetchPetDetails = async (id) => {
-//     try {
-//         const response = await fetch(`http://localhost:3000/api/pets/${id}`, {
-//             method: "GET",
-//             credentials: "include",
-//         });
-//         if (!response.ok) throw new Error("Failed to fetch pet details");
-//         return await response.json();
-//     } catch (error) {
-//         console.error("Error loading pet details:", error);
-//         throw error;
-//     }
-// };
+export const fetchMyPets = async () => {
+    try {
+        const response = await fetch(`${import.meta.env.VITE_API_URL}/api/pets/mine`, {
+            method: "GET",
+            credentials: "include",
+        });
+        if (!response.ok) throw new Error("Failed to fetch my pets");
+        return await response.json();
+    } catch (error) {
+        console.error("Error loading my pets:", error);
+        throw error;
+    }
+};
