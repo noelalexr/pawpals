@@ -39,3 +39,17 @@ export const fetchMyPetDetails = async (id) => {
         throw error;
     }
 };
+
+export const fetchLoggedInKennel = async () => {
+    try {
+        const response = await fetch(`${import.meta.env.VITE_API_URL}/api/kennels/validate`, {
+            method: "GET",
+            credentials: "include",
+        });
+        if (!response.ok) throw new Error("Failed to fetch kennel info");
+        return await response.json();
+    } catch (err) {
+        console.error("Error fetching kennel info:", err);
+        throw err;
+    }
+};

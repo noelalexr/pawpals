@@ -10,6 +10,7 @@ import PrivateDashboard from "./pages/PrivateDashboard";
 import PetDetails from "./pages/PetDetails";
 import MyPetDetails from "./pages/MyPetDetails"
 import EditPet from "./pages/EditPet";
+import AdoptedPets from "./pages/AdoptedPets";
 
 //
 async function checkAuth() {
@@ -49,6 +50,12 @@ const router = createBrowserRouter(
             // loader: dashboardLoader,
         },
         {
+            path: "/adopted-pets",
+            // loader: checkAuth,
+            element: <AdoptedPets />,
+            // loader: dashboardLoader,
+        },
+        {
             path: "/pets/:id",
             // loader: checkAuth,
             element: <PetDetails />,
@@ -63,6 +70,7 @@ const router = createBrowserRouter(
             // loader: checkAuth,
             element: <EditPet />,
         },
+
     ]
 )
 

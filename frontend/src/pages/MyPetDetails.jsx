@@ -79,19 +79,19 @@ const PetDetails = () => {
 
 
     return (
-        <div className="bg-gradient-to-b from-[#c1d4e9] to-[#4B7FBB] min-h-screen p-10 flex justify-center">
-            <div className="bg-white p-10 max-w-[70%] rounded-sm">
-                <div className="relative flex flex-col justify-center items-center mb-5 gap-5">
-                    <div onClick={() => navigate("/private-dashboard")} className="absolute top-0 left-0 rounded-full text-[#4B7FBB] p-3 hover:bg-gray-300 active:bg-gray-300 ease-in-out duration-300 cursor-pointer">
+        <div className="bg-gradient-to-b from-[#c1d4e9] to-[#4B7FBB] min-h-screen md:p-10 flex justify-center">
+            <div className="bg-white px-5 py-5 md:p-10 min-w-screen md:min-w-[0] md:max-w-[70%] md:rounded-sm">
+                <div className="relative flex flex-col justify-center items-center mb-8 gap-5">
+                    <div onClick={() => navigate(-1)} className="absolute top-1/2 transform -translate-y-1/2 left-0 rounded-full text-[#4B7FBB] p-3 hover:bg-gray-300 active:bg-gray-300 ease-in-out duration-300 cursor-pointer">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6">
                             <path strokeLinecap="round" strokeLinejoin="round" d="M10.5 19.5 3 12m0 0 7.5-7.5M3 12h18" />
                         </svg>
                     </div>
-                    <button onClick={() => navigate(`/pets/mine/${id}/edit`)} className="bg-[#4B7FBB] hover:bg-[#406c9e] text-white px-5 py-3 rounded-md text-sm cursor-pointer transition-colors duration-300">Edit pet details</button>
+
                     <div>
                         <button
                             onClick={handleAdoptedButton}
-                            className="bg-gray-100 px-5 py-3 rounded-full text-lg cursor-pointer transition-colors duration-300 hover:bg-gray-200"
+                            className="bg-gray-200 px-5 py-3 rounded-full text-lg cursor-pointer transition-colors duration-300 hover:bg-gray-300"
                         >Mark as <span className={`${myPetDetails.isAdopted ? "text-green-600" : "text-red-600"}`}>{myPetDetails.isAdopted ? "Available" : "Adopted"}</span>
                         </button>
                     </div>
@@ -99,12 +99,12 @@ const PetDetails = () => {
                 <div className="border-1 border-[#406c9e] p-5 rounded-lg">
 
                     <p className="text-center text-[#406c9e] font-bold pb-3 text-lg">Images</p>
-                    <div className="flex justify-center gap-8">
-                        <div>
+                    <div className="md:flex justify-center gap-8">
+                        <div className="pb-5">
                             <p className="text-center text-gray-400 pb-2">Primary Image</p>
-                            <img src={myPetDetails.images[0].url} alt={myPetDetails.name} className="w-60 h-60 object-cover" />
+                            <img src={myPetDetails.images[0].url} alt={myPetDetails.name} className="w-60 h-60 mx-auto object-cover" />
                         </div>
-                        <div>
+                        <div className="pb-5">
                             <p className="text-center text-gray-400 pb-2">Secondary Images</p>
                             <div className="flex justify-center items-center">
                                 {myPetDetails.images.length > 1 ? (
@@ -113,14 +113,14 @@ const PetDetails = () => {
                                             <img
                                                 src={myPetDetails.images[1].url}
                                                 alt={myPetDetails.name}
-                                                className="w-50 h-50 object-cover"
+                                                className="w-30 h-30 md:w-50 md:h-50 object-cover"
                                             />
                                         )}
                                         {myPetDetails.images[2]?.url && (
                                             <img
                                                 src={myPetDetails.images[2].url}
                                                 alt={myPetDetails.name}
-                                                className="w-50 h-50 object-cover"
+                                                className="w-30 h-30 md:w-50 md:h-50 object-cover"
                                             />
                                         )}
                                     </div>
@@ -147,6 +147,7 @@ const PetDetails = () => {
                     <p><b className="text-[#406c9e]">Neutered: </b> {myPetDetails.medical.parasiteControl.neutered ? "Yes" : "No"}</p>
                     <p><b className="text-[#406c9e]">Heartworm: </b> {myPetDetails.medical.parasiteControl.heartworm ? "Yes" : "No"}</p>
                 </div>
+                <button onClick={() => navigate(`/pets/mine/${id}/edit`)} className="bg-[#4B7FBB] hover:bg-[#406c9e] text-white py-3 rounded-full w-[100%] mt-5 text-\lg cursor-pointer transition-colors duration-300">Edit pet details</button>
             </div>
         </div>
     )
