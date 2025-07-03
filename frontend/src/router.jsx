@@ -8,6 +8,8 @@ import Signup from "./components/Signup";
 import PublicDashboard from "./pages/PublicDashboard";
 import PrivateDashboard from "./pages/PrivateDashboard";
 import PetDetails from "./pages/PetDetails";
+import MyPetDetails from "./pages/MyPetDetails"
+import EditPet from "./pages/EditPet";
 
 //
 async function checkAuth() {
@@ -50,6 +52,16 @@ const router = createBrowserRouter(
             path: "/pets/:id",
             // loader: checkAuth,
             element: <PetDetails />,
+        },
+        {
+            path: "/pets/mine/:id",
+            // loader: checkAuth,
+            element: <MyPetDetails />,
+        },
+        {
+            path: "/pets/mine/:id/edit",
+            // loader: checkAuth,
+            element: <EditPet />,
         },
     ]
 )
