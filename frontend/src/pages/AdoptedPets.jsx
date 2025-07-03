@@ -15,10 +15,9 @@ import LoaderPage from "./LoaderPage.jsx";
 
 //LOADERS
 import { fetchMyPets } from "../loaders/dataLoader.js"
-import { fetchLoggedInKennel } from "../loaders/dataLoader";
 
 
-const PrivateDashboard = () => {
+const AdoptedPets = () => {
     const [search, setSearch] = useState("");
     const [selectedSpecies, setSelectedSpecies] = useState("");
     const [selectedGender, setSelectedGender] = useState("");
@@ -26,7 +25,6 @@ const PrivateDashboard = () => {
     const [filteredMyPets, setFilteredMyPets] = useState([]);
     const [myPets, setMyPets] = useState([]);
     const [loading, setLoading] = useState(true);
-    const [kennelName, setKennelName] = useState("");
     const navigate = useNavigate();
     // const { myPets, loading, error } = useContext(PrivatePetContext);
 
@@ -34,7 +32,7 @@ const PrivateDashboard = () => {
         const loadMyPets = async () => {
             try {
                 const data = await fetchMyPets();
-                const availablePets = data.filter(pet => pet.isAdopted === false);
+                const availablePets = data.filter(pet => pet.isAdopted === true);
                 setMyPets(availablePets);
             } catch (err) {
                 console.error("Failed to load my pets:", err);
@@ -45,17 +43,6 @@ const PrivateDashboard = () => {
         loadMyPets();
     }, []);
 
-    // useEffect(() => {
-    //     const loadKennelName = async () => {
-    //         try {
-    //             const kennel = await fetchLoggedInKennel();
-    //             setKennelName(kennel.name);
-    //         } catch (err) {
-    //             console.error("Failed to load kennel name");
-    //         }
-    //     };
-    //     loadKennelName();
-    // }, []);
 
 
     const ageRanges = [
@@ -132,10 +119,9 @@ const PrivateDashboard = () => {
                 </div>
                 <button onClick={() => navigate("/login")} className='py-2 px-3 text-xs rounded-sm text-white font-semibold bg-gray-400 hover:bg-gray-500 active:bg-gray-500 transition-colors ease-in-out duration-300 cursor-pointer'>Logout</button>
             </div>
-            {/* <div>{`Logged in as ${kennelName}`}</div> */}
             <div className="flex justify-end md:px-[15%] pt-3 pb-1 text-[#4B7FBB] text-sm">
-                <button onClick={() => navigate("/adopted-pets")} className="hover:underline cursor-pointer hover:text-red-700 mx-2 md:text-md text-sm">
-                    <span>Navigate to <b>Adopted Pets Page </b></span>
+                <button onClick={() => navigate("/private-dashboard")} className=" hover:underline cursor-pointer hover:text-green-700 md:text-md text-sm mx-2">
+                    <span>Go back to <b>Availabe Pets Page </b></span>
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-5 inline my-auto">
                         <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" />
                     </svg>
@@ -264,9 +250,9 @@ const PrivateDashboard = () => {
 
             </div>
             <div className="flex justify-center md:gap-3 gap-2 mb-3 mt-7 mx-2">
-                <div className="bg-green-600 md:w-[18%] w-[8%] h-[2px] rounded-full my-auto"></div>
-                <p className="md:text-2xl text-green-700 text-center">Your Available Pets for Adoption</p>
-                <div className="bg-green-600 md:w-[18%] w-[8%] h-[2px] rounded-full my-auto"></div>
+                <div className="bg-red-600 md:w-[25%] w-[25%] h-[2px] rounded-full my-auto"></div>
+                <p className="md:text-2xl text-red-700 text-center">Adopted Pets</p>
+                <div className="bg-red-600 md:w-[25%] w-[25%] h-[2px] rounded-full my-auto"></div>
 
             </div>
 
@@ -324,4 +310,4 @@ const PrivateDashboard = () => {
     )
 }
 
-export default PrivateDashboard
+export default AdoptedPets

@@ -36,7 +36,7 @@ const PublicDashboard = () => {
     ];
 
     const uniqueCities = [
-        ...new Set(pets.map(pet => pet.kennel.citySort).filter(Boolean))
+        ...new Set(pets.map(pet => pet.kennel.location.citySort).filter(Boolean))
     ];
 
     const handleSpeciesClick = (species) => {
@@ -82,7 +82,7 @@ const PublicDashboard = () => {
 
         if (city) {
             filteredData = filteredData.filter(
-                pet => pet.kennel.citySort.toLowerCase() === city.toLowerCase()
+                pet => pet.kennel.location.citySort.toLowerCase() === city.toLowerCase()
             );
         }
 
@@ -124,9 +124,9 @@ const PublicDashboard = () => {
                         setSelectedCity(value);
                     }}
                 >
-                    <option value="" className="appearance-none">All Cities</option>
+                    <option value="" className="appearance-none text-sm">All Cities</option>
                     {uniqueCities.map((city, idx) => (
-                        <option key={idx} value={city}>
+                        <option key={idx} value={city} className="text-sm">
                             {city}
                         </option>
                     ))}
