@@ -6,18 +6,6 @@ dotenv.config();
 
 const verifyDeveloper = async (req, res, next) => {
     try{
-        if(!req.cookies.token) {
-            return res.status(401).json({ error: "Unauthorized Access" });
-        }
-
-        const token = req.cookies.token;
-
-        if(!token) {
-            return res.status(401).json({ error: "Unauthorized Access" });
-        }
-
-        const decoded = jwt.verify(token, process.env.JWT_SECRET);
-
         const developer = await Developer.findById(decoded.id);
 
         if(!developer || developer.role !== "developer"){

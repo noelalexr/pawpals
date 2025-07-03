@@ -76,33 +76,35 @@ const rejectKennel = async (req, res) => {
 };
 
 const listPendingKennels = async (req, res) => {
-  const role = req.user.role?.toLowerCase();
 
-  try {
-    if (role !== "developer") {
-      return res.status(403).json({ error: "Access denied: Developers only" });
+
+    try {
+        const developer = await developerModel.findById(req.userId);
+
+        if (!developer || developer.role?.toLowerCase() !== "developer") {
+        return res.status(403).json({ error: "Access denied: Developers only" });
     }
 
-    const kennels = await kennelModel.find({ isApproved: false });
-    res.status(200).json(kennels);
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
+        const kennels = await kennelModel.find({ isApproved: false });
+        res.status(200).json(kennels);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
 };
 
 const listAllKennels = async (req, res) => {
-  const role = req.user.role?.toLowerCase();
+    try {
+        const developer = await developerModel.findById(req.userId);
 
-  try {
-    if (role !== "developer") {
-      return res.status(403).json({ error: "Access denied: Developers only" });
+        if (!developer || developer.role?.toLowerCase() !== "developer") {
+        return res.status(403).json({ error: "Access denied: Developers only" });
+        }
+
+        const kennels = await kennelModel.find(); // get all kennels
+        res.status(200).json(kennels);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
     }
-
-    const kennels = await kennelModel.find(); // get all kennels
-    res.status(200).json(kennels);
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
 };
 
 export {rejectKennel, approveKennel, listPendingKennels, listAllKennels}

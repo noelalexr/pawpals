@@ -7,11 +7,11 @@ const router = express.Router()
 
 router.post("/", auth, upload.array("images", 3), createPet);
 router.get("/", listPet);
+router.get("/:id", readPet);
 router.get("/mine", auth, listMyPets);
 router.get("/mine/:id", auth, readMyPet);
-router.get("/:id", readPet);
-router.patch("/:id", auth, upload.array("images", 3), patchPet);
-router.delete("/:id", auth, deletePet);
-router.delete("/:id/photos/:publicId", auth, deletePetPhoto);
+router.patch("/mine/:id", auth, upload.array("images", 3), patchPet);
+router.delete("/mine/:id", auth, deletePet);
+router.delete("/mine/:id/photos/:publicId", auth, deletePetPhoto);
 
 export default router
