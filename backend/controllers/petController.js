@@ -8,7 +8,7 @@ const createPet = async (req, res) => {
             if (req.files.length > 3) {
                 return res.status(400).json({ error: "Maximum of 3 images allowed." });
             }
-            newData.images = req.files.map(file, index => ({
+            newData.images = req.files.map(file => ({
                 url: file.path,
                 public_id: file.filename,
             }));
@@ -36,9 +36,13 @@ const listPet = async (req, res) => {
         const records = await petModel.find(query)
             .populate({
                 path: "kennel",
+                match: { isApproved: true },
                 select: "name location email contact website socialLinks"
             });
-        res.json(records);
+
+        const approvedPets = records.filter(pet => pet.kennel);
+
+        res.json(approvedPets);
     } catch (error) {
         res.status(500).json({ error: error.message })
     }
@@ -49,9 +53,9 @@ const listMyPets = async (req, res) => {
     const id = req.userId;
     const record = await petModel.find({ kennel: id })
         .populate({
-        path: "kennel",
-        select: "name location email contact website socialLinks"
-            });
+            path: "kennel",
+            select: "name location email contact website socialLinks"
+        });
     res.json(record);
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -64,10 +68,12 @@ const readPet = async (req, res) => {
         const record = await petModel.findById(id)
             .populate({
                 path: "kennel",
+                match: { isApproved: true },
                 select: "name location email contact website socialLinks"
             });
-        if (!record) {
-            return res.status(404).json({ error: "Pet not found" })
+            
+        if (!record || !record.kennel) {
+            return res.status(404).json({ error: "Pet not found or kennel not approved" });
         }
         res.status(200).json(record);
     } catch (error) {
@@ -186,4 +192,4 @@ const deletePetPhoto = async (req, res) => {
     }
 };
 
-export { createPet, listPet, listMyPets, readPet, patchPet, deletePet, deletePetPhoto }
+export { createPet, listPet, listMyPets, readMyPet, readPet, patchPet, deletePet, deletePetPhoto }
