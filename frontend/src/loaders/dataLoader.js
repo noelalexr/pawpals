@@ -25,3 +25,17 @@ export const fetchMyPets = async () => {
         throw error;
     }
 };
+
+export const fetchMyPetDetails = async (id) => {
+    try {
+        const response = await fetch(`${import.meta.env.VITE_API_URL}/api/pets/mine/${id}`, {
+            method: "GET",
+            credentials: "include",
+        });
+        if (!response.ok) throw new Error("Failed to fetch my pet details");
+        return await response.json();
+    } catch (error) {
+        console.error("Error loading my pet details:", error);
+        throw error;
+    }
+};

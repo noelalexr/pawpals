@@ -1,21 +1,20 @@
-import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
 import Developer from "../models/developerSchema.js";
 
 dotenv.config();
 
 const verifyDeveloper = async (req, res, next) => {
-    try{
+    try {
         const developer = await Developer.findById(decoded.id);
 
-        if(!developer || developer.role !== "developer"){
+        if (!developer || developer.role !== "developer") {
             return res.status(403).json({ error: "Access denied: Developers only" });
         }
 
         req.developer = developer; //gets the devs info
 
         next();
-    }catch(err){
+    } catch (err) {
         res.status(500).json({ error: err.message });
     }
 };
