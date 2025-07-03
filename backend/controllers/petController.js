@@ -50,7 +50,7 @@ const listPet = async (req, res) => {
 
 const listMyPets = async (req, res) => {
   try {
-    const id = req.userId;
+    const id = req.user.userId;
     const record = await petModel.find({ kennel: id })
         .populate({
             path: "kennel",
@@ -62,7 +62,7 @@ const listMyPets = async (req, res) => {
   }
 };
 
-const readPet = async (req, res) => {
+const readMyPet = async (req, res) => {
     try {
         const id = req.params.id;
         const record = await petModel.findById(id)
@@ -81,31 +81,6 @@ const readPet = async (req, res) => {
     }
 };
 
-const readMyPet = async (req, res) => {
-  try {
-    const petId = req.params.id;
-    const userId = req.userId;
-
-    const record = await petModel.findOne({ _id: petId, kennel: userId })
-      .populate({
-        path: "kennel",
-        select: "name location email contact website socialLinks"
-      });
-
-    if (!record) {
-      return res.status(404).json({ error: "Pet not found or unauthorized access" });
-    }
-
-    if (record.kennel.toString() !== req.userId) {
-        return res.status(403).json({ error: "Unauthorized access to pet" });
-    }
-
-    res.status(200).json(record);
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-};
-
 const patchPet = async (req, res) => {
     try {
         const id = req.params.id;
@@ -116,7 +91,7 @@ const patchPet = async (req, res) => {
             return res.status(404).json({ error: "Pet not found" });
         }
 
-        if (record.kennel.toString() !== req.userId) {
+        if (record.kennel.toString() !== req.user.userId) {
             return res.status(403).json({ error: "Unauthorized access to pet" });
         }
 
@@ -153,7 +128,7 @@ const deletePet = async (req, res) => {
             return res.status(404).json({ error: "Pet not found" });
         }
 
-        if (record.kennel.toString() !== req.userId) {
+        if (record.kennel.toString() !== req.user.userId) {
             return res.status(403).json({ error: "Unauthorized access to pet" });
         }
 
@@ -177,7 +152,7 @@ const deletePetPhoto = async (req, res) => {
         const record = await petModel.findById(id);
         if (!record) return res.status(404).json({ error: "Pet not found" });
 
-        if (record.kennel.toString() !== req.userId) {
+        if (record.kennel.toString() !== req.user.userId) {
             return res.status(403).json({ error: "Unauthorized access to pet" });
         }
 
@@ -192,4 +167,4 @@ const deletePetPhoto = async (req, res) => {
     }
 };
 
-export { createPet, listPet, listMyPets, readMyPet, readPet, patchPet, deletePet, deletePetPhoto }
+export { createPet, listPet, listMyPets, readMyPet, patchPet, deletePet, deletePetPhoto }
