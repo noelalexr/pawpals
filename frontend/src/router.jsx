@@ -37,6 +37,12 @@ const router = createBrowserRouter(
             // loader: dashboardLoader,
         },
         {
+            path: "/adopted-pets",
+            // loader: checkAuth,
+            element: <AdoptedPets />,
+            // loader: dashboardLoader,
+        },
+        {
             path: "/pets/:id",
             // loader: checkAuth,
             element: <PetDetails />,
