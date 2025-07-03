@@ -8,7 +8,7 @@ const router = express.Router()
 router.post("/", auth, upload.array("images", 3), createPet);
 router.get("/", listPet);
 router.get("/mine", auth, listMyPets);
-router.get("/mine/:id", auth, readPet);
+router.get("/mine/:id", auth, readMyPet);
 router.patch("/mine/:id", auth, upload.array("images", 3), patchPet);
 router.delete("/mine/:id", auth, deletePet);
 router.delete("/mine/:id/photos/:publicId", auth, deletePetPhoto);
