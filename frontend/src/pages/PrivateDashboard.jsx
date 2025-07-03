@@ -10,11 +10,11 @@ import maleIcon from "../assets/images/icons/male.png"
 import femaleIcon from "../assets/images/icons/female.png"
 import downArrowIcon from "../assets/images/icons/down-arrow.png"
 
-//CONTEXTS
-import { PrivatePetContext } from "../contexts/PrivatePetContext.jsx";
-
 //PAGES
 import LoaderPage from "./LoaderPage.jsx";
+
+//LOADERS
+import { fetchMyPets } from "../loaders/dataLoader.js"
 
 
 const PrivateDashboard = () => {
@@ -24,8 +24,26 @@ const PrivateDashboard = () => {
     const [selectedAgeRange, setSelectedAgeRange] = useState("");
     const [selectedCity, setSelectedCity] = useState("")
     const [filteredMyPets, setFilteredMyPets] = useState([]);
+    const [myPets, setMyPets] = useState([]);
+    const [loading, setLoading] = useState(true);
     const navigate = useNavigate();
-    const { myPets, loading, error } = useContext(PrivatePetContext);
+    // const { myPets, loading, error } = useContext(PrivatePetContext);
+
+    useEffect(() => {
+        const loadMyPets = async () => {
+            try {
+                const data = await fetchMyPets();
+                setMyPets(data);
+            } catch (err) {
+                console.error("Failed to load my pets:", err);
+            } finally {
+                setLoading(false);
+            }
+        };
+        loadMyPets();
+    }, []);
+
+
 
     const ageRanges = [
         { label: "All Ages", value: "" },
@@ -109,7 +127,7 @@ const PrivateDashboard = () => {
                     <h1 className='outfit text-lg font-bold my-auto'><span className='text-[#3B6FA1]'>Paw</span><span className='text-gray-700'>Pals</span></h1>
                     <img src={pawIcon} alt="paw" className='w-5 h-5 m-auto' />
                 </div>
-                <button onClick={() => navigate("/login")} className='py-2 px-3 text-xs rounded-lg text-white font-semibold bg-[#4B7FBB] hover:bg-[#416da0] active:bg-[#416da0] transition-colors ease-in-out duration-300 cursor-pointer'>Kennel Login</button>
+                <button onClick={() => navigate("/login")} className='py-2 px-3 text-xs rounded-sm text-white font-semibold bg-gray-400 hover:bg-gray-500 active:bg-gray-500 transition-colors ease-in-out duration-300 cursor-pointer'>Logout</button>
             </div>
             <div className="flex flex-col md:mx-[18%] mx-5 mt-3">
                 <div className="flex gap-2">
@@ -264,7 +282,7 @@ const PrivateDashboard = () => {
                     {/* {filtered.map((product) => ( */}
                     {filteredMyPets.map((pet) => (
                         <Link
-                            to={`/pets/${pet._id}`}
+                            to={`/pets/mine/${pet._id}`}
                             key={pet._id}
                             className="md:m-5 m-3"
                         >

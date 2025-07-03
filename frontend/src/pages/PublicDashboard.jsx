@@ -109,7 +109,7 @@ const PublicDashboard = () => {
                     <h1 className='outfit text-lg font-bold my-auto'><span className='text-[#3B6FA1]'>Paw</span><span className='text-gray-700'>Pals</span></h1>
                     <img src={pawIcon} alt="paw" className='w-5 h-5 m-auto' />
                 </div>
-                <button onClick={() => navigate("/login")} className='py-2 px-3 text-xs rounded-lg text-white font-semibold bg-[#4B7FBB] hover:bg-[#416da0] active:bg-[#416da0] transition-colors ease-in-out duration-300 cursor-pointer'>Kennel Login</button>
+                <button onClick={() => navigate("/login")} className='py-2 px-3 text-xs rounded-sm text-white font-semibold bg-[#4B7FBB] hover:bg-[#416da0] active:bg-[#416da0] transition-colors ease-in-out duration-300 cursor-pointer'>Kennel Login</button>
             </div>
             <div className="flex flex-col md:mx-[18%] mx-5 mt-3">
                 <div className="flex gap-2">

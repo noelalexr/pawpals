@@ -5,6 +5,10 @@ import { useParams, useNavigate } from "react-router";
 import facebookIcon from "../assets/images/icons/facebook.png";
 import instagramIcon from "../assets/images/icons/instagram.png";
 import tiktokIcon from "../assets/images/icons/tiktok.png";
+import pinBlueIcon from "../assets/images/icons/pin-blue.png"
+import pinGrayIcon from "../assets/images/icons/pin-gray.png"
+import emailBlueIcon from "../assets/images/icons/email-blue.png"
+import webBlueIcon from "../assets/images/icons/website-blue.png"
 
 //CONTEXTS
 import { PublicPetContext } from "../contexts/PublicPetContext";
@@ -19,6 +23,16 @@ const PetDetails = () => {
     const petDetails = pets.find((pet) => String(pet._id) === id);
     if (!petDetails) return <p className="text-center text-red-600">Pet not found.</p>;
 
+    const createdAt = new Date(petDetails.createdAt);
+
+    const photoStyleDate = createdAt.getFullYear()
+        + '.' + String(createdAt.getMonth() + 1).padStart(2, '0')
+        + '.' + String(createdAt.getDate()).padStart(2, '0')
+        + ' ' + String(createdAt.getHours()).padStart(2, '0')
+        + ':' + String(createdAt.getMinutes()).padStart(2, '0');
+
+
+
     return (
         <div className="min-h-screen bg-gradient-to-b from-[#c1d4e9] to-[#4B7FBB] p-15 bg-fixed">
 
@@ -27,24 +41,29 @@ const PetDetails = () => {
                 <div className="flex flex-col gap-5 justify-center items-center my-auto">
                     <div className="flex justify-center gap-3">
                         {petDetails.images[1]?.url && (
-                            <img src={petDetails.images[1].url} alt={petDetails.name} className="-rotate-5 mt-8 rounded-2xl w-50 h-50 object-cover shadow-gray-700 shadow-lg hover:scale-120 hover:rotate-0 transition-all duration-300 hover:z-1" />
+                            <div className="bg-gray-100 p-4 pb-3 -rotate-5 mt-8 shadow-gray-700 shadow-lg hover:scale-125 hover:rotate-0 transition-all duration-300 hover:z-1">
+                                <img src={petDetails.images[1].url} alt={petDetails.name} className="w-50 h-50 object-cover border-1 border-gray-400" />
+                                <p className="pt-3 text-[9px] text-gray-400 text-right">posted: {photoStyleDate}</p>
+                            </div>
                         )}
                         {petDetails.images[2]?.url && (
-                            <img src={petDetails.images[2].url} alt={petDetails.name} className="rotate-8 mb-3 rounded-2xl w-50 h-50 object-cover shadow-gray-700 shadow-lg hover:scale-120 hover:rotate-0 transition-all duration-300 hover:z-1" />
+                            <div className="bg-gray-100 p-4 pb-3 rotate-8 mb-auto shadow-gray-700 shadow-lg hover:scale-125 hover:rotate-0 transition-all duration-300 hover:z-1">
+                                <img src={petDetails.images[2].url} alt={petDetails.name} className="w-50 h-50 object-cover border-1 border-gray-400" />
+                                <p className="pt-3 text-[9px] text-gray-400 text-right">posted: {photoStyleDate}</p>
+                            </div>
                         )}
                     </div>
-                    <div className="bg-white w-110 my-auto px-10 py-7 rounded-4xl -rotate-2 shadow-gray-700 shadow-xs">
-                        <div className="flex justify-between">
+                    <div className="bg-white w-110 my-auto px-10 py-7 rounded-4xl -rotate-2 shadow-gray-700 shadow-xs mx-auto">
+                        <div className="flex gap-5 justify-between">
                             <div>
                                 <p className="text-3xl">{petDetails.name}</p>
                                 <p className="text-gray-400">{petDetails.breed}</p>
                             </div>
-                            <div className="flex my-auto text-[#4B7FBB]">
-                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6">
-                                    <path strokeLinecap="round" strokeLinejoin="round" d="M15 10.5a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
-                                    <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1 1 15 0Z" />
-                                </svg>
-                                <p className="">{petDetails.kennel.location.citySort}</p>
+                            <div className="flex justify-center my-auto text-[#4B7FBB] ">
+                                <p className="text-right">
+                                    <img src={pinBlueIcon} alt="Pin Icon" className="w-5 inline-block mx-1 my-auto" />
+                                    {petDetails.kennel.location.citySort}
+                                </p>
                             </div>
                         </div>
                         <div className="bg-gray-300 w-[100%] h-[1px] rounded-full my-5"></div>
@@ -73,19 +92,27 @@ const PetDetails = () => {
                 <div className="bg-gray-300 w-[100%] h-[1px] rounded-full my-5"></div>
                 <div className="text-center">
                     <p className="text-[#4B7FBB] text-2xl pb-3">Kennel Infromation</p>
-                    <p className="text-xl font-semibold">{petDetails.kennel.name}</p>
-                    <p className="text-gray-400 text-sm">{petDetails.kennel.location.fullAddress}</p>
-                    <div className="bg-gray-100 py-3 px-5 max-w-120 mx-auto my-5 rounded-xl text-sm">
-                        <p className="text-gray-500 pb-2 text-lg">Contact Details</p>
-                        <p>
-                            <span className="text-[#4B7FBB]">Email: </span>
-                            <a href={`mailto:${petDetails.kennel.email}`} className="hover:underline">{petDetails.kennel.email}</a>
+                    <p className="text-xl font-semibold pt-3">{petDetails.kennel.name}</p>
+                    <p className="text-gray-400 text-sm my-auto pb-3">
+                        <img src={pinGrayIcon} alt="Pin Icon" className="w-5 inline-block mx-1 my-auto" />
+                        {petDetails.kennel.location.fullAddress}
+                    </p>
+                    <div className="bg-gray-100 p-5 max-w-120 mx-auto my-5 rounded-xl text-sm">
+                        <p className="text-gray-500 pb-3 text-lg">Email and Website</p>
+                        <p className="pb-2">
+                            <a href={`mailto:${petDetails.kennel.email}`} className="hover:underline text-[#4B7FBB]">
+                                <img src={emailBlueIcon} alt="Email Icon" className="w-5 inline-block mx-1 my-auto mr-1" />
+                                {petDetails.kennel.email}
+                            </a>
                         </p>
                         <p>
-                            <span className="text-[#4B7FBB]">Website: </span>
-                            <a href={petDetails.kennel.website} target="_blank" rel="noopener noreferrer" className="hover:underline">{petDetails.kennel.website}</a>
+                            <a href={petDetails.kennel.website} target="_blank" rel="noopener noreferrer" className="hover:underline text-[#4B7FBB]">
+                                <img src={webBlueIcon} alt="Website Icon" className="w-5 inline-block mx-1 my-auto mr-1" />
+                                {petDetails.kennel.website}
+                            </a>
                         </p>
-                        <div className="flex gap-2 justify-center py-3">
+                        <p className="text-gray-500 pb-3 text-lg pt-7">Connect to them via:</p>
+                        <div className="flex gap-2 justify-center">
                             {petDetails.kennel.socialLinks?.facebook && (
                                 <a
                                     href={petDetails.kennel.socialLinks.facebook}
