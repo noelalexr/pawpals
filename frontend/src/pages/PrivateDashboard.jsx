@@ -15,7 +15,10 @@ import LoaderPage from "./LoaderPage.jsx";
 
 //LOADERS
 import { fetchMyPets } from "../loaders/dataLoader.js"
+<<<<<<< HEAD
 import { fetchLoggedInKennel } from "../loaders/dataLoader";
+=======
+>>>>>>> c6d0c6fadd578c968b1dc6d96234ed20bdf811c8
 
 
 const PrivateDashboard = () => {
@@ -26,7 +29,10 @@ const PrivateDashboard = () => {
     const [filteredMyPets, setFilteredMyPets] = useState([]);
     const [myPets, setMyPets] = useState([]);
     const [loading, setLoading] = useState(true);
+<<<<<<< HEAD
     const [kennelName, setKennelName] = useState("");
+=======
+>>>>>>> c6d0c6fadd578c968b1dc6d96234ed20bdf811c8
     const navigate = useNavigate();
     // const { myPets, loading, error } = useContext(PrivatePetContext);
 
@@ -34,8 +40,12 @@ const PrivateDashboard = () => {
         const loadMyPets = async () => {
             try {
                 const data = await fetchMyPets();
+<<<<<<< HEAD
                 const availablePets = data.filter(pet => pet.isAdopted === false);
                 setMyPets(availablePets);
+=======
+                setMyPets(data);
+>>>>>>> c6d0c6fadd578c968b1dc6d96234ed20bdf811c8
             } catch (err) {
                 console.error("Failed to load my pets:", err);
             } finally {
@@ -45,6 +55,7 @@ const PrivateDashboard = () => {
         loadMyPets();
     }, []);
 
+<<<<<<< HEAD
     // useEffect(() => {
     //     const loadKennelName = async () => {
     //         try {
@@ -56,6 +67,8 @@ const PrivateDashboard = () => {
     //     };
     //     loadKennelName();
     // }, []);
+=======
+>>>>>>> c6d0c6fadd578c968b1dc6d96234ed20bdf811c8
 
 
     const ageRanges = [

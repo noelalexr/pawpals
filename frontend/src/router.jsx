@@ -4,12 +4,17 @@ import { createBrowserRouter, redirect } from "react-router";
 import Login from "./components/Login";
 import Signup from "./components/Signup";
 
+//LOADERS
+import { authLoader } from "./loaders/authLoader";
+import { devAuthLoader } from "./loaders/devAuthLoader";
+
 //PAGES
 import PublicDashboard from "./pages/PublicDashboard";
 import PrivateDashboard from "./pages/PrivateDashboard";
 import PetDetails from "./pages/PetDetails";
 import MyPetDetails from "./pages/MyPetDetails"
 import EditPet from "./pages/EditPet";
+<<<<<<< HEAD
 import AdoptedPets from "./pages/AdoptedPets";
 
 //
@@ -27,6 +32,8 @@ async function checkAuth() {
         throw redirect("/public-dashboard");
     }
 }
+=======
+>>>>>>> c6d0c6fadd578c968b1dc6d96234ed20bdf811c8
 
 const router = createBrowserRouter(
     [
@@ -70,7 +77,10 @@ const router = createBrowserRouter(
             // loader: checkAuth,
             element: <EditPet />,
         },
+<<<<<<< HEAD
 
+=======
+>>>>>>> c6d0c6fadd578c968b1dc6d96234ed20bdf811c8
     ]
 )
 

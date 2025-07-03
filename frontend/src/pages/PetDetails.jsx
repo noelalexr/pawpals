@@ -24,6 +24,20 @@ const PetDetails = () => {
     if (!petDetails) return <p className="text-center text-red-600">Pet not found.</p>;
 
     const createdAt = new Date(petDetails.createdAt);
+<<<<<<< HEAD
+=======
+
+    const photoStyleDate = createdAt.getFullYear()
+        + '.' + String(createdAt.getMonth() + 1).padStart(2, '0')
+        + '.' + String(createdAt.getDate()).padStart(2, '0')
+        + ' ' + String(createdAt.getHours()).padStart(2, '0')
+        + ':' + String(createdAt.getMinutes()).padStart(2, '0');
+
+
+
+    return (
+        <div className="min-h-screen bg-gradient-to-b from-[#c1d4e9] to-[#4B7FBB] p-15 bg-fixed">
+>>>>>>> c6d0c6fadd578c968b1dc6d96234ed20bdf811c8
 
     const photoStyleDate = createdAt.getFullYear()
         + '.' + String(createdAt.getMonth() + 1).padStart(2, '0')
@@ -47,19 +61,31 @@ const PetDetails = () => {
                     <div className="flex md:justify-center justify-around md:gap-3 w-[100%]">
                         {petDetails.images[1]?.url && (
                             <div className="bg-gray-100 p-4 pb-3 -rotate-5 mt-8 shadow-gray-700 shadow-lg hover:scale-125 hover:rotate-0 transition-all duration-300 hover:z-1">
+<<<<<<< HEAD
                                 <img src={petDetails.images[1].url} alt={petDetails.name} className="md:w-50 md:h-50 w-30 h-30 object-cover border-1 border-gray-400" />
+=======
+                                <img src={petDetails.images[1].url} alt={petDetails.name} className="w-50 h-50 object-cover border-1 border-gray-400" />
+>>>>>>> c6d0c6fadd578c968b1dc6d96234ed20bdf811c8
                                 <p className="pt-3 text-[9px] text-gray-400 text-right">posted: {photoStyleDate}</p>
                             </div>
                         )}
                         {petDetails.images[2]?.url && (
                             <div className="bg-gray-100 p-4 pb-3 rotate-8 mb-auto shadow-gray-700 shadow-lg hover:scale-125 hover:rotate-0 transition-all duration-300 hover:z-1">
+<<<<<<< HEAD
                                 <img src={petDetails.images[2].url} alt={petDetails.name} className="md:w-50 md:h-50 w-30 h-30 object-cover border-1 border-gray-400" />
+=======
+                                <img src={petDetails.images[2].url} alt={petDetails.name} className="w-50 h-50 object-cover border-1 border-gray-400" />
+>>>>>>> c6d0c6fadd578c968b1dc6d96234ed20bdf811c8
                                 <p className="pt-3 text-[9px] text-gray-400 text-right">posted: {photoStyleDate}</p>
                             </div>
                         )}
                     </div>
+<<<<<<< HEAD
 
                     <div className="bg-white md:w-110 w-[100%] my-auto md:px-10 md:py-7 p-6 rounded-t-2xl md:rounded-3xl md:-rotate-2 md:shadow-gray-700 md:shadow-xs mx-auto">
+=======
+                    <div className="bg-white w-110 my-auto px-10 py-7 rounded-4xl -rotate-2 shadow-gray-700 shadow-xs mx-auto">
+>>>>>>> c6d0c6fadd578c968b1dc6d96234ed20bdf811c8
                         <div className="flex gap-5 justify-between">
                             <div>
                                 <p className="md:text-3xl text-2xl">{petDetails.name}</p>

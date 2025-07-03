@@ -43,7 +43,7 @@ const loginDev = async (req, res) => {
     const { email, password } = req.body;
 
     try {
-        const developer = await Developer.find({ email });
+        const developer = await Developer.findOne({ email });
 
         if(!developer){
             return res.status(404).json({ message: "Developer not found" });
@@ -74,4 +74,33 @@ const loginDev = async (req, res) => {
     }
 };
 
-export { registerDev, loginDev };
+const logoutDev = async (req, res) => {
+    try {
+        res.clearCookie("token", {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === "production",
+            sameSite: "Strict",
+        });
+
+        res.json({ message: "Logout successful" });
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+};
+
+const validateDev = (req, res) => {
+    try {
+        const token = req.cookies.token;
+
+        if (!token) {
+        return res.status(401).json({ valid: false });
+        }
+
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        res.status(200).json({ valid: true, user: decoded });
+    } catch (error) {
+        res.status(401).json({ valid: false });
+    }
+};
+
+export { registerDev, loginDev, logoutDev, validateDev };
