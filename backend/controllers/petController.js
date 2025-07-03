@@ -75,36 +75,65 @@ const readPet = async (req, res) => {
     }
 };
 
+const readMyPet = async (req, res) => {
+  try {
+    const petId = req.params.id;
+    const userId = req.userId;
+
+    const record = await petModel.findOne({ _id: petId, kennel: userId })
+      .populate({
+        path: "kennel",
+        select: "name location email contact website socialLinks"
+      });
+
+    if (!record) {
+      return res.status(404).json({ error: "Pet not found or unauthorized access" });
+    }
+
+    if (record.kennel.toString() !== req.userId) {
+        return res.status(403).json({ error: "Unauthorized access to pet" });
+    }
+
+    res.status(200).json(record);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
 const patchPet = async (req, res) => {
     try {
         const id = req.params.id;
         const newData = req.body;
-        const existingPet = await petModel.findById(id);
+        const record = await petModel.findById(id);
 
-        if (!existingPet) {
+        if (!record) {
             return res.status(404).json({ error: "Pet not found" });
+        }
+
+        if (record.kennel.toString() !== req.userId) {
+            return res.status(403).json({ error: "Unauthorized access to pet" });
         }
 
         if (req.files && req.files.length > 0) {
             if (req.files.length > 3) {
                 return res.status(400).json({ error: "Maximum of 3 images allowed." });
             }
-            if ((existingPet.images.length + req.files.length) > 3) {
+            if ((record.images.length + req.files.length) > 3) {
                 return res.status(400).json({ error: "Cannot have more than 3 images." });
             }
 
-            const newImages = req.files.map(file, index => ({
+            const newImages = req.files.map((file) => ({
                 url: file.path,
                 public_id: file.filename,
             }));
 
-            existingPet.images.push(...newImages);
+            record.images.push(...newImages);
         }
 
-        Object.assign(existingPet, newData);
-        await existingPet.save();
+        Object.assign(record, newData);
+        await record.save();
 
-        res.status(200).json(existingPet);
+        res.status(200).json(record);
     } catch (error) {
         res.status(500).json({ error: error.message });
     }
@@ -116,6 +145,10 @@ const deletePet = async (req, res) => {
         const record = await petModel.findById(id);
         if (!record) {
             return res.status(404).json({ error: "Pet not found" });
+        }
+
+        if (record.kennel.toString() !== req.userId) {
+            return res.status(403).json({ error: "Unauthorized access to pet" });
         }
 
         if (record.images && record.images.length > 0) {
@@ -135,13 +168,17 @@ const deletePetPhoto = async (req, res) => {
     const { id, publicId } = req.params;
 
     try {
-        const pet = await petModel.findById(id);
-        if (!pet) return res.status(404).json({ error: "Pet not found" });
+        const record = await petModel.findById(id);
+        if (!record) return res.status(404).json({ error: "Pet not found" });
+
+        if (record.kennel.toString() !== req.userId) {
+            return res.status(403).json({ error: "Unauthorized access to pet" });
+        }
 
         await cloudinary.uploader.destroy(publicId);
 
-        pet.images = pet.images.filter(img => img.public_id !== publicId);
-        await pet.save();
+        record.images = record.images.filter(img => img.public_id !== publicId);
+        await record.save();
 
         res.status(200).json({ message: "Photo deleted" });
     } catch (error) {
