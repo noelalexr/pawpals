@@ -40,7 +40,6 @@ export const fetchMyPetDetails = async (id) => {
     }
 };
 
-<<<<<<< HEAD
 export const fetchLoggedInKennel = async () => {
     try {
         const response = await fetch(`${import.meta.env.VITE_API_URL}/api/kennels/validate`, {
@@ -53,17 +52,17 @@ export const fetchLoggedInKennel = async () => {
         console.error("Error fetching kennel info:", err);
         throw err;
     }
-=======
+}
+
 export const fetchPendingKennels = async () => {
-  try {
-    const res = await fetch(`${import.meta.env.VITE_API_URL}/api/dev/kennels/pending`, {
-      credentials: "include",
-    });
-    if (!res.ok) throw new Error("Failed to fetch pending kennels");
-    return await res.json();
-  } catch (error) {
-    console.error("Error fetching pending kennels:", error);
-    throw error;
-  }
->>>>>>> c6d0c6fadd578c968b1dc6d96234ed20bdf811c8
+    try {
+        const res = await fetch(`${import.meta.env.VITE_API_URL}/api/dev/kennels/pending`, {
+            credentials: "include",
+        });
+        if (!res.ok) throw new Error("Failed to fetch pending kennels");
+        return await res.json();
+    } catch (error) {
+        console.error("Error fetching pending kennels:", error);
+        throw error;
+    }
 };

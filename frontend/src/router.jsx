@@ -14,26 +14,6 @@ import PrivateDashboard from "./pages/PrivateDashboard";
 import PetDetails from "./pages/PetDetails";
 import MyPetDetails from "./pages/MyPetDetails"
 import EditPet from "./pages/EditPet";
-<<<<<<< HEAD
-import AdoptedPets from "./pages/AdoptedPets";
-
-//
-async function checkAuth() {
-    try {
-        const res = await fetch(`${import.meta.env.VITE_API_URL}/api/dashboard`, {
-            method: "GET",
-            credentials: "include",
-        });
-        if (!res.ok) {
-            throw new Error("Not authenticated");
-        }
-        return null;
-    } catch {
-        throw redirect("/public-dashboard");
-    }
-}
-=======
->>>>>>> c6d0c6fadd578c968b1dc6d96234ed20bdf811c8
 
 const router = createBrowserRouter(
     [
@@ -77,10 +57,6 @@ const router = createBrowserRouter(
             // loader: checkAuth,
             element: <EditPet />,
         },
-<<<<<<< HEAD
-
-=======
->>>>>>> c6d0c6fadd578c968b1dc6d96234ed20bdf811c8
     ]
 )
 
