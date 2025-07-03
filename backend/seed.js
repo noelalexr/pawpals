@@ -10,7 +10,7 @@ dotenv.config();
 
 const connectDB = async () => {
     try{
-        await mongoose.connect(process.env.MONGO_URL);
+        await mongoose.connect(process.env.MONGO_URI);
         console.log("MongoDB connected");
     }catch(err){
         console.log("MongoDB connection failed", err.message);
@@ -112,8 +112,8 @@ const seed = async () => {
                 gender: "male",
                 description: "Friendly Labrador",
                 images: [{
-                    url: "https://res.cloudinary.com/dwspjzkcz/image/upload/v1751287094/buddy-123235-1.jpg",
-                    public_id: "buddy-123235-1"
+                    url: "https://res.cloudinary.com/dwspjzkcz/image/upload/v1751287219/bantay-1234123-2.png",
+                    public_id: "buddy123"
                 }],
                 isAdopted: false,
                 adoptionFee: 500,
@@ -139,15 +139,11 @@ const seed = async () => {
                 images: [
                     {
                         url: "https://res.cloudinary.com/dwspjzkcz/image/upload/v1751287090/bantay-1234123-1.avif",
-                        public_id: "bantay-1234123-1"
+                        public_id: "bantay123"
                     },
                     {
                         url: "https://res.cloudinary.com/dwspjzkcz/image/upload/v1751287219/bantay-1234123-2.png",
-                        public_id: "bantay-1234123-2"
-                    },
-                    {
-                        url: "https://res.cloudinary.com/dwspjzkcz/image/upload/v1751513943/bantay-1234123-3.png",
-                        public_id: "bantay-1234123-3"
+                        public_id: "bantay456"
                     }
                 ],
                 isAdopted: false,
@@ -173,7 +169,7 @@ const seed = async () => {
                 description: "Alpha male Aspin",
                 images: [{
                     url: "https://res.cloudinary.com/dwspjzkcz/image/upload/v1751287091/llao-1676890101262-1.avif",
-                    public_id: "llao-1676890101262-1"
+                    public_id: "llao123"
                 }],
                 isAdopted: false,
                 adoptionFee: 450,
@@ -198,12 +194,12 @@ const seed = async () => {
                 description: "Cuddly Siamese Cat",
                 images: [
                     {
-                        url: "https://res.cloudinary.com/dwspjzkcz/image/upload/v1751287092/coco-1644767-1.png",
-                        public_id: "coco-1644767-1"
+                        url: "https://res.cloudinary.com/dwspjzkcz/image/upload/v1751287091/coco-1644767-2.png",
+                        public_id: "coco123"
                     },
                     {
-                        url: "https://res.cloudinary.com/dwspjzkcz/image/upload/v1751287091/coco-1644767-2.png",
-                        public_id: "coco-1644767-2"
+                        url: "https://res.cloudinary.com/dwspjzkcz/image/upload/v1751287092/coco-1644767-1.png",
+                        public_id: "coco456"
                     }
                 ],
                 isAdopted: false,
@@ -229,12 +225,12 @@ const seed = async () => {
                 description: "Gigachad Bulldog",
                 images: [
                     {
-                        url: "https://res.cloudinary.com/dwspjzkcz/image/upload/v1751287104/dyagwar-203424-1.png",
-                        public_id: "dyagwar-203424-1"
+                        url: "https://res.cloudinary.com/dwspjzkcz/image/upload/v1751287104/dyagwar-203424-2.png",
+                        public_id: "dyagwar123"
                     },
                     {
-                        url: "https://res.cloudinary.com/dwspjzkcz/image/upload/v1751287104/dyagwar-203424-2.png",
-                        public_id: "dyagwar-203424-2"
+                        url: "https://res.cloudinary.com/dwspjzkcz/image/upload/v1751287104/dyagwar-203424-1.png",
+                        public_id: "dyagwar456"
                     }
                 ],
                 isAdopted: false,

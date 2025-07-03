@@ -1,125 +1,13 @@
 import React, { useState, useMemo } from "react";
-import { Link } from "react-router-dom";
-
-const styles = {
- container: {
-  height: "100vh", 
-  overflow: "hidden",
-  display: "flex",
-  justifyContent: "center",
-  alignItems: "center",
-  backgroundImage: "url('https://cdn.wallpapersafari.com/3/12/w09t6B.jpg')",
-  backgroundSize: "cover",
-  backgroundPosition: "center",
-  backgroundRepeat: "no-repeat",
-  fontFamily: "sans-serif",
-  padding: 0,
-},
-  innerWrapper: {
-    display: "flex",
-    flexDirection: "row",
-    borderRadius: "0.5rem",
-    boxShadow: "0 8px 16px rgba(0,0,0,0.1)",
-    overflow: "hidden",
-    maxWidth: "1700px",
-    width: "100%",
-    backgroundColor: "rgba(255,255,255,0.95)", // optional overlay
-  },
-  box: {
-    backgroundColor: "#fff",
-    width: "500px",
-    padding: "2rem",
-    display: "flex",
-    flexDirection: "column",
-    justifyContent: "center",
-  },
-  title: {
-    fontSize: "3rem",
-    fontWeight: "bold",
-    color: "#1f2937",
-    textAlign: "center",
-  },
-  highlight: {
-    color: "#749cc9",
-  },
-  subtitle: {
-    color: "#4b5563",
-    textAlign: "center",
-    marginBottom: "1.5rem",
-    fontSize: "1.2rem",
-  },
-  form: {
-    display: "flex",
-    flexDirection: "column",
-    gap: "0.75rem",
-  },
-  label: {
-    fontSize: "0.875rem",
-    fontWeight: 500,
-    color: "#374151",
-    marginBottom: "0.25rem",
-    display: "block",
-  },
-  input: {
-    width: "100%",
-    padding: "0.5rem 1rem",
-    border: "1px solid #d1d5db",
-    borderRadius: "0.5rem",
-    fontSize: "1rem",
-    boxSizing: "border-box", 
-  },
-  button: {
-    backgroundColor: "#416b9f",
-    color: "white",
-    fontWeight: 600,
-    padding: "0.5rem 1rem",
-    border: "none",
-    borderRadius: "0.5rem",
-    cursor: "pointer",
-    transition: "background-color 0.2s",
-  },
-  signupText: {
-    textAlign: "center",
-    fontSize: "0.875rem",
-    color: "#4b5563",
-    marginTop: "1rem",
-  },
-  footer: {
-    marginTop: "2rem",
-    fontSize: "0.875rem",
-    color: "#6b7280",
-    textAlign: "center",
-  },
-  imageContainer: {
-    width: "1200px",
-    display: "block",
-    height: "600px",
-  },
-  image: {
-    width: "100%",
-    height: "100%",
-    objectFit: "cover",
-    display: "block",
-  },
-  error: {
-    color: "red",
-    fontSize: "0.75rem",
-    marginTop: "0.25rem",
-  },
-  togglePassword: {
-    cursor: "pointer",
-    fontSize: "0.75rem",
-    color: "#4b5563",
-    marginTop: "0.25rem",
-    textAlign: "right",
-  },
-};
+import { useNavigate } from "react-router-dom";
+import styles from "../styles/loginStyles";
 
 export default function Login() {
   const [formData, setFormData] = useState({ email: "", password: "" });
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
 
   const quotes = [
     "Give Love a Home — Adopt from the Pound.",
@@ -149,7 +37,7 @@ export default function Login() {
   }, []);
 
   const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.type]: e.target.value });
+    setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
   const validate = () => {
@@ -163,7 +51,7 @@ export default function Login() {
     return "";
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const errorMsg = validate();
     if (errorMsg) {
@@ -171,12 +59,33 @@ export default function Login() {
       return;
     }
 
-    setError("");
     setLoading(true);
-    setTimeout(() => {
+    setError("");
+
+    try {
+      const res = await fetch("http://localhost:3000/api/dev/login", {
+        method: "POST",
+        credentials: "include",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        console.error("Server responded with:", data);
+        throw new Error(data.message || "Login failed");
+      }
+
+      console.log("Login success:", data);
+      navigate("/dashboard");
+    } catch (err) {
+      setError(err.message || "Server error");
+    } finally {
       setLoading(false);
-      alert("Login successful!");
-    }, 1500);
+    }
   };
 
   return (
@@ -184,13 +93,18 @@ export default function Login() {
       <div style={styles.innerWrapper}>
         <div style={styles.box}>
           <h1 style={styles.title}>
-            Welcome to <span><span style={{ color: "#749CC9" }}>Paw</span><span style={{ color: "black" }}>Pals</span></span>
+            Welcome to{" "}
+            <span>
+              <span style={{ color: "#749CC9" }}>Paw</span>
+              <span style={{ color: "black" }}>Pals</span>
+            </span>
           </h1>
           <p style={styles.subtitle}>{randomQuote}</p>
           <form style={styles.form} onSubmit={handleSubmit}>
             <div>
               <label style={styles.label}>Email Address</label>
               <input
+                name="email"
                 type="email"
                 placeholder="you@example.com"
                 required
@@ -201,6 +115,7 @@ export default function Login() {
             <div>
               <label style={styles.label}>Password</label>
               <input
+                name="password"
                 type={showPassword ? "text" : "password"}
                 placeholder="Enter your password"
                 required
@@ -220,17 +135,16 @@ export default function Login() {
             </button>
           </form>
           <p style={styles.signupText}>
-  Don't have an account?{" "}
-  <Link to="/signup" style={styles.highlight}>
-    Sign up
-  </Link>
-</p>
+            Don't have an account?{" "}
+            <a href="/signup" style={styles.highlight}>
+              Sign up
+            </a>
+          </p>
           <footer style={styles.footer}>
             ©2025 PawPals | <a href="#">Privacy Policy</a> |{" "}
             <a href="#">Sitemap</a>
           </footer>
         </div>
-
         <div
           style={{
             ...styles.imageContainer,

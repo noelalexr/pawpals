@@ -1,8 +1,8 @@
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
-import bcrypt from "bcryptjs";
 import kennelModel from "../models/kennelSchema.js";
 import sendEmail from "../services/mailService.js";
+import bcrypt from "bcryptjs";
 
 dotenv.config();
 
@@ -45,7 +45,6 @@ const register = async (req, res) => {
 
         res.status(200).json({message: `Emails have been sent to ${payload.email} and ${devEmail}`})
     } catch(error) {
-        console.error("[REGISTER ERROR]", error);
         res.status(500).json({error: error.message});
     }
 };
@@ -88,9 +87,10 @@ const logout = async (req, res) => {
         });
 
         res.json({ message: "Logout successful" });
-    } catch (error) {
-        res.status(500).json({ error: error.message });
-    }
+    } catch(error) {
+    console.error("[REGISTER ERROR]", error); // <--- this will show the real problem
+    res.status(500).json({error: error.message});
+}
 };
 
 const validate = (req, res) => {
