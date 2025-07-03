@@ -8,7 +8,7 @@ const createPet = async (req, res) => {
             if (req.files.length > 3) {
                 return res.status(400).json({ error: "Maximum of 3 images allowed." });
             }
-            newData.images = req.files.map(file => ({
+            newData.images = req.files.map(file, index => ({
                 url: file.path,
                 public_id: file.filename,
             }));
@@ -36,13 +36,9 @@ const listPet = async (req, res) => {
         const records = await petModel.find(query)
             .populate({
                 path: "kennel",
-                match: { isApproved: true },
                 select: "name location email contact website socialLinks"
             });
-
-        const approvedPets = records.filter(pet => pet.kennel);
-
-        res.json(approvedPets);
+        res.json(records);
     } catch (error) {
         res.status(500).json({ error: error.message })
     }
@@ -53,9 +49,9 @@ const listMyPets = async (req, res) => {
     const id = req.user.userId;
     const record = await petModel.find({ kennel: id })
         .populate({
-            path: "kennel",
-            select: "name location email contact website socialLinks"
-        });
+        path: "kennel",
+        select: "name location email contact website socialLinks"
+            });
     res.json(record);
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -68,12 +64,10 @@ const readMyPet = async (req, res) => {
         const record = await petModel.findById(id)
             .populate({
                 path: "kennel",
-                match: { isApproved: true },
                 select: "name location email contact website socialLinks"
             });
-            
-        if (!record || !record.kennel) {
-            return res.status(404).json({ error: "Pet not found or kennel not approved" });
+        if (!record) {
+            return res.status(404).json({ error: "Pet not found" })
         }
         res.status(200).json(record);
     } catch (error) {
@@ -85,9 +79,9 @@ const patchPet = async (req, res) => {
     try {
         const id = req.params.id;
         const newData = req.body;
-        const record = await petModel.findById(id);
+        const existingPet = await petModel.findById(id);
 
-        if (!record) {
+        if (!existingPet) {
             return res.status(404).json({ error: "Pet not found" });
         }
 
@@ -99,22 +93,22 @@ const patchPet = async (req, res) => {
             if (req.files.length > 3) {
                 return res.status(400).json({ error: "Maximum of 3 images allowed." });
             }
-            if ((record.images.length + req.files.length) > 3) {
+            if ((existingPet.images.length + req.files.length) > 3) {
                 return res.status(400).json({ error: "Cannot have more than 3 images." });
             }
 
-            const newImages = req.files.map((file) => ({
+            const newImages = req.files.map(file, index => ({
                 url: file.path,
                 public_id: file.filename,
             }));
 
-            record.images.push(...newImages);
+            existingPet.images.push(...newImages);
         }
 
-        Object.assign(record, newData);
-        await record.save();
+        Object.assign(existingPet, newData);
+        await existingPet.save();
 
-        res.status(200).json(record);
+        res.status(200).json(existingPet);
     } catch (error) {
         res.status(500).json({ error: error.message });
     }
@@ -158,8 +152,8 @@ const deletePetPhoto = async (req, res) => {
 
         await cloudinary.uploader.destroy(publicId);
 
-        record.images = record.images.filter(img => img.public_id !== publicId);
-        await record.save();
+        pet.images = pet.images.filter(img => img.public_id !== publicId);
+        await pet.save();
 
         res.status(200).json({ message: "Photo deleted" });
     } catch (error) {
