@@ -32,7 +32,7 @@ app.use("/api/pets", petRoute);
 app.use("/api/kennels", cityRoutes);
 
 //error handling
-app.use((err, res) => {
+app.use((err, req, res, next) => {
     res.status(err.status || 500).json({  message: err.message });
 });
 
