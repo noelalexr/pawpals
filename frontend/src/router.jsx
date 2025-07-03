@@ -4,28 +4,16 @@ import { createBrowserRouter, redirect } from "react-router";
 import Login from "./components/Login";
 import Signup from "./components/Signup";
 
+//LOADERS
+import { authLoader } from "./loaders/authLoader";
+import { devAuthLoader } from "./loaders/devAuthLoader";
+
 //PAGES
 import PublicDashboard from "./pages/PublicDashboard";
 import PrivateDashboard from "./pages/PrivateDashboard";
 import PetDetails from "./pages/PetDetails";
 import MyPetDetails from "./pages/MyPetDetails"
 import EditPet from "./pages/EditPet";
-
-//
-async function checkAuth() {
-    try {
-        const res = await fetch(`${import.meta.env.VITE_API_URL}/api/dashboard`, {
-            method: "GET",
-            credentials: "include",
-        });
-        if (!res.ok) {
-            throw new Error("Not authenticated");
-        }
-        return null;
-    } catch {
-        throw redirect("/public-dashboard");
-    }
-}
 
 const router = createBrowserRouter(
     [
