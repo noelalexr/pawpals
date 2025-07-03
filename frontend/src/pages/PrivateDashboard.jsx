@@ -11,7 +11,7 @@ import femaleIcon from "../assets/images/icons/female.png"
 import downArrowIcon from "../assets/images/icons/down-arrow.png"
 
 //CONTEXTS
-import { DataContext } from "../contexts/DataContext.jsx";
+import { PrivatePetContext } from "../contexts/PrivatePetContext.jsx";
 
 //PAGES
 import LoaderPage from "./LoaderPage.jsx";
@@ -23,9 +23,9 @@ const PrivateDashboard = () => {
     const [selectedGender, setSelectedGender] = useState("");
     const [selectedAgeRange, setSelectedAgeRange] = useState("");
     const [selectedCity, setSelectedCity] = useState("")
-    const [filteredPets, setFilteredPets] = useState([]);
+    const [filteredMyPets, setFilteredMyPets] = useState([]);
     const navigate = useNavigate();
-    const { pets, loading, error } = useContext(DataContext);
+    const { myPets, loading, error } = useContext(PrivatePetContext);
 
     const ageRanges = [
         { label: "All Ages", value: "" },
@@ -36,7 +36,7 @@ const PrivateDashboard = () => {
     ];
 
     const uniqueCities = [
-        ...new Set(pets.map(pet => pet.kennel.citySort).filter(Boolean))
+        ...new Set(myPets.map(pet => pet.kennel.citySort).filter(Boolean))
     ];
 
     const handleSpeciesClick = (species) => {
@@ -48,7 +48,7 @@ const PrivateDashboard = () => {
     };
 
     const applyFilters = (searchText, species, gender, ageRange, city) => {
-        let filteredData = [...pets];
+        let filteredData = [...myPets];
 
         if (species) {
             filteredData = filteredData.filter(
@@ -86,16 +86,16 @@ const PrivateDashboard = () => {
             );
         }
 
-        setFilteredPets(filteredData);
+        setFilteredMyPets(filteredData);
     };
 
     useEffect(() => {
         applyFilters(search, selectedSpecies, selectedGender, selectedAgeRange, selectedCity);
-    }, [search, selectedSpecies, selectedGender, selectedAgeRange, selectedCity, pets]);
+    }, [search, selectedSpecies, selectedGender, selectedAgeRange, selectedCity, myPets]);
 
     const handleRemoveFilter = () => {
         setSearch("");
-        setFilteredPets(pets);
+        setFilteredMyPets(myPets);
     };
 
     if (loading) {
@@ -256,13 +256,13 @@ const PrivateDashboard = () => {
             </div>
 
 
-            {filteredPets.length === 0 ? (
+            {filteredMyPets.length === 0 ? (
                 <p className="text-center text-gray-400 mt-20">No pet available</p>
             ) : (
 
                 <div className="flex flex-wrap justify-center md:px-[15%]">
                     {/* {filtered.map((product) => ( */}
-                    {filteredPets.map((pet) => (
+                    {filteredMyPets.map((pet) => (
                         <Link
                             to={`/pets/${pet._id}`}
                             key={pet._id}

@@ -1,24 +1,21 @@
 import { createContext, useState, useEffect } from "react";
 import { fetchPets } from "../loaders/dataLoader.js"
 
-export const DataContext = createContext();
+export const PublicPetContext = createContext();
 
-export const DataProvider = ({ children }) => {
+export const PublicPetProvider = ({ children }) => {
     const [pets, setPets] = useState([]);
-    // const [petDetails, setPetDetails] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
     const fetchData = async () => {
         setLoading(true);
         try {
-            const [petsData,] = await Promise.all([
+            const [petsData] = await Promise.all([
                 fetchPets(),
-                // fetchPetDetails(),
             ]);
 
             setPets(petsData);
-            // setPetDetails(petDetailsData);
         } catch (error) {
             console.error("Error loading data:", error);
             setError(error);
@@ -32,8 +29,8 @@ export const DataProvider = ({ children }) => {
     }, []);
 
     return (
-        <DataContext.Provider value={{ pets, loading, error }}>
+        <PublicPetContext.Provider value={{ pets, loading, error, refetchPets: fetchData }}>
             {children}
-        </DataContext.Provider>
+        </PublicPetContext.Provider>
     );
 };
