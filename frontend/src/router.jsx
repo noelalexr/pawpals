@@ -42,8 +42,15 @@ const router = createBrowserRouter(
                 },
                 {
                     path: "pets/:id",
-                    // loader: checkAuth,
                     element: <PetDetails />,
+                },
+                {
+                    path: "/dev/login",
+                    element: <DevLogin />,
+                },
+                {
+                    path: "/dev/signup",
+                    element: <DevSignup />,
                 },
             ]
         },
@@ -75,15 +82,6 @@ const router = createBrowserRouter(
 
             ]
         },
-        {
-            path: "/dev/login",
-            element: <DevLogin />,
-        },
-        {
-            path: "/dev/signup",
-            element: <DevSignup />,
-        },
-
     ]
 )
 

@@ -175,7 +175,7 @@ const PrivateDashboard = () => {
                 </svg>
                 <input
                     type="text"
-                    placeholder="Search for pets... (by name or breed etc.)"
+                    placeholder="Search for pets... (by breed or pet name only)"
                     value={search}
                     onChange={(e) => setSearch(e.target.value)}
                     className="block w-[100%] outline-none placeholder-gray-400"
@@ -261,9 +261,9 @@ const PrivateDashboard = () => {
                             <img src={femaleIcon} alt="female" className="w-5" />
                         </button>
                         <button
-                            onClick={() => handleGenderClick("Unknown")}
+                            onClick={() => handleGenderClick("Undetermined")}
                             className={`flex justify-center gap-3 py-[5px] px-[4px] text-xs w-25 rounded-md cursor-pointer transition-colors duration-300
-                            ${selectedGender === "Unknown" ? "bg-[#4B7FBB] text-white" : "bg-[#e7eef7] hover:bg-[#dce3ee] text-gray-600"}`}
+                            ${selectedGender === "Undetermined" ? "bg-[#4B7FBB] text-white" : "bg-[#e7eef7] hover:bg-[#dce3ee] text-gray-600"}`}
                         >
                             <p className="my-auto">Unknown Sex</p>
                         </button>

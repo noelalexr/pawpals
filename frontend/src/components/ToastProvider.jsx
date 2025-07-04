@@ -6,6 +6,9 @@ function getToastClassName({ type }) {
             return "bg-white text-black/50 font-semibold text-sm rounded-md rounded-l-xl shadow-lg py-4 pl-6 pr-10 flex border-l-12 border-1 border-green-600";
         case 'warning':
             return "bg-white text-black/50 font-semibold text-sm rounded-md rounded-l-xl shadow-lg py-4 pl-6 pr-10 flex border-l-12 border-1 border-yellow-400";
+        case 'error':
+            return "bg-white text-black/50 font-semibold text-sm rounded-md rounded-l-xl shadow-lg py-4 pl-6 pr-10 flex border-l-4 border-red-500";
+
     }
 }
 

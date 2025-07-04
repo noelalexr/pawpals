@@ -138,7 +138,7 @@ const PublicDashboard = () => {
                 </svg>
                 <input
                     type="text"
-                    placeholder="Search for pets... (by name or breed etc.)"
+                    placeholder="Search for pets... (by breed or pet name only)"
                     value={search}
                     onChange={(e) => setSearch(e.target.value)}
                     className="block w-[100%] outline-none placeholder-gray-400"
@@ -224,9 +224,9 @@ const PublicDashboard = () => {
                             <img src={femaleIcon} alt="female" className="w-5" />
                         </button>
                         <button
-                            onClick={() => handleGenderClick("Unknown")}
+                            onClick={() => handleGenderClick("Undetermined")}
                             className={`flex justify-center gap-3 py-[5px] px-[4px] text-xs w-25 rounded-md cursor-pointer transition-colors duration-300
-                            ${selectedGender === "Unknown" ? "bg-[#4B7FBB] text-white" : "bg-[#e7eef7] hover:bg-[#dce3ee] text-gray-600"}`}
+                            ${selectedGender === "Undetermined" ? "bg-[#4B7FBB] text-white" : "bg-[#e7eef7] hover:bg-[#dce3ee] text-gray-600"}`}
                         >
                             <p className="my-auto">Unknown Sex</p>
                         </button>
@@ -240,12 +240,12 @@ const PublicDashboard = () => {
                 <div className="flex gap-2 justify-center mt-3">
                     <p className="text-sm text-[#4B7FBB] my-auto">Filter by Age:</p>
                     <select
-                        className="px-3 py-2 rounded-lg appearance-none focus:outline-none my-auto text-gray-600 text-sm focus:bg-[#dce3ee] hover:bg-[#dce3ee] cursor-pointer transition-colors duration-300 text-center bg-[#e7eef7]"
+                        className="p-2 rounded-lg appearance-none focus:outline-none my-auto text-gray-600 text-sm focus:bg-[#dce3ee] hover:bg-[#dce3ee] cursor-pointer transition-colors duration-300 text-center bg-[#e7eef7]"
                         value={selectedAgeRange}
                         onChange={(e) => setSelectedAgeRange(e.target.value)}
                     >
                         {ageRanges.map((range) => (
-                            <option key={range.value} value={range.value}>
+                            <option key={range.value} value={range.value} className="text-xs">
                                 {range.label}
                             </option>
                         ))}
