@@ -1,5 +1,6 @@
 import { useState, useEffect, useContext } from "react";
 import { useNavigate, Link } from "react-router";
+import { toast } from "react-toastify";
 
 //ICONS
 import pawIcon from "../assets/images/icons/paw.png";
@@ -15,6 +16,7 @@ import LoaderPage from "./LoaderPage.jsx";
 
 //LOADERS
 import { fetchMyPets } from "../loaders/dataLoader.js"
+import { fetchLoggedinKennel } from "../loaders/dataLoader";
 
 
 const AdoptedPets = () => {
@@ -25,6 +27,7 @@ const AdoptedPets = () => {
     const [filteredMyPets, setFilteredMyPets] = useState([]);
     const [myPets, setMyPets] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [kennelName, setKennelName] = useState("");
     const navigate = useNavigate();
     // const { myPets, loading, error } = useContext(PrivatePetContext);
 
@@ -41,6 +44,15 @@ const AdoptedPets = () => {
             }
         };
         loadMyPets();
+    }, []);
+
+    useEffect(() => {
+        const getKennelName = async () => {
+            const user = await fetchLoggedinKennel();
+            if (user) setKennelName(user.name);
+        };
+
+        getKennelName();
     }, []);
 
 
@@ -106,6 +118,21 @@ const AdoptedPets = () => {
         setFilteredMyPets(myPets);
     };
 
+    const handleLogout = async () => {
+        try {
+            await fetch(`${import.meta.env.VITE_LOGOUT_API}`, {
+                method: "POST",
+                credentials: "include",
+            });
+
+            toast.success("Logged out Succesfully!");
+            navigate("/");
+
+        } catch (err) {
+            console.error("Logout failed:", err);
+        }
+    };
+
     if (loading) {
         return <LoaderPage />;
     }
@@ -117,8 +144,9 @@ const AdoptedPets = () => {
                     <h1 className='outfit text-lg font-bold my-auto'><span className='text-[#3B6FA1]'>Paw</span><span className='text-gray-700'>Pals</span></h1>
                     <img src={pawIcon} alt="paw" className='w-5 h-5 m-auto' />
                 </div>
-                <button onClick={() => navigate("/login")} className='py-2 px-3 text-xs rounded-sm text-white font-semibold bg-gray-400 hover:bg-gray-500 active:bg-gray-500 transition-colors ease-in-out duration-300 cursor-pointer'>Logout</button>
+                <button onClick={handleLogout} className='py-2 px-3 text-xs rounded-sm text-white font-semibold bg-gray-400 hover:bg-gray-500 active:bg-gray-500 transition-colors ease-in-out duration-300 cursor-pointer'>Logout</button>
             </div>
+            <div className="bg-[#4B7FBB] py-1 text-center text-white">Logged in as <b>{`${kennelName}`}</b></div>
             <div className="flex justify-end md:px-[15%] pt-3 pb-1 text-[#4B7FBB] text-sm">
                 <button onClick={() => navigate("/private-dashboard")} className=" hover:underline cursor-pointer hover:text-green-700 md:text-md text-sm mx-2">
                     <span>Go back to <b>Availabe Pets Page </b></span>
@@ -264,7 +292,7 @@ const AdoptedPets = () => {
                     {/* {filtered.map((product) => ( */}
                     {filteredMyPets.map((pet) => (
                         <Link
-                            to={`/pets/mine/${pet._id}`}
+                            to={`/private-dashboard/pets/mine/${pet._id}`}
                             key={pet._id}
                             className="md:m-5 m-3"
                         >

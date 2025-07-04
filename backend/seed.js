@@ -1,37 +1,27 @@
-import mongoose from "mongoose";
 import dotenv from "dotenv";
-import bcrypt from "bcrypt"
+import bcrypt from "bcrypt";
+import connectDB from "./configs/db.js";
 
 import Developer from "./models/developerSchema.js";
 import Kennel from "./models/kennelSchema.js";
 import Pet from "./models/petSchema.js";
 
+connectDB();
 dotenv.config();
 
-const connectDB = async () => {
-    try{
-        await mongoose.connect(process.env.MONGO_URL);
-        console.log("MongoDB connected");
-    }catch(err){
-        console.log("MongoDB connection failed", err.message);
-        process.exit(1);
-    }
-};
-
 const seed = async () => {
-    await connectDB();
     await Kennel.deleteMany();
     await Pet.deleteMany();
     await Developer.deleteMany();
 
-    try{
+    try {
         const hashedPassword = await bcrypt.hash("password123", 10);
 
         //dev from seed
         const existingDev = await Developer.findOne({ email: "dev@pawpals.com" });
 
-        if(!existingDev) {
-            await Developer.create({ 
+        if (!existingDev) {
+            await Developer.create({
                 name: "Test Developer",
                 email: "dev@pawpals.com",
                 password: hashedPassword,
@@ -54,7 +44,7 @@ const seed = async () => {
                 socialLinks: {
                     facebook: "https://www.facebook.com/pawsphilippines",
                 },
-                documents: [ "business-permit.pdf", "dti-registration.pdf" ],
+                documents: ["business-permit.pdf", "dti-registration.pdf"],
                 isApproved: true
             },
             {
@@ -70,7 +60,7 @@ const seed = async () => {
                 socialLinks: {
                     facebook: "https://www.facebook.com/PhilAnimalRescueTeam/",
                 },
-                documents: [ "veterinary-health-certificate.pdf", "business-permit.pdf" ],
+                documents: ["veterinary-health-certificate.pdf", "business-permit.pdf"],
                 isApproved: true
             },
             {
@@ -86,15 +76,86 @@ const seed = async () => {
                 socialLinks: {
                     facebook: "https://www.facebook.com/CARAwelfareph",
                 },
-                documents: [ "pound-registration-certificate.pdf", "veterinary-health-certificate.pdf" ],
+                documents: ["pound-registration-certificate.pdf", "veterinary-health-certificate.pdf"],
+                isApproved: true
+            },
+            {
+                name: "Animal Kingdom Foundation (AKF)",
+                email: "contact@akf.com",
+                password: hashedPassword,
+                location: {
+                    fullAddress: "No. 8 Purante St., Brgy. Cub‑cub, Capas, Tarlac",
+                    citySort: "Capas, Tarlac"
+                },
+                contact: "0987-6543-210",
+                website: "https://www.akfrescues.org/",
+                socialLinks: {
+                    facebook: "https://www.facebook.com/AKFanimalrescue/",
+                    instagram: "https://www.instagram.com/akfanimalrescue/"
+                },
+                documents: ["business-permit.pdf", "pound-registration-certificate.pdf", "veterinary-health-certificate.pdf", "dti.pdf"],
+                isApproved: true
+            },
+            {
+                name: "Pawssion Project Foundation Inc.",
+                email: "contact@pawssion.com",
+                password: hashedPassword,
+                location: {
+                    fullAddress: "1429 Paradise 1, Purok 7 Tungkong Mangga, San Jose del Monte, Bulacan",
+                    citySort: "San Jose del Monte, Bulacan"
+                },
+                contact: "0987-6543-210",
+                website: "https://pawssionproject.org.ph/",
+                socialLinks: {
+                    facebook: "https://www.facebook.com/PAWSsionProject",
+                    tiktok: "https://www.tiktok.com/@pawssionproject"
+                },
+                documents: ["veterinary-health-certificate.pdf", "dti.pdf"],
                 isApproved: true
             }
         ];
 
-        for(const kennelData of mockApprovedKennelsData){
+        const unapprovedKennels = [
+            {
+                name: "Antipolo Pound (Antipolo City Hall)",
+                email: "contact@antipolopound.com",
+                password: hashedPassword,
+                location: {
+                    fullAddress: "4th floor, Antipolo City Hall, Antipolo, Rizal",
+                    citySort: "Antipolo, Rizal"
+                },
+                contact: "0987-6543-210",
+                website: "https://doggoipsum.com/",
+                socialLinks: {
+                    facebook: "https://www.facebook.com/",
+                    instagram: "https://www.instagram.com/"
+                },
+                documents: ["business-permit.pdf, pound-registration-certificate.pdf", "veterinary-health-certificate.pdf"],
+                isApproved: false
+            },
+            {
+                name: "Paw‑Gi Kennel Pom",
+                email: "contact@pawgikennel.com",
+                password: hashedPassword,
+                location: {
+                    fullAddress: "Plaza Real West Riverside SFDM, Quezon City, Metro Manila",
+                    citySort: "Quezon City, Metro Manila"
+                },
+                contact: "0987-6543-210",
+                website: "https://www.thedodo.com/dogs",
+                socialLinks: {
+                    facebook: "https://www.facebook.com/",
+                    tiktok: "https://www.tiktok.com/"
+                },
+                documents: ["business-permit.pdf, animal-welfare-act-compliance-certificate.pdf", "veterinary-health-certificate.pdf"],
+                isApproved: false
+            }
+        ];
+
+        for (const kennelData of [...mockApprovedKennelsData, ...unapprovedKennels]) {
             const exists = await Kennel.findOne({ email: kennelData.email });
 
-            if(!exists){
+            if (!exists) {
                 await Kennel.create(kennelData);
             }
         }
@@ -217,7 +278,7 @@ const seed = async () => {
                     }
                 },
                 specialAssistance: false,
-                kennel: kennels[2]?._id
+                kennel: kennels[1]?._id
             },
             {
                 name: "Dyagwar",
@@ -248,21 +309,196 @@ const seed = async () => {
                     }
                 },
                 specialAssistance: false,
+                kennel: kennels[0]?._id
+            },
+            {
+                name: "Dobby",
+                age: 3,
+                arrivalDate: new Date("2025-07-03"),
+                breed: "Doberman",
+                species: "dog",
+                gender: "male",
+                description: "Very Intelligent Doberman",
+                images: [
+                    {
+                        url: "https://res.cloudinary.com/dwspjzkcz/image/upload/v1751594431/dobby-29452-1.png",
+                        public_id: "dobby-29452-1"
+                    },
+                    {
+                        url: "https://res.cloudinary.com/dwspjzkcz/image/upload/v1751594438/dobby-29452-2.png",
+                        public_id: "dobby-29452-2"
+                    },
+                    {
+                        url: "https://res.cloudinary.com/dwspjzkcz/image/upload/v1751594544/dobby-29452-3.png",
+                        public_id: "dobby-29452-3"
+                    }
+                ],
+                isAdopted: false,
+                adoptionFee: 200,
+                medical: {
+                    vaccinated: true,
+                    parasiteControl: {
+                        tickAndFlea: false,
+                        heartworn: false,
+                        neutered: true
+                    }
+                },
+                specialAssistance: false,
                 kennel: kennels[2]?._id
-            }
+            },
+            {
+                name: "ChiChi",
+                age: 5,
+                arrivalDate: new Date("2025-04-05"),
+                breed: "Shih Tzu",
+                species: "dog",
+                gender: "male",
+                description: "Happy and Sociable Shih Tzu",
+                images: [
+                    {
+                        url: "https://res.cloudinary.com/dwspjzkcz/image/upload/v1751594564/chichi-123987-1.png",
+                        public_id: "chichi-123987-1"
+                    },
+                    {
+                        url: "https://res.cloudinary.com/dwspjzkcz/image/upload/v1751594569/chichi-123987-2.png",
+                        public_id: "chichi-123987-2"
+                    },
+                    {
+                        url: "https://res.cloudinary.com/dwspjzkcz/image/upload/v1751594602/chichi-123987-3.png",
+                        public_id: "chichi-123987-3"
+                    }
+                ],
+                isAdopted: false,
+                adoptionFee: 350,
+                medical: {
+                    vaccinated: true,
+                    parasiteControl: {
+                        tickAndFlea: true,
+                        heartworn: true,
+                        neutered: false
+                    }
+                },
+                specialAssistance: false,
+                kennel: kennels[3]?._id
+            },
+            {
+                name: "Benjie",
+                age: 5,
+                arrivalDate: new Date("2025-04-25"),
+                breed: "Bengal",
+                species: "cat",
+                gender: "male",
+                description: "Extremely Intelligent Bengal",
+                images: [
+                    {
+                        url: "https://res.cloudinary.com/dwspjzkcz/image/upload/v1751594608/benjie-9138094-1.png",
+                        public_id: "benjie-9138094-1"
+                    },
+                    {
+                        url: "https://res.cloudinary.com/dwspjzkcz/image/upload/v1751594613/benjie-9138094-2.png",
+                        public_id: "benjie-9138094-2"
+                    },
+                    {
+                        url: "https://res.cloudinary.com/dwspjzkcz/image/upload/v1751594634/benjie-9138094-3.png",
+                        public_id: "benjie-9138094-3"
+                    }
+                ],
+                isAdopted: false,
+                adoptionFee: 550,
+                medical: {
+                    vaccinated: true,
+                    parasiteControl: {
+                        tickAndFlea: false,
+                        heartworn: false,
+                        neutered: false
+                    }
+                },
+                specialAssistance: false,
+                kennel: kennels[3]?._id
+            },
+            {
+                name: "Mr Smee",
+                age: 2,
+                arrivalDate: new Date("2025-04-20"),
+                breed: "Sphynx",
+                species: "cat",
+                gender: "male",
+                description: "Affectionate and Highly Intelligent Sphynx",
+                images: [
+                    {
+                        url: "https://res.cloudinary.com/dwspjzkcz/image/upload/v1751594641/mr.-smee-123982-1.png",
+                        public_id: "mr.-smee-123982-1"
+                    },
+                    {
+                        url: "https://res.cloudinary.com/dwspjzkcz/image/upload/v1751594644/mr.-smee-123982-2.png",
+                        public_id: "mr.-smee-123982-2"
+                    },
+                    {
+                        url: "https://res.cloudinary.com/dwspjzkcz/image/upload/v1751594664/mr.-smee-123982-3.png",
+                        public_id: "mr.-smee-123982-3"
+                    }
+                ],
+                isAdopted: false,
+                adoptionFee: 450,
+                medical: {
+                    vaccinated: true,
+                    parasiteControl: {
+                        tickAndFlea: false,
+                        heartworn: false,
+                        neutered: false
+                    }
+                },
+                specialAssistance: false,
+                kennel: kennels[3]?._id
+            },
+            {
+                name: "Raggy",
+                age: 1,
+                arrivalDate: new Date("2025-07-03"),
+                breed: "Ragdoll",
+                species: "cat",
+                gender: "male",
+                description: "Affectionate Ragdoll",
+                images: [
+                    {
+                        url: "https://res.cloudinary.com/dwspjzkcz/image/upload/v1751594669/raggy-9817231-1.png",
+                        public_id: "raggy-9817231-1"
+                    },
+                    {
+                        url: "https://res.cloudinary.com/dwspjzkcz/image/upload/v1751594694/raggy-9817231-2.png",
+                        public_id: "raggy-9817231-2"
+                    },
+                    {
+                        url: "https://res.cloudinary.com/dwspjzkcz/image/upload/v1751594717/raggy-9817231-3.png",
+                        public_id: "raggy-9817231-3"
+                    }
+                ],
+                isAdopted: false,
+                adoptionFee: 500,
+                medical: {
+                    vaccinated: true,
+                    parasiteControl: {
+                        tickAndFlea: true,
+                        heartworn: true,
+                        neutered: false
+                    }
+                },
+                specialAssistance: false,
+                kennel: kennels[3]?._id
+            },
         ];
 
-        for(const petData of mockPetsData){
+        for (const petData of mockPetsData) {
             const exists = await Pet.findOne({ name: petData.name });
 
-            if(!exists){
+            if (!exists) {
                 await Pet.create(petData);
             }
         }
 
         console.log("Seeding completed (no existing data affected)")
         process.exit();
-    }catch(err){
+    } catch (err) {
         console.log("Seeding failed", err.message);
         process.exit(1);
     }

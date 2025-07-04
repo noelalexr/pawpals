@@ -1,5 +1,6 @@
 import { useState, useEffect, useContext } from "react";
 import { useParams, useNavigate } from "react-router";
+import { toast } from "react-toastify";
 
 //ICONS
 import facebookIcon from "../assets/images/icons/facebook.png";
@@ -55,7 +56,7 @@ const PetDetails = () => {
         const newStatus = !myPetDetails.isAdopted;
 
         try {
-            const res = await fetch(`${import.meta.env.VITE_API_URL}/api/pets/mine/${id}`, {
+            const res = await fetch(`${import.meta.env.VITE_MY_PETS_API}/${id}`, {
                 method: "PATCH",
                 headers: {
                     "Content-Type": "application/json",
@@ -63,7 +64,11 @@ const PetDetails = () => {
                 credentials: "include",
                 body: JSON.stringify({ isAdopted: newStatus }),
             });
-
+            toast.success(
+                myPetDetails.isAdopted
+                    ? "Marked as Available!"
+                    : "Marked as Adopted!"
+            );
             if (!res.ok) throw new Error("Failed to update adoption status");
             await loadMyPetDetails();
         } catch (err) {
@@ -79,7 +84,7 @@ const PetDetails = () => {
 
 
     return (
-        <div className="bg-gradient-to-b from-[#c1d4e9] to-[#4B7FBB] min-h-screen md:p-10 flex justify-center">
+        <div className="bg-gradient-to-b from-[#c1d4e9] to-[#4B7FBB] min-h-screen md:p-5 flex justify-center">
             <div className="bg-white px-5 py-5 md:p-10 min-w-screen md:min-w-[0] md:max-w-[70%] md:rounded-sm">
                 <div className="relative flex flex-col justify-center items-center mb-8 gap-5">
                     <div onClick={() => navigate(-1)} className="absolute top-1/2 transform -translate-y-1/2 left-0 rounded-full text-[#4B7FBB] p-3 hover:bg-gray-300 active:bg-gray-300 ease-in-out duration-300 cursor-pointer">
@@ -96,58 +101,72 @@ const PetDetails = () => {
                         </button>
                     </div>
                 </div>
-                <div className="border-1 border-[#406c9e] p-5 rounded-lg">
+                <div className="border-1 border-[#406c9e] pb-5 pt-3 px-5 rounded-lg">
 
-                    <p className="text-center text-[#406c9e] font-bold pb-3 text-lg">Images</p>
-                    <div className="md:flex justify-center gap-8">
-                        <div className="pb-5">
-                            <p className="text-center text-gray-400 pb-2">Primary Image</p>
-                            <img src={myPetDetails.images[0].url} alt={myPetDetails.name} className="w-60 h-60 mx-auto object-cover" />
+                    <p className="text-lg font-semibold pb-1 text-center">Images</p>
+                    <div className="md:flex flex-wrap justify-center gap-8">
+                        <div className="pb-5 md:pb-0">
+                            <p className="text-center text-[#406c9e] pb-2">Primary Image</p>
+                            <img src={myPetDetails.images[0].url} alt={myPetDetails.name} className="w-60 h-60 mx-auto object-cover rounded-lg" />
                         </div>
-                        <div className="pb-5">
-                            <p className="text-center text-gray-400 pb-2">Secondary Images</p>
-                            <div className="flex justify-center items-center">
-                                {myPetDetails.images.length > 1 ? (
-                                    <div className="flex gap-4">
-                                        {myPetDetails.images[1]?.url && (
-                                            <img
-                                                src={myPetDetails.images[1].url}
-                                                alt={myPetDetails.name}
-                                                className="w-30 h-30 md:w-50 md:h-50 object-cover"
-                                            />
-                                        )}
-                                        {myPetDetails.images[2]?.url && (
-                                            <img
-                                                src={myPetDetails.images[2].url}
-                                                alt={myPetDetails.name}
-                                                className="w-30 h-30 md:w-50 md:h-50 object-cover"
-                                            />
-                                        )}
-                                    </div>
+                        <div className="bg-gray-200 py-3 px-4 rounded-lg my-auto">
+                            <p className="text-center text-[#406c9e] pb-2">Secondary Images</p>
+
+                            <div className="flex flex-row justify-center items-center gap-4">
+                                {myPetDetails.images[1]?.url ? (
+                                    <img
+                                        src={myPetDetails.images[1].url}
+                                        alt={myPetDetails.name}
+                                        className="w-30 h-30 md:w-45 md:h-45 object-cover rounded-lg"
+                                    />
                                 ) : (
-                                    <p className="">No secondary images uploaded.</p>
+                                    <div className="w-30 h-30 md:w-45 md:h-45 bg-gray-300 rounded-lg flex items-center justify-center text-gray-400 text-sm">
+                                        No Image
+                                    </div>
+                                )}
+                                {myPetDetails.images[2]?.url ? (
+                                    <img
+                                        src={myPetDetails.images[2].url}
+                                        alt={myPetDetails.name}
+                                        className="w-30 h-30 md:w-45 md:h-45 object-cover rounded-lg"
+                                    />
+                                ) : (
+                                    <div className="w-30 h-30 md:w-45 md:h-45 bg-gray-300 rounded-lg flex items-center justify-center text-gray-400 text-sm">
+                                        No Image
+                                    </div>
                                 )}
                             </div>
+
                         </div>
                     </div>
                 </div>
-                <div className="pt-5 px-5 text-center">
-                    <p><b className="text-[#406c9e]">Name: </b>{myPetDetails.name}</p>
-                    <p><b className="text-[#406c9e]">Status: </b>{myPetDetails.isAdopted ? "Adopted" : "Available"}</p>
-                    <p><b className="text-[#406c9e]">Age: </b>{myPetDetails.age}</p>
-                    <p><b className="text-[#406c9e]">Breed: </b>{myPetDetails.breed}</p>
-                    <p><b className="text-[#406c9e]">Species: </b>{myPetDetails.species}</p>
-                    <p><b className="text-[#406c9e]">Gender: </b>{myPetDetails.gender}</p>
-                    <p><b className="text-[#406c9e]">Description: </b>{myPetDetails.description}</p>
-                    <p><b className="text-[#406c9e]">Adoption Fee: </b>{myPetDetails.adoptionFee}</p>
-                    <p className="text-lg font-bold pt-5">Medical Details</p>
-                    <p><b className="text-[#406c9e]">Vaccinated: </b> {myPetDetails.medical.vaccinated ? "Yes" : "No"}</p>
-                    <p className="text-lg font-bold pt-5">Parasite Control</p>
-                    <p><b className="text-[#406c9e]">Tick and Flea: </b> {myPetDetails.medical.parasiteControl.tickAndFlea ? "Yes" : "No"}</p>
-                    <p><b className="text-[#406c9e]">Neutered: </b> {myPetDetails.medical.parasiteControl.neutered ? "Yes" : "No"}</p>
-                    <p><b className="text-[#406c9e]">Heartworm: </b> {myPetDetails.medical.parasiteControl.heartworm ? "Yes" : "No"}</p>
+                <div className="py-10 px-5 text-center md:flex flex-row justify-center gap-10">
+                    <div className="bg-gray-100 px-7 py-3 rounded-md flex flex-col justify-center">
+                        <p className="text-lg font-semibold pb-1">Basic Information</p>
+                        <p><span className="text-[#406c9e]">Name: </span>{myPetDetails.name}</p>
+                        <p><span className="text-[#406c9e]">Status: </span>{myPetDetails.isAdopted ? "Adopted" : "Available"}</p>
+                        <p><span className="text-[#406c9e]">Age: </span>{myPetDetails.age}</p>
+                        <p><span className="text-[#406c9e]">Breed: </span>{myPetDetails.breed}</p>
+                        <p><span className="text-[#406c9e]">Species: </span>{myPetDetails.species}</p>
+                        <p><span className="text-[#406c9e]">Gender: </span>{myPetDetails.gender}</p>
+                        <p><span className="text-[#406c9e]">Description: </span>{myPetDetails.description}</p>
+                        <p><span className="text-[#406c9e]">Adoption Fee: </span>{myPetDetails.adoptionFee}</p>
+                    </div>
+                    <div className="md:flex flex-col justify-center items-center gap-10">
+                        <div className="bg-gray-100 px-7 py-3 rounded-md flex flex-col justify-center mt-5 md:mt-0">
+                            <p className="text-lg font-semibold pb-1">Medical Details</p>
+                            <p><span className="text-[#406c9e]">Vaccinated: </span> {myPetDetails.medical.vaccinated ? "Yes" : "No"}</p>
+                        </div>
+                        <div className="bg-gray-100 px-7 py-3 rounded-md flex flex-col justify-center mt-5 md:mt-0">
+                            <p className="text-lg font-semibold pb-1">Parasite Control</p>
+
+                            <p><span className="text-[#406c9e]">Tick and Flea: </span> {myPetDetails.medical.parasiteControl.tickAndFlea ? "Yes" : "No"}</p>
+                            <p><span className="text-[#406c9e]">Neutered: </span> {myPetDetails.medical.parasiteControl.neutered ? "Yes" : "No"}</p>
+                            <p><span className="text-[#406c9e]">Heartworm: </span> {myPetDetails.medical.parasiteControl.heartworm ? "Yes" : "No"}</p>
+                        </div>
+                    </div>
                 </div>
-                <button onClick={() => navigate(`/pets/mine/${id}/edit`)} className="bg-[#4B7FBB] hover:bg-[#406c9e] text-white py-3 rounded-full w-[100%] mt-5 text-\lg cursor-pointer transition-colors duration-300">Edit pet details</button>
+                <button onClick={() => navigate(`/private-dashboard/pets/mine/${id}/edit`)} className="bg-[#4B7FBB] hover:bg-[#406c9e] text-white py-3 rounded-full w-[80%] block mx-auto cursor-pointer transition-colors duration-300">Edit pet details</button>
             </div>
         </div>
     )
