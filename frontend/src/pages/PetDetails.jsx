@@ -8,7 +8,8 @@ import tiktokIcon from "../assets/images/icons/tiktok.png";
 import pinBlueIcon from "../assets/images/icons/pin-blue.png"
 import pinGrayIcon from "../assets/images/icons/pin-gray.png"
 import emailBlueIcon from "../assets/images/icons/email-blue.png"
-import webBlueIcon from "../assets/images/icons/website-blue.png"
+import webBlueIcon from "../assets/images/icons/website-blue.png"//ICONS
+import pawIcon from "../assets/images/icons/paw.png";
 
 //CONTEXTS
 import { PublicPetContext } from "../contexts/PublicPetContext";
@@ -43,7 +44,7 @@ const PetDetails = () => {
                         <path strokeLinecap="round" strokeLinejoin="round" d="M10.5 19.5 3 12m0 0 7.5-7.5M3 12h18" />
                     </svg>
                 </div>
-                <div className="flex flex-col md:gap-5 justify-center items-center my-auto">
+                <div className="flex flex-col md:gap-2 justify-center items-center my-auto">
                     <div className="flex md:justify-center justify-around md:gap-3 w-[100%]">
                         {petDetails.images[1]?.url && (
                             <div className="bg-gray-100 md:p-4 p-3 md:pb-3 pb-2 -rotate-5 mt-8 shadow-gray-700 shadow-lg hover:scale-125 hover:rotate-0 transition-all duration-300 hover:z-1">
@@ -59,10 +60,10 @@ const PetDetails = () => {
                         )}
                     </div>
 
-                    <div className="bg-white md:w-110 w-[100%] my-auto md:px-10 md:py-7 p-6 rounded-t-2xl md:rounded-3xl md:-rotate-2 md:shadow-gray-700 md:shadow-xs mx-auto">
+                    <div className="bg-white md:w-110 w-[100%] my-auto md:px-8 p-6 rounded-t-2xl md:rounded-3xl md:-rotate-2 md:shadow-gray-700 md:shadow-xs mx-auto">
                         <div className="flex gap-5 justify-between">
                             <div>
-                                <p className="md:text-3xl text-2xl">{petDetails.name}</p>
+                                <p className="text-2xl">{petDetails.name}</p>
                                 <p className="text-gray-400">{petDetails.breed}</p>
                             </div>
                             <div className="flex justify-center my-auto text-[#4B7FBB] ">
@@ -89,7 +90,11 @@ const PetDetails = () => {
                     </div>
                 </div>
             </div>
-            <div className="py-8 md:px-10 px-5 bg-white -mt-3 md:mt-5 md:rounded-sm max-w-230 mx-auto">
+            <div className="md:relative py-8 md:px-10 px-5 bg-white -mt-3 md:mt-10 md:rounded-sm max-w-230 mx-auto">
+                <div className='absolute flex gap-1 md:right-5 md:top-4 right-3 top-2'>
+                    <h1 className='outfit md:text-sm text-xs font-bold my-auto'><span className='text-[#3B6FA1]'>Paw</span><span className='text-gray-700'>Pals</span></h1>
+                    <img src={pawIcon} alt="paw" className='md:w-4 md:h-4 w-3 h-3 m-auto' />
+                </div>
                 <div>
                     <p className="text-[#4B7FBB] text-sm">Description</p>
                     <p className="py-2 px-5 text-sm">{petDetails.description}</p>
