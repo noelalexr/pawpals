@@ -1,37 +1,20 @@
 import React, { useState, useMemo } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import styles from "../styles/loginStyles";
-import { toast } from "react-toastify";
 
-export default function Login() {
+export default function DevLogin() {
     const [formData, setFormData] = useState({ email: "", password: "" });
     const [showPassword, setShowPassword] = useState(false);
     const [error, setError] = useState("");
     const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
-    const API = import.meta.env.VITE_API_URL;
 
     const quotes = [
-        "Give Love a Home — Adopt from the Pound.",
-        "Where Second Chances Begin.",
-        "They’re Waiting for a Family. Could It Be Yours?",
-        "Find Love. Save a Life.",
-        "Rescue the Lonely. Adopt a Friend.",
-        "Every Paw Has a Story. Help Rewrite It.",
-        "Be the Reason a Tail Wags Again.",
-        "From Forgotten to Family — Adopt Today.",
-        "Paws Up for Adoption!",
-        "Tails Are Wagging — Come Say Hello!",
-        "Adopt, Don’t Shop — The Pound's Full of Love.",
-        "Fur-Ever Starts Here!",
-        "Unleash Joy — Adopt from the Pound!",
-        "Big Hearts Behind These Kennels.",
-        "The Best Pets Aren’t Bought — They’re Rescued.",
-        "Your Kindness is Their New Beginning.",
-        "Together, We Can End Homelessness for Pets.",
-        "Adoption is the First Step to a Better Life.",
-        "Be Their Hero — Adopt from the Pound.",
-        "Help Us Empty Cages and Fill Homes.",
+        "Code for a Cause — Join PawPals.",
+        "Developers Save Lives Too.",
+        "Backend Meets Barkend.",
+        "The Platform Needs You.",
+        "Build the Bridge Between Pets and People.",
     ];
 
     const randomQuote = useMemo(() => {
@@ -44,7 +27,7 @@ export default function Login() {
 
     const validate = () => {
         const { email, password } = formData;
-        if (!/\S+@\S+\.\S+/.test(email)) return "Please enter a valid email.";
+        if (!/\S+@\S+\.\S+/.test(email)) return "Enter a valid email.";
         if (password.length < 6) return "Password must be at least 6 characters.";
         return "";
     };
@@ -58,25 +41,18 @@ export default function Login() {
         }
 
         setLoading(true);
-        setError("");
-
         try {
-            const res = await fetch(`${import.meta.env.VITE_LOGIN_API}`, {
+            const res = await fetch("http://localhost:3000/api/developers/login", {
                 method: "POST",
                 credentials: "include",
-                headers: {
-                    "Content-Type": "application/json",
-                },
+                headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(formData),
             });
 
             const data = await res.json();
+            if (!res.ok) throw new Error(data.message || "Login failed");
 
-            if (!res.ok) {
-                throw new Error(data.message || "Login failed");
-            }
-            toast.success("Login Successful!");
-            navigate("/private-dashboard");
+            navigate("/developerdashboard");
         } catch (err) {
             setError(err.message || "Server error");
         } finally {
@@ -88,36 +64,30 @@ export default function Login() {
         <div style={styles.container}>
             <div style={styles.innerWrapper}>
                 <div style={styles.box}>
-                    <h1 style={styles.title}>
-                        Welcome to{" "}
-                        <span>
-                            <span style={{ color: "#749CC9" }}>Paw</span>
-                            <span style={{ color: "black" }}>Pals</span>
-                        </span>
-                    </h1>
+                    <h1 style={styles.title}>Developer Login</h1>
                     <p style={styles.subtitle}>{randomQuote}</p>
 
                     <form style={styles.form} onSubmit={handleSubmit}>
                         <div>
-                            <label style={styles.label}>Email Address</label>
+                            <label style={styles.label}>Email</label>
                             <input
-                                name="email"
                                 type="email"
-                                placeholder="you@example.com"
-                                required
+                                name="email"
                                 style={styles.input}
+                                value={formData.email}
                                 onChange={handleChange}
+                                required
                             />
                         </div>
                         <div>
                             <label style={styles.label}>Password</label>
                             <input
-                                name="password"
                                 type={showPassword ? "text" : "password"}
-                                placeholder="Enter your password"
-                                required
+                                name="password"
                                 style={styles.input}
+                                value={formData.password}
                                 onChange={handleChange}
+                                required
                             />
                             <div
                                 style={styles.togglePassword}
@@ -128,28 +98,24 @@ export default function Login() {
                         </div>
 
                         {error && <div style={styles.error}>{error}</div>}
+
                         <button type="submit" style={styles.button} disabled={loading}>
                             {loading ? "Logging in..." : "Log In"}
                         </button>
                     </form>
 
                     <p style={styles.signupText}>
-                        Don’t have an account?{" "}
-                        <Link to="/signup" style={styles.highlight}>
-                            Sign up
-                        </Link>
+                        Don’t have a developer account?{" "}
+                        <Link to="/dev/signup" style={styles.highlight}>Register here</Link>
                     </p>
 
                     <p style={styles.signupText}>
-                        Are you a developer?{" "}
-                        <Link to="/dev/login" style={styles.highlight}>
-                            Log in here
-                        </Link>
+                        Are you a kennel user?{" "}
+                        <Link to="/login" style={styles.highlight}>Login here</Link>
                     </p>
 
                     <footer style={styles.footer}>
-                        ©2025 PawPals | <a href="#">Privacy Policy</a> |{" "}
-                        <a href="#">Sitemap</a>
+                        ©2025 PawPals | <a href="#">Privacy Policy</a> | <a href="#">Sitemap</a>
                     </footer>
                 </div>
 
@@ -161,7 +127,7 @@ export default function Login() {
                 >
                     <img
                         src="https://t3.ftcdn.net/jpg/04/81/85/46/360_F_481854656_gHGTnBscKXpFEgVTwAT4DL4NXXNhDKU9.jpg"
-                        alt="Adoptable Dog"
+                        alt="Developer Login"
                         style={styles.image}
                     />
                 </div>

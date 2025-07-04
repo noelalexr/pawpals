@@ -1,6 +1,6 @@
 export const fetchPets = async () => {
     try {
-        const response = await fetch(`${import.meta.env.VITE_API_URL}/api/pets`, {
+        const response = await fetch(`${import.meta.env.VITE_PETS_API}`, {
             method: "GET",
             credentials: "include",
         });
@@ -14,7 +14,7 @@ export const fetchPets = async () => {
 
 export const fetchMyPets = async () => {
     try {
-        const response = await fetch(`${import.meta.env.VITE_API_URL}/api/pets/mine`, {
+        const response = await fetch(`${import.meta.env.VITE_MY_PETS_API}`, {
             method: "GET",
             credentials: "include",
         });
@@ -28,7 +28,7 @@ export const fetchMyPets = async () => {
 
 export const fetchMyPetDetails = async (id) => {
     try {
-        const response = await fetch(`${import.meta.env.VITE_API_URL}/api/pets/mine/${id}`, {
+        const response = await fetch(`${import.meta.env.VITE_MY_PETS_API}/${id}`, {
             method: "GET",
             credentials: "include",
         });
@@ -40,20 +40,6 @@ export const fetchMyPetDetails = async (id) => {
     }
 };
 
-export const fetchLoggedInKennel = async () => {
-    try {
-        const response = await fetch(`${import.meta.env.VITE_API_URL}/api/kennels/validate`, {
-            method: "GET",
-            credentials: "include",
-        });
-        if (!response.ok) throw new Error("Failed to fetch kennel info");
-        return await response.json();
-    } catch (err) {
-        console.error("Error fetching kennel info:", err);
-        throw err;
-    }
-}
-
 export const fetchPendingKennels = async () => {
     try {
         const res = await fetch(`${import.meta.env.VITE_API_URL}/api/dev/kennels/pending`, {
@@ -64,5 +50,24 @@ export const fetchPendingKennels = async () => {
     } catch (error) {
         console.error("Error fetching pending kennels:", error);
         throw error;
+    }
+};
+
+export const fetchLoggedinKennel = async () => {
+    try {
+        const response = await fetch(`${import.meta.env.VITE_VALIDATE_API}`, {
+            method: "GET",
+            credentials: "include",
+        });
+
+        const result = await response.json();
+        if (!response.ok || !result.valid) {
+            throw new Error("Unauthorized");
+        }
+
+        return result.user;
+    } catch (err) {
+        console.error("Failed to validate user:", err);
+        return null;
     }
 };
