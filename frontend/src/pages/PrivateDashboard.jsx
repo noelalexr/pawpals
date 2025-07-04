@@ -1,5 +1,6 @@
 import { useState, useEffect, useContext } from "react";
 import { useNavigate, Link } from "react-router";
+import { toast } from "react-toastify";
 
 //ICONS
 import pawIcon from "../assets/images/icons/paw.png";
@@ -15,7 +16,7 @@ import LoaderPage from "./LoaderPage.jsx";
 
 //LOADERS
 import { fetchMyPets } from "../loaders/dataLoader.js"
-import { fetchLoggedInKennel } from "../loaders/dataLoader";
+import { fetchLoggedinKennel } from "../loaders/dataLoader";
 
 
 const PrivateDashboard = () => {
@@ -56,6 +57,17 @@ const PrivateDashboard = () => {
     //     };
     //     loadKennelName();
     // }, []);
+
+
+
+    useEffect(() => {
+        const getKennelName = async () => {
+            const user = await fetchLoggedinKennel();
+            if (user) setKennelName(user.name);
+        };
+
+        getKennelName();
+    }, []);
 
 
     const ageRanges = [
@@ -119,6 +131,22 @@ const PrivateDashboard = () => {
         setFilteredMyPets(myPets);
     };
 
+    const handleLogout = async () => {
+        try {
+            await fetch(`${import.meta.env.VITE_LOGOUT_API}`, {
+                method: "POST",
+                credentials: "include",
+            });
+
+            toast.success("Logged out Succesfully!");
+            navigate("/");
+
+        } catch (err) {
+            console.error("Logout failed:", err);
+        }
+    };
+
+    console.log(myPets)
     if (loading) {
         return <LoaderPage />;
     }
@@ -130,11 +158,11 @@ const PrivateDashboard = () => {
                     <h1 className='outfit text-lg font-bold my-auto'><span className='text-[#3B6FA1]'>Paw</span><span className='text-gray-700'>Pals</span></h1>
                     <img src={pawIcon} alt="paw" className='w-5 h-5 m-auto' />
                 </div>
-                <button onClick={() => navigate("/login")} className='py-2 px-3 text-xs rounded-sm text-white font-semibold bg-gray-400 hover:bg-gray-500 active:bg-gray-500 transition-colors ease-in-out duration-300 cursor-pointer'>Logout</button>
+                <button onClick={handleLogout} className='py-2 px-3 text-xs rounded-sm text-white font-semibold bg-gray-400 hover:bg-gray-500 active:bg-gray-500 transition-colors ease-in-out duration-300 cursor-pointer'>Logout</button>
             </div>
-            {/* <div>{`Logged in as ${kennelName}`}</div> */}
+            <div className="bg-[#4B7FBB] py-1 text-center text-white px-5"><span className="text-sm my-auto">Logged in as </span><b className="truncate overflow-hidden whitespace-nowrap max-w-[100%] inline-block align-middle">{`${kennelName}`}</b></div>
             <div className="flex justify-end md:px-[15%] pt-3 pb-1 text-[#4B7FBB] text-sm">
-                <button onClick={() => navigate("/adopted-pets")} className="hover:underline cursor-pointer hover:text-red-700 mx-2 md:text-md text-sm">
+                <button onClick={() => navigate("/private-dashboard/adopted-pets")} className="hover:underline cursor-pointer hover:text-red-700 mx-2 md:text-md text-sm">
                     <span>Navigate to <b>Adopted Pets Page </b></span>
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-5 inline my-auto">
                         <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" />
@@ -269,6 +297,14 @@ const PrivateDashboard = () => {
                 <div className="bg-green-600 md:w-[18%] w-[8%] h-[2px] rounded-full my-auto"></div>
 
             </div>
+            <div className="flex justify-center py-2">
+                <button onClick={() => navigate("/private-dashboard/pets/mine/add")} className="flex justify-center gap-2 py-2 w-80 border-2 border-[#4b7fbb81] text-[#4B7FBB] hover:bg-[#4B7FBB] hover:text-white transition-colors duration-300 cursor-pointer rounded-md text-sm my-auto">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-4 my-auto">
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+                    </svg>
+                    Add Pet here
+                </button>
+            </div>
 
             {filteredMyPets.length === 0 ? (
                 <p className="text-center text-gray-400 mt-20">No pet available</p>
@@ -278,7 +314,7 @@ const PrivateDashboard = () => {
                     {/* {filtered.map((product) => ( */}
                     {filteredMyPets.map((pet) => (
                         <Link
-                            to={`/pets/mine/${pet._id}`}
+                            to={`/private-dashboard/pets/mine/${pet._id}`}
                             key={pet._id}
                             className="md:m-5 m-3"
                         >

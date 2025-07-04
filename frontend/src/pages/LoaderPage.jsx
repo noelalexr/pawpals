@@ -1,4 +1,4 @@
-import logoGif from "../assets/images/gifs/logo-gif.gif";
+import logoGif from "../assets/images/logo/logo-gif.gif";
 
 const LoaderPage = () => {
     return (

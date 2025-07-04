@@ -1,22 +1,15 @@
 import petModel from "../models/petSchema.js"
-import { v2 as cloudinary } from 'cloudinary';
+import cloudinary from "../configs/cloudinary.js";
 
 const createPet = async (req, res) => {
     try {
         const newData = req.body;
-        if (req.files && req.files.length > 0) {
-            if (req.files.length > 3) {
-                return res.status(400).json({ error: "Maximum of 3 images allowed." });
-            }
-            newData.images = req.files.map(file => ({
-                url: file.path,
-                public_id: file.filename,
-            }));
-        }
-        const record = new petModel(newData);
-        await record.save();
+        newData.kennel = req.user.userId;
 
-        res.status(201).json(record);
+        const pet = new petModel(newData);
+        await pet.save();
+
+        res.status(201).json(pet);
     } catch (error) {
         res.status(500).json({ error: error.message });
     }
@@ -49,17 +42,17 @@ const listPet = async (req, res) => {
 };
 
 const listMyPets = async (req, res) => {
-  try {
-    const id = req.user.userId;
-    const record = await petModel.find({ kennel: id })
-        .populate({
-            path: "kennel",
-            select: "name location email contact website socialLinks"
-        });
-    res.json(record);
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
+    try {
+        const id = req.user.userId;
+        const record = await petModel.find({ kennel: id })
+            .populate({
+                path: "kennel",
+                select: "name location email contact website socialLinks"
+            });
+        res.json(record);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
 };
 
 const readMyPet = async (req, res) => {
@@ -71,13 +64,47 @@ const readMyPet = async (req, res) => {
                 match: { isApproved: true },
                 select: "name location email contact website socialLinks"
             });
-            
+
         if (!record || !record.kennel) {
             return res.status(404).json({ error: "Pet not found or kennel not approved" });
         }
         res.status(200).json(record);
     } catch (error) {
         res.status(500).json({ error: error.message })
+    }
+};
+
+const patchPetImages = async (req, res) => {
+    try {
+        const id = req.params.id;
+        const pet = await petModel.findById(id);
+
+        if (!pet) {
+            return res.status(404).json({ error: "Pet not found" });
+        }
+
+        if (pet.kennel.toString() !== req.user.userId) {
+            return res.status(403).json({ error: "Unauthorized" });
+        }
+
+        if (req.files && req.files.length > 0) {
+            const totalImages = pet.images.length + req.files.length;
+            if (totalImages > 3) {
+                return res.status(400).json({ error: "Cannot exceed 3 images." });
+            }
+
+            const newImages = req.files.map(file => ({
+                url: file.path,
+                public_id: file.filename,
+            }));
+
+            pet.images.push(...newImages);
+            await pet.save();
+        }
+
+        res.status(200).json(pet);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
     }
 };
 
@@ -167,4 +194,4 @@ const deletePetPhoto = async (req, res) => {
     }
 };
 
-export { createPet, listPet, listMyPets, readMyPet, patchPet, deletePet, deletePetPhoto }
+export { createPet, listPet, listMyPets, readMyPet, patchPetImages, patchPet, deletePet, deletePetPhoto }

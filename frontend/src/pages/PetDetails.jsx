@@ -38,7 +38,7 @@ const PetDetails = () => {
 
             <div className="flex flex-col md:flex-row justify-center -space-y-10 md:gap-2">
                 <img src={petDetails.images[0].url} alt={petDetails.name} className="md:rotate-4 md:rounded-2xl w-[100%] h-75 md:w-130 md:h-130 object-cover md:z-1 md:shadow-gray-700 shadow-lg md:hover:scale-105 md:hover:rotate-0 transition-all duration-300" />
-                <div onClick={() => navigate("/public-dashboard")} className="absolute md:top-10 md:left-10 top-2 left-2 rounded-full text-white bg-[#4B7FBB] p-3 hover:bg-[#3d699b] active:bg-[#3d699b] ease-in-out duration-300 cursor-pointer z-5">
+                <div onClick={() => navigate("/")} className="absolute md:top-10 md:left-10 top-2 left-2 rounded-full text-white bg-[#4B7FBB] p-3 hover:bg-[#3d699b] active:bg-[#3d699b] ease-in-out duration-300 cursor-pointer z-5">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6">
                         <path strokeLinecap="round" strokeLinejoin="round" d="M10.5 19.5 3 12m0 0 7.5-7.5M3 12h18" />
                     </svg>
@@ -46,15 +46,15 @@ const PetDetails = () => {
                 <div className="flex flex-col md:gap-5 justify-center items-center my-auto">
                     <div className="flex md:justify-center justify-around md:gap-3 w-[100%]">
                         {petDetails.images[1]?.url && (
-                            <div className="bg-gray-100 p-4 pb-3 -rotate-5 mt-8 shadow-gray-700 shadow-lg hover:scale-125 hover:rotate-0 transition-all duration-300 hover:z-1">
-                                <img src={petDetails.images[1].url} alt={petDetails.name} className="md:w-50 md:h-50 w-30 h-30 object-cover border-1 border-gray-400" />
-                                <p className="pt-3 text-[9px] text-gray-400 text-right">posted: {photoStyleDate}</p>
+                            <div className="bg-gray-100 md:p-4 p-3 md:pb-3 pb-2 -rotate-5 mt-8 shadow-gray-700 shadow-lg hover:scale-125 hover:rotate-0 transition-all duration-300 hover:z-1">
+                                <img src={petDetails.images[1].url} alt={petDetails.name} className="md:w-50 md:h-50 w-35 h-35 object-cover border-1 border-gray-400" />
+                                <p className="md:pt-3 pt-2 text-[9px] text-gray-400 text-right">posted: {photoStyleDate}</p>
                             </div>
                         )}
                         {petDetails.images[2]?.url && (
-                            <div className="bg-gray-100 p-4 pb-3 rotate-8 mb-auto shadow-gray-700 shadow-lg hover:scale-125 hover:rotate-0 transition-all duration-300 hover:z-1">
-                                <img src={petDetails.images[2].url} alt={petDetails.name} className="md:w-50 md:h-50 w-30 h-30 object-cover border-1 border-gray-400" />
-                                <p className="pt-3 text-[9px] text-gray-400 text-right">posted: {photoStyleDate}</p>
+                            <div className="bg-gray-100 md:p-4 p-3 md:pb-3 pb-2 rotate-8 mb-auto shadow-gray-700 shadow-lg hover:scale-125 hover:rotate-0 transition-all duration-300 hover:z-1">
+                                <img src={petDetails.images[2].url} alt={petDetails.name} className="md:w-50 md:h-50 w-35 h-35 object-cover border-1 border-gray-400" />
+                                <p className="md:pt-3 pt-2 text-[9px] text-gray-400 text-right">posted: {photoStyleDate}</p>
                             </div>
                         )}
                     </div>
