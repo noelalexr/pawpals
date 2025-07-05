@@ -207,10 +207,12 @@ const seed = async () => {
                 species: "dog",
                 gender: "male",
                 description: "Friendly Labrador",
-                images: [{
-                    url: "https://res.cloudinary.com/dwspjzkcz/image/upload/v1751287094/buddy-123235-1.jpg",
-                    public_id: "buddy-123235-1"
-                }],
+                images: {
+                    primary: {
+                        url: "https://res.cloudinary.com/dwspjzkcz/image/upload/v1751287094/buddy-123235-1.jpg",
+                        public_id: "buddy-123235-1"
+                    },
+                },
                 isAdopted: false,
                 adoptionFee: 500,
                 medical: {
@@ -232,20 +234,24 @@ const seed = async () => {
                 species: "cat",
                 gender: "male",
                 description: "Fluffy Persian Cat",
-                images: [
-                    {
+                images: {
+                    primary: {
                         url: "https://res.cloudinary.com/dwspjzkcz/image/upload/v1751287090/bantay-1234123-1.avif",
                         public_id: "bantay-1234123-1"
                     },
-                    {
-                        url: "https://res.cloudinary.com/dwspjzkcz/image/upload/v1751287219/bantay-1234123-2.png",
-                        public_id: "bantay-1234123-2"
-                    },
-                    {
-                        url: "https://res.cloudinary.com/dwspjzkcz/image/upload/v1751513943/bantay-1234123-3.png",
-                        public_id: "bantay-1234123-3"
+                    secondary: {
+                        type: [
+                            {
+                                url: "https://res.cloudinary.com/dwspjzkcz/image/upload/v1751287219/bantay-1234123-2.png",
+                                public_id: "bantay-1234123-2"
+                            },
+                            {
+                                url: "https://res.cloudinary.com/dwspjzkcz/image/upload/v1751513943/bantay-1234123-3.png",
+                                public_id: "bantay-1234123-3"
+                            }
+                        ]
                     }
-                ],
+                },     
                 isAdopted: false,
                 adoptionFee: 400,
                 medical: {
@@ -267,10 +273,12 @@ const seed = async () => {
                 species: "dog",
                 gender: "female",
                 description: "Alpha male Aspin",
-                images: [{
-                    url: "https://res.cloudinary.com/dwspjzkcz/image/upload/v1751287091/llao-1676890101262-1.avif",
-                    public_id: "llao-1676890101262-1"
-                }],
+                images: {
+                    primary:{
+                        url: "https://res.cloudinary.com/dwspjzkcz/image/upload/v1751287091/llao-1676890101262-1.avif",
+                        public_id: "llao-1676890101262-1"
+                    }
+                },
                 isAdopted: false,
                 adoptionFee: 450,
                 medical: {
@@ -292,16 +300,20 @@ const seed = async () => {
                 species: "cat",
                 gender: "female",
                 description: "Cuddly Siamese Cat",
-                images: [
-                    {
+                images: {
+                    primary: {
                         url: "https://res.cloudinary.com/dwspjzkcz/image/upload/v1751287092/coco-1644767-1.png",
                         public_id: "coco-1644767-1"
                     },
-                    {
-                        url: "https://res.cloudinary.com/dwspjzkcz/image/upload/v1751287091/coco-1644767-2.png",
-                        public_id: "coco-1644767-2"
+                    secondary: {
+                        type: [
+                            {
+                            url: "https://res.cloudinary.com/dwspjzkcz/image/upload/v1751287091/coco-1644767-2.png",
+                            public_id: "coco-1644767-2"
+                            },
+                        ]
                     }
-                ],
+                },
                 isAdopted: false,
                 adoptionFee: 500,
                 medical: {
@@ -323,16 +335,20 @@ const seed = async () => {
                 species: "dog",
                 gender: "male",
                 description: "Gigachad Bulldog",
-                images: [
-                    {
+                images: {
+                    primary: {
                         url: "https://res.cloudinary.com/dwspjzkcz/image/upload/v1751287104/dyagwar-203424-1.png",
                         public_id: "dyagwar-203424-1"
                     },
-                    {
-                        url: "https://res.cloudinary.com/dwspjzkcz/image/upload/v1751287104/dyagwar-203424-2.png",
-                        public_id: "dyagwar-203424-2"
+                    secondary: {
+                        type:[
+                            {
+                                url: "https://res.cloudinary.com/dwspjzkcz/image/upload/v1751287104/dyagwar-203424-2.png",
+                                public_id: "dyagwar-203424-2"
+                            }
+                        ]
                     }
-                ],
+                },
                 isAdopted: false,
                 adoptionFee: 300,
                 medical: {
@@ -354,20 +370,24 @@ const seed = async () => {
                 species: "dog",
                 gender: "male",
                 description: "Very Intelligent Doberman",
-                images: [
-                    {
+                images: {
+                    primary: {
                         url: "https://res.cloudinary.com/dwspjzkcz/image/upload/v1751594431/dobby-29452-1.png",
                         public_id: "dobby-29452-1"
                     },
-                    {
-                        url: "https://res.cloudinary.com/dwspjzkcz/image/upload/v1751594438/dobby-29452-2.png",
-                        public_id: "dobby-29452-2"
-                    },
-                    {
-                        url: "https://res.cloudinary.com/dwspjzkcz/image/upload/v1751594544/dobby-29452-3.png",
-                        public_id: "dobby-29452-3"
+                    secondary: {
+                        type: [
+                            {
+                                url: "https://res.cloudinary.com/dwspjzkcz/image/upload/v1751594438/dobby-29452-2.png",
+                                public_id: "dobby-29452-2"
+                            },
+                            {
+                                url: "https://res.cloudinary.com/dwspjzkcz/image/upload/v1751594544/dobby-29452-3.png",
+                                public_id: "dobby-29452-3"
+                            }
+                        ]
                     }
-                ],
+                },
                 isAdopted: false,
                 adoptionFee: 200,
                 medical: {
@@ -389,20 +409,24 @@ const seed = async () => {
                 species: "dog",
                 gender: "male",
                 description: "Happy and Sociable Shih Tzu",
-                images: [
-                    {
+                images: {
+                    primary: {
                         url: "https://res.cloudinary.com/dwspjzkcz/image/upload/v1751594564/chichi-123987-1.png",
                         public_id: "chichi-123987-1"
                     },
-                    {
-                        url: "https://res.cloudinary.com/dwspjzkcz/image/upload/v1751594569/chichi-123987-2.png",
-                        public_id: "chichi-123987-2"
-                    },
-                    {
-                        url: "https://res.cloudinary.com/dwspjzkcz/image/upload/v1751594602/chichi-123987-3.png",
-                        public_id: "chichi-123987-3"
+                    secondary: {
+                        type: [
+                            {
+                                url: "https://res.cloudinary.com/dwspjzkcz/image/upload/v1751594569/chichi-123987-2.png",
+                                public_id: "chichi-123987-2"
+                            },
+                            {
+                                url: "https://res.cloudinary.com/dwspjzkcz/image/upload/v1751594602/chichi-123987-3.png",
+                                public_id: "chichi-123987-3"
+                            }
+                        ]
                     }
-                ],
+                },
                 isAdopted: false,
                 adoptionFee: 350,
                 medical: {
@@ -424,20 +448,24 @@ const seed = async () => {
                 species: "cat",
                 gender: "male",
                 description: "Extremely Intelligent Bengal",
-                images: [
-                    {
+                images: {
+                    primary:{
                         url: "https://res.cloudinary.com/dwspjzkcz/image/upload/v1751594608/benjie-9138094-1.png",
                         public_id: "benjie-9138094-1"
                     },
-                    {
-                        url: "https://res.cloudinary.com/dwspjzkcz/image/upload/v1751594613/benjie-9138094-2.png",
-                        public_id: "benjie-9138094-2"
-                    },
-                    {
-                        url: "https://res.cloudinary.com/dwspjzkcz/image/upload/v1751594634/benjie-9138094-3.png",
-                        public_id: "benjie-9138094-3"
+                    secondary: {
+                        type:[
+                            {
+                                url: "https://res.cloudinary.com/dwspjzkcz/image/upload/v1751594613/benjie-9138094-2.png",
+                                public_id: "benjie-9138094-2"
+                            },
+                            {
+                                url: "https://res.cloudinary.com/dwspjzkcz/image/upload/v1751594634/benjie-9138094-3.png",
+                                public_id: "benjie-9138094-3"
+                            }
+                        ]
                     }
-                ],
+                },
                 isAdopted: false,
                 adoptionFee: 550,
                 medical: {
@@ -459,20 +487,24 @@ const seed = async () => {
                 species: "cat",
                 gender: "male",
                 description: "Affectionate and Highly Intelligent Sphynx",
-                images: [
-                    {
+                images: {
+                    primary: {
                         url: "https://res.cloudinary.com/dwspjzkcz/image/upload/v1751594641/mr.-smee-123982-1.png",
-                        public_id: "mr.-smee-123982-1"
+                        public_id: "mr.-smee-123982-1"  
                     },
-                    {
-                        url: "https://res.cloudinary.com/dwspjzkcz/image/upload/v1751594644/mr.-smee-123982-2.png",
-                        public_id: "mr.-smee-123982-2"
-                    },
-                    {
-                        url: "https://res.cloudinary.com/dwspjzkcz/image/upload/v1751594664/mr.-smee-123982-3.png",
-                        public_id: "mr.-smee-123982-3"
+                    secondary: {
+                        type: [
+                            {
+                                url: "https://res.cloudinary.com/dwspjzkcz/image/upload/v1751594644/mr.-smee-123982-2.png",
+                                public_id: "mr.-smee-123982-2"
+                            },
+                            {
+                                url: "https://res.cloudinary.com/dwspjzkcz/image/upload/v1751594664/mr.-smee-123982-3.png",
+                                public_id: "mr.-smee-123982-3"
+                            }
+                        ]
                     }
-                ],
+                },
                 isAdopted: false,
                 adoptionFee: 450,
                 medical: {
@@ -494,20 +526,24 @@ const seed = async () => {
                 species: "cat",
                 gender: "male",
                 description: "Affectionate Ragdoll",
-                images: [
-                    {
+                images: {
+                    primary: {
                         url: "https://res.cloudinary.com/dwspjzkcz/image/upload/v1751594669/raggy-9817231-1.png",
                         public_id: "raggy-9817231-1"
                     },
-                    {
-                        url: "https://res.cloudinary.com/dwspjzkcz/image/upload/v1751594694/raggy-9817231-2.png",
-                        public_id: "raggy-9817231-2"
-                    },
-                    {
-                        url: "https://res.cloudinary.com/dwspjzkcz/image/upload/v1751594717/raggy-9817231-3.png",
-                        public_id: "raggy-9817231-3"
+                    secondary: {
+                        type: [
+                            {
+                                url: "https://res.cloudinary.com/dwspjzkcz/image/upload/v1751594694/raggy-9817231-2.png",
+                                public_id: "raggy-9817231-2"
+                            },
+                            {
+                                url: "https://res.cloudinary.com/dwspjzkcz/image/upload/v1751594717/raggy-9817231-3.png",
+                                public_id: "raggy-9817231-3"
+                            }
+                        ]
                     }
-                ],
+                },
                 isAdopted: false,
                 adoptionFee: 500,
                 medical: {

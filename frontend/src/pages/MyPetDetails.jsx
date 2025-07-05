@@ -115,33 +115,36 @@ const PetDetails = () => {
                             <img src={myPetDetails.images.primary.url} alt={myPetDetails.name} className="w-60 h-60 mx-auto object-cover rounded-lg border-2 border-gray-300" />
                         </div>
                         <div className="bg-gray-100 pb-4 pt-2 px-4 rounded-lg my-auto">
-                            <p className="text-center text-[#4B7FBB] pb-2">Secondary Images</p>
-
-                            <div className="flex flex-row justify-center items-center gap-4">
-                                {myPetDetails.images.secondary[0]?.url ? (
-                                    <img
-                                        src={myPetDetails.images.secondary[0].url}
-                                        alt={myPetDetails.name}
-                                        className="w-30 h-30 md:w-45 md:h-45 object-cover rounded-lg border-2 border-gray-300"
-                                    />
+                            <p className="text-center text-[#4B7FBB] pb-2">Secondary Image</p>
+                            <div className="flex justify-center items-center">
+                                {myPetDetails.images?.secondary?.url ? (
+                                <img
+                                    src={myPetDetails.images.secondary.url}
+                                    alt={myPetDetails.name}
+                                    className="w-30 h-30 md:w-45 md:h-45 object-cover rounded-lg border-2 border-gray-300"
+                                />
                                 ) : (
-                                    <div className="w-30 h-30 md:w-45 md:h-45 bg-gray-300 rounded-lg flex items-center justify-center text-gray-400 text-xs">
-                                        No Image
-                                    </div>
-                                )}
-                                {myPetDetails.images.secondary[1]?.url ? (
-                                    <img
-                                        src={myPetDetails.images.secondary[1].url}
-                                        alt={myPetDetails.name}
-                                        className="w-30 h-30 md:w-45 md:h-45 object-cover rounded-lg border-2 border-gray-300"
-                                    />
-                                ) : (
-                                    <div className="w-30 h-30 md:w-45 md:h-45 bg-gray-300 rounded-lg flex items-center justify-center text-gray-400 text-xs">
-                                        No Image
-                                    </div>
+                                <div className="w-30 h-30 md:w-45 md:h-45 bg-gray-300 rounded-lg flex items-center justify-center text-gray-400 text-xs">
+                                    No Image
+                                </div>
                                 )}
                             </div>
-
+                        </div>
+                        <div className="bg-gray-100 pb-4 pt-2 px-4 rounded-lg my-auto">
+                            <p className="text-center text-[#4B7FBB] pb-2">Tertiary Image</p>
+                            <div className="flex justify-center items-center">
+                                {myPetDetails.images?.tertiary?.url ? (
+                                <img
+                                    src={myPetDetails.images.tertiary.url}
+                                    alt={myPetDetails.name}
+                                    className="w-30 h-30 md:w-45 md:h-45 object-cover rounded-lg border-2 border-gray-300"
+                                />
+                                ) : (
+                                <div className="w-30 h-30 md:w-45 md:h-45 bg-gray-300 rounded-lg flex items-center justify-center text-gray-400 text-xs">
+                                    No Image
+                                </div>
+                                )}
+                            </div>
                         </div>
                     </div>
                 </div>
