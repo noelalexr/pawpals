@@ -106,37 +106,37 @@ const PetDetails = () => {
                         </button>
                     </div>
                 </div>
-                <div className="border-3 border-[#406c9e5d] pb-5 pt-3 px-5 rounded-lg">
+                <div className="border-3 border-[#4B7FBB5d] pb-8 pt-5 px-8 rounded-xl">
 
                     <p className="text-md font-semibold pb-1 text-center">Images</p>
-                    <div className="md:flex flex-wrap justify-center gap-8">
+                    <div className="md:flex flex-wrap justify-center gap-10">
                         <div className="pb-5 md:pb-0">
-                            <p className="text-center text-[#406c9e] pb-2">Primary Image</p>
-                            <img src={myPetDetails.images[0].url} alt={myPetDetails.name} className="w-60 h-60 mx-auto object-cover rounded-lg border-2 border-gray-300" />
+                            <p className="text-center text-[#4B7FBB] pb-2">Primary Image</p>
+                            <img src={myPetDetails.images.primary.url} alt={myPetDetails.name} className="w-60 h-60 mx-auto object-cover rounded-lg border-2 border-gray-300" />
                         </div>
-                        <div className="bg-gray-100 py-3 px-4 rounded-lg my-auto">
-                            <p className="text-center text-[#406c9e] pb-2">Secondary Images</p>
+                        <div className="bg-gray-100 pb-4 pt-2 px-4 rounded-lg my-auto">
+                            <p className="text-center text-[#4B7FBB] pb-2">Secondary Images</p>
 
                             <div className="flex flex-row justify-center items-center gap-4">
-                                {myPetDetails.images[1]?.url ? (
+                                {myPetDetails.images.secondary[0]?.url ? (
                                     <img
-                                        src={myPetDetails.images[1].url}
+                                        src={myPetDetails.images.secondary[0].url}
                                         alt={myPetDetails.name}
                                         className="w-30 h-30 md:w-45 md:h-45 object-cover rounded-lg border-2 border-gray-300"
                                     />
                                 ) : (
-                                    <div className="w-30 h-30 md:w-45 md:h-45 bg-gray-300 rounded-lg flex items-center justify-center text-gray-400 text-sm">
+                                    <div className="w-30 h-30 md:w-45 md:h-45 bg-gray-300 rounded-lg flex items-center justify-center text-gray-400 text-xs">
                                         No Image
                                     </div>
                                 )}
-                                {myPetDetails.images[2]?.url ? (
+                                {myPetDetails.images.secondary[1]?.url ? (
                                     <img
-                                        src={myPetDetails.images[2].url}
+                                        src={myPetDetails.images.secondary[1].url}
                                         alt={myPetDetails.name}
                                         className="w-30 h-30 md:w-45 md:h-45 object-cover rounded-lg border-2 border-gray-300"
                                     />
                                 ) : (
-                                    <div className="w-30 h-30 md:w-45 md:h-45 bg-gray-300 rounded-lg flex items-center justify-center text-gray-400 text-sm">
+                                    <div className="w-30 h-30 md:w-45 md:h-45 bg-gray-300 rounded-lg flex items-center justify-center text-gray-400 text-xs">
                                         No Image
                                     </div>
                                 )}
@@ -145,41 +145,42 @@ const PetDetails = () => {
                         </div>
                     </div>
                 </div>
-                <div className="pt-10 pb-5 px-5 text-center md:flex flex-row justify-center gap-5">
+                <div className="md:px-7 px-3 pt-12 rounded-md md:w-[80%] md:mx-auto ">
+                    <p className="text-md font-semibold pb-1">Description</p>
+                    <p className="px-5">{myPetDetails.description}</p>
+                </div>
+                <div className="bg-[#4b7fbb5c] md:w-[85%] h-[2px] rounded-full mx-auto mt-10 mb-7"></div>
+                <div className=" pb-5 px-5 text-center md:flex flex-row justify-center gap-5">
                     <div className="bg-gray-100 px-7 py-5 rounded-md flex flex-col justify-center">
                         <p className="text-md font-semibold pb-1">Basic Information</p>
-                        <p><span className="text-[#406c9e]">Name: </span>{myPetDetails.name}</p>
-                        <p><span className="text-[#406c9e]">Status: </span>{myPetDetails.isAdopted ? "Adopted" : "Available"}</p>
+                        <p><span className="text-[#4B7FBB]">Name: </span>{myPetDetails.name}</p>
+                        <p><span className="text-[#4B7FBB]">Status: </span>{myPetDetails.isAdopted ? "Adopted" : "Available"}</p>
                         <p>
-                            <span className="text-[#406c9e]">Age: </span>
+                            <span className="text-[#4B7FBB]">Age: </span>
                             {myPetDetails.age} {myPetDetails.age === 1 ? "year" : "years"} old
                         </p>
-                        <p><span className="text-[#406c9e]">Breed: </span>{myPetDetails.breed}</p>
-                        <p><span className="text-[#406c9e]">Species: </span>{myPetDetails.species}</p>
-                        <p><span className="text-[#406c9e]">Gender: </span>{myPetDetails.gender}</p>
-                        <p><span className="text-[#406c9e]">Adoption Fee: </span>{new Intl.NumberFormat("en-PH", { style: "currency", currency: "PHP", }).format(myPetDetails.adoptionFee)}</p>
+                        <p><span className="text-[#4B7FBB]">Breed: </span>{myPetDetails.breed}</p>
+                        <p><span className="text-[#4B7FBB]">Species: </span>{myPetDetails.species}</p>
+                        <p><span className="text-[#4B7FBB]">Gender: </span>{myPetDetails.gender}</p>
+                        <p><span className="text-[#4B7FBB]">Adoption Fee: </span>{new Intl.NumberFormat("en-PH", { style: "currency", currency: "PHP", }).format(myPetDetails.adoptionFee)}</p>
                     </div>
                     <div className="md:flex flex-col justify-center items-center gap-5">
                         <div className="bg-gray-100 px-7 py-3 rounded-md flex flex-col justify-center mt-5 md:mt-0 w-[100%]">
                             <p className="text-md font-semibold pb-1">Special Assistance</p>
-                            <p><span className="text-[#406c9e]">Needed: </span> {myPetDetails.specialAssistance ? "Yes" : "No"}</p>
+                            <p><span className="text-[#4B7FBB]">Needed: </span> {myPetDetails.specialAssistance ? "Yes" : "No"}</p>
                         </div>
                         <div className="bg-gray-100 px-7 py-3 rounded-md flex flex-col justify-center mt-5 md:mt-0 w-[100%]">
                             <p className="text-md font-semibold pb-1">Medical Details</p>
-                            <p><span className="text-[#406c9e]">Vaccinated: </span> {myPetDetails.medical.vaccinated ? "Yes" : "No"}</p>
+                            <p><span className="text-[#4B7FBB]">Vaccinated: </span> {myPetDetails.medical.vaccinated ? "Yes" : "No"}</p>
                         </div>
                         <div className="bg-gray-100 px-7 py-3 rounded-md flex flex-col justify-center mt-5 md:mt-0 w-[100%]">
                             <p className="text-md font-semibold pb-1">Parasite Control</p>
 
-                            <p><span className="text-[#406c9e]">Tick and Flea: </span> {myPetDetails.medical.parasiteControl.tickAndFlea ? "Yes" : "No"}</p>
-                            <p><span className="text-[#406c9e]">Neutered: </span> {myPetDetails.medical.parasiteControl.neutered ? "Yes" : "No"}</p>
-                            <p><span className="text-[#406c9e]">Heartworm: </span> {myPetDetails.medical.parasiteControl.heartworm ? "Yes" : "No"}</p>
+                            <p><span className="text-[#4B7FBB]">Tick and Flea: </span> {myPetDetails.medical.parasiteControl.tickAndFlea ? "Yes" : "No"}</p>
+                            <p><span className="text-[#4B7FBB]">Neutered: </span> {myPetDetails.medical.parasiteControl.neutered ? "Yes" : "No"}</p>
+                            <p><span className="text-[#4B7FBB]">Heartworm: </span> {myPetDetails.medical.parasiteControl.heartworm ? "Yes" : "No"}</p>
                         </div>
                     </div>
-                </div>
-                <div className="bg-gray-100 px-7 py-5 rounded-md md:w-[70%] md:mx-auto mx-5">
-                    <p className="text-md font-semibold pb-1">Description</p>
-                    <p>{myPetDetails.description}</p>
                 </div>
                 <button onClick={() => navigate(`/private-dashboard/pets/mine/${id}/edit`)} className="bg-[#4B7FBB] hover:bg-[#406c9e] text-white py-3 mt-10 rounded-lg w-[100%] block mx-auto cursor-pointer transition-colors duration-300 text-lg">Edit pet details</button>
             </div>
