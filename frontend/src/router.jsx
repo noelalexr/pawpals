@@ -45,6 +45,14 @@ const router = createBrowserRouter(
                     path: "pets/:id",
                     element: <PetDetails />,
                 },
+                {
+                    path: "/dev/login",
+                    element: <DevLogin />,
+                },
+                {
+                    path: "/dev/signup",
+                    element: <DevSignup />,
+                },
             ]
         },
         {
