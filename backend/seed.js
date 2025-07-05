@@ -112,6 +112,40 @@ const seed = async () => {
                 },
                 documents: ["veterinary-health-certificate.pdf", "dti.pdf"],
                 isApproved: true
+            },
+            {
+                name: "Animal Kingdom Foundation (AKF)",
+                email: "contact@akf.com",
+                password: hashedPassword,
+                location: {
+                    fullAddress: "No. 8 Purante St., Brgy. Cub‑cub, Capas, Tarlac",
+                    citySort: "Capas, Tarlac"
+                },
+                contact: "0987-6543-210",
+                website: "https://www.akfrescues.org/",
+                socialLinks: {
+                    facebook: "https://www.facebook.com/AKFanimalrescue/",
+                    instagram: "https://www.instagram.com/akfanimalrescue/"
+                },
+                documents: [ "business-permit.pdf", "pound-registration-certificate.pdf", "veterinary-health-certificate.pdf", "dti.pdf" ],
+                isApproved: true
+            },
+            {
+                name: "Pawssion Project Foundation Inc.",
+                email: "contact@pawssion.com",
+                password: hashedPassword,
+                location: {
+                    fullAddress: "1429 Paradise 1, Purok 7 Tungkong Mangga, San Jose del Monte, Bulacan",
+                    citySort: "San Jose del Monte, Bulacan"
+                },
+                contact: "0987-6543-210",
+                website: "https://pawssionproject.org.ph/",
+                socialLinks: {
+                    facebook: "https://www.facebook.com/PAWSsionProject",
+                    tiktok: "https://www.tiktok.com/@pawssionproject"
+                },
+                documents: [ "veterinary-health-certificate.pdf", "dti.pdf" ],
+                isApproved: true
             }
         ];
 
@@ -130,7 +164,7 @@ const seed = async () => {
                     facebook: "https://www.facebook.com/",
                     instagram: "https://www.instagram.com/"
                 },
-                documents: ["business-permit.pdf, pound-registration-certificate.pdf", "veterinary-health-certificate.pdf"],
+                documents: [ "business-permit.pdf, pound-registration-certificate.pdf", "veterinary-health-certificate.pdf" ],
                 isApproved: false
             },
             {
@@ -147,12 +181,13 @@ const seed = async () => {
                     facebook: "https://www.facebook.com/",
                     tiktok: "https://www.tiktok.com/"
                 },
-                documents: ["business-permit.pdf, animal-welfare-act-compliance-certificate.pdf", "veterinary-health-certificate.pdf"],
+                documents: [ "business-permit.pdf, animal-welfare-act-compliance-certificate.pdf", "veterinary-health-certificate.pdf" ],
                 isApproved: false
             }
         ];
 
-        for (const kennelData of [...mockApprovedKennelsData, ...unapprovedKennels]) {
+        for(const kennelData of [...mockApprovedKennelsData, ...unapprovedKennels]){
+
             const exists = await Kennel.findOne({ email: kennelData.email });
 
             if (!exists) {
