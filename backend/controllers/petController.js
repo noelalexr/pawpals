@@ -6,6 +6,9 @@ const createPet = async (req, res) => {
         const newData = req.body;
         newData.kennel = req.user.userId;
 
+        newData.age = Number(newData.age);
+        newData.adoptionFee = Number(newData.adoptionFee);
+
         const pet = new petModel(newData);
         await pet.save();
 
@@ -78,7 +81,6 @@ const patchPetImages = async (req, res) => {
     try {
         const id = req.params.id;
         const pet = await petModel.findById(id);
-
         if (!pet) {
             return res.status(404).json({ error: "Pet not found" });
         }
@@ -87,21 +89,39 @@ const patchPetImages = async (req, res) => {
             return res.status(403).json({ error: "Unauthorized" });
         }
 
-        if (req.files && req.files.length > 0) {
-            const totalImages = pet.images.length + req.files.length;
-            if (totalImages > 3) {
-                return res.status(400).json({ error: "Cannot exceed 3 images." });
-            }
+        for (const file of req.files) {
+            const match = file.filename.match(/-(\d+)$/);
+            if (!match) continue;
 
-            const newImages = req.files.map(file => ({
+            const slot = parseInt(match[1], 10);
+            const image = {
                 url: file.path,
                 public_id: file.filename,
-            }));
+            };
 
-            pet.images.push(...newImages);
-            await pet.save();
+            if (slot === 1) {
+                // Replace primary image
+                if (pet.images.primary?.public_id) {
+                    await cloudinary.uploader.destroy(pet.images.primary.public_id);
+                }
+                pet.images.primary = image;
+            } else if ([2, 3].includes(slot)) {
+                const existingIndex = pet.images.secondary.findIndex(img => img.public_id.endsWith(`-${slot}`));
+
+                if (existingIndex !== -1) {
+                    // Replace existing secondary image
+                    await cloudinary.uploader.destroy(pet.images.secondary[existingIndex].public_id);
+                    pet.images.secondary[existingIndex] = image;
+                } else {
+                    if (pet.images.secondary.length >= 2) {
+                        return res.status(400).json({ error: "Only 2 secondary images allowed." });
+                    }
+                    pet.images.secondary.push(image);
+                }
+            }
         }
 
+        await pet.save();
         res.status(200).json(pet);
     } catch (error) {
         res.status(500).json({ error: error.message });
@@ -112,36 +132,26 @@ const patchPet = async (req, res) => {
     try {
         const id = req.params.id;
         const newData = req.body;
-        const record = await petModel.findById(id);
+        const pet = await petModel.findById(id);
 
-        if (!record) {
+        if (!pet) {
             return res.status(404).json({ error: "Pet not found" });
         }
 
-        if (record.kennel.toString() !== req.user.userId) {
+        if (pet.kennel.toString() !== req.user.userId) {
             return res.status(403).json({ error: "Unauthorized access to pet" });
         }
 
-        if (req.files && req.files.length > 0) {
-            if (req.files.length > 3) {
-                return res.status(400).json({ error: "Maximum of 3 images allowed." });
-            }
-            if ((record.images.length + req.files.length) > 3) {
-                return res.status(400).json({ error: "Cannot have more than 3 images." });
-            }
+        delete newData._id;
+        delete newData.kennel;
+        delete newData.images;
 
-            const newImages = req.files.map((file) => ({
-                url: file.path,
-                public_id: file.filename,
-            }));
+        const updatedPet = await petModel.findByIdAndUpdate(id, newData, {
+            new: true,
+            runValidators: true,
+        });
 
-            record.images.push(...newImages);
-        }
-
-        Object.assign(record, newData);
-        await record.save();
-
-        res.status(200).json(record);
+        res.status(200).json(updatedPet);
     } catch (error) {
         res.status(500).json({ error: error.message });
     }
@@ -165,6 +175,13 @@ const deletePet = async (req, res) => {
             }
         }
 
+        const folderName = `pets/${record.name?.toLowerCase().replace(/\s+/g, '-')}-${record._id}`;
+        try {
+            await cloudinary.api.delete_folder(folderName);
+        } catch (folderErr) {
+            console.warn(`Warning: Folder '${folderName}' could not be deleted - ${folderErr.message}`);
+        }
+
         await petModel.findByIdAndDelete(id);
         res.status(200).json({ message: "Pet and associated images have been deleted" });
     } catch (error) {
@@ -177,17 +194,36 @@ const deletePetPhoto = async (req, res) => {
 
     try {
         const record = await petModel.findById(id);
-        if (!record) return res.status(404).json({ error: "Pet not found" });
+        if (!record) {
+            return res.status(404).json({ error: "Pet not found" });
+        }
 
         if (record.kennel.toString() !== req.user.userId) {
             return res.status(403).json({ error: "Unauthorized access to pet" });
         }
 
-        await cloudinary.uploader.destroy(publicId);
+        let deleted = false;
 
-        record.images = record.images.filter(img => img.public_id !== publicId);
+        // Check if it's the primary image
+        if (record.images.primary?.public_id === publicId) {
+            await cloudinary.uploader.destroy(publicId);
+            record.images.primary = undefined;
+            deleted = true;
+        } else {
+            // Try deleting from secondary images
+            const index = record.images.secondary.findIndex(img => img.public_id === publicId);
+            if (index !== -1) {
+                await cloudinary.uploader.destroy(publicId);
+                record.images.secondary.splice(index, 1);
+                deleted = true;
+            }
+        }
+
+        if (!deleted) {
+            return res.status(404).json({ error: "Photo not found in pet record" });
+        }
+
         await record.save();
-
         res.status(200).json({ message: "Photo deleted" });
     } catch (error) {
         res.status(500).json({ error: error.message });

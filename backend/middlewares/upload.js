@@ -8,9 +8,8 @@ const storage = new CloudinaryStorage({
     params: async (req, file) => {
         const petId = req.params.id;
         let petName = 'unnamed';
-        let usedSlots = [];
+        const usedSlots = new Set();
 
-        // If pet ID is provided, fetch pet data
         if (petId) {
             const pet = await petModel.findById(petId).select("images name");
 
@@ -20,31 +19,31 @@ const storage = new CloudinaryStorage({
 
             petName = pet.name?.toLowerCase().replace(/\s+/g, '-') || 'unnamed';
 
-            // Get used slot numbers (1, 2, 3)
-            usedSlots = pet.images?.map(img => {
-                const match = img.public_id?.match(/-(\d+)$/);
-                return match ? parseInt(match[1], 10) : null;
-            }).filter(n => n !== null) || [];
-        }
+            if (pet.images?.primary?.public_id) {
+                const match = pet.images.primary.public_id.match(/-(\d+)$/);
+                if (match) usedSlots.add(parseInt(match[1], 10));
+            }
 
-        // Initialize available slot numbers if not already set
-        if (!req.fileIndexMap) {
-            const availableSlots = [1, 2, 3].filter(n => !usedSlots.includes(n));
-            req.fileIndexMap = availableSlots;
-
-            if (availableSlots.length === 0) {
-                throw new Error('Maximum number of images reached for this pet');
+            if (pet.images?.secondary?.length) {
+                for (const img of pet.images.secondary) {
+                    const match = img.public_id.match(/-(\d+)$/);
+                    if (match) usedSlots.add(parseInt(match[1], 10));
+                }
             }
         }
 
-        const nextSlot = req.fileIndexMap.shift();
+        if (!req.fileIndexMap) {
+            req.fileIndexMap = [1, 2, 3]; // primary, secondary1, secondary2
+        }
 
+        // Assign next available slot or reuse slot to allow overwrite
+        const slot = req.fileIndexMap.shift();
         return {
             folder: `pets/${petName}-${petId}`,
             allowed_formats: ['jpg', 'png', 'jpeg', 'webp', 'heic', 'avif'],
-            public_id: `${petName}-${petId}-${nextSlot}`,
+            public_id: `${petName}-${petId}-${slot}`,
         };
-    },
+    }
 });
 
 const upload = multer({

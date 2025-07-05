@@ -8,12 +8,20 @@ const petSchema = new mongoose.Schema({
     species: { type: String, required: true, enum: ["dog", "cat", "bird"] },
     gender: { type: String, required: true, enum: ["male", "female", "undetermined"] },
     description: { type: String, required: true },
-    images: [
-        {
-            url: { type: String, required: true },
-            public_id: { type: String, required: true },
-        }
-    ],
+    images: {
+        primary: {
+            url: { type: String },
+            public_id: { type: String },
+        },
+        secondary: {
+            type: [
+                {
+                    url: { type: String },
+                    public_id: { type: String },
+                }
+            ],
+        },
+    },
     isAdopted: { type: Boolean, required: true, default: false },
     adoptionFee: { type: Number, required: true },
     medical: {
