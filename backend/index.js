@@ -3,6 +3,7 @@ import dotenv from "dotenv";
 import helmet from "helmet";
 import cors from "cors";
 import cookieParser from "cookie-parser";
+import chatbotRoutes from "./routes/chatbotRoute.js";
 
 //databases
 import connectDB from "./configs/db.js";
@@ -30,6 +31,7 @@ app.use("/api/developers", developerRoute);
 app.use("/api/kennels", authRoute);
 app.use("/api/pets", petRoute);
 app.use("/api/kennels", cityRoutes);
+app.use("/api/chatbot", chatbotRoutes);
 
 //error handling
 app.use((err, req, res, next) => {
