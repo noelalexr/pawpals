@@ -9,18 +9,9 @@ const petSchema = new mongoose.Schema({
     gender: { type: String, required: true, enum: ["male", "female", "undetermined"] },
     description: { type: String, required: true },
     images: {
-        primary: {
-            url: { type: String },
-            public_id: { type: String },
-        },
-        secondary: {
-            type: [
-                {
-                    url: { type: String },
-                    public_id: { type: String },
-                }
-            ],
-        },
+        primary: { url: String, public_id: String },
+        secondary: { url: String, public_id: String },
+        tertiary: { url: String, public_id: String }
     },
     isAdopted: { type: Boolean, required: true, default: false },
     adoptionFee: { type: Number, required: true },

@@ -78,55 +78,47 @@ const readMyPet = async (req, res) => {
 };
 
 const patchPetImages = async (req, res) => {
-    try {
-        const id = req.params.id;
-        const pet = await petModel.findById(id);
-        if (!pet) {
-            return res.status(404).json({ error: "Pet not found" });
-        }
+  try {
+    const id = req.params.id;
+    const pet = await petModel.findById(id);
+    if (!pet) return res.status(404).json({ error: "Pet not found" });
 
-        if (pet.kennel.toString() !== req.user.userId) {
-            return res.status(403).json({ error: "Unauthorized" });
-        }
-
-        for (const file of req.files) {
-            const match = file.filename.match(/-(\d+)$/);
-            if (!match) continue;
-
-            const slot = parseInt(match[1], 10);
-            const image = {
-                url: file.path,
-                public_id: file.filename,
-            };
-
-            if (slot === 1) {
-                // Replace primary image
-                if (pet.images.primary?.public_id) {
-                    await cloudinary.uploader.destroy(pet.images.primary.public_id);
-                }
-                pet.images.primary = image;
-            } else if ([2, 3].includes(slot)) {
-                const existingIndex = pet.images.secondary.findIndex(img => img.public_id.endsWith(`-${slot}`));
-
-                if (existingIndex !== -1) {
-                    // Replace existing secondary image
-                    await cloudinary.uploader.destroy(pet.images.secondary[existingIndex].public_id);
-                    pet.images.secondary[existingIndex] = image;
-                } else {
-                    if (pet.images.secondary.length >= 2) {
-                        return res.status(400).json({ error: "Only 2 secondary images allowed." });
-                    }
-                    pet.images.secondary.push(image);
-                }
-            }
-        }
-
-        await pet.save();
-        res.status(200).json(pet);
-    } catch (error) {
-        res.status(500).json({ error: error.message });
+    if (pet.kennel.toString() !== req.user.userId) {
+      return res.status(403).json({ error: "Unauthorized" });
     }
+
+    const primary = req.files?.primary?.[0];
+    const secondary = req.files?.secondary?.[0];
+    const tertiary = req.files?.tertiary?.[0];
+
+    if (primary) {
+      if (pet.images.primary?.public_id) {
+        await cloudinary.uploader.destroy(pet.images.primary.public_id);
+      }
+      pet.images.primary = { url: primary.path, public_id: primary.filename };
+    }
+
+    if (secondary) {
+      if (pet.images.secondary?.public_id) {
+        await cloudinary.uploader.destroy(pet.images.secondary.public_id);
+      }
+      pet.images.secondary = { url: secondary.path, public_id: secondary.filename };
+    }
+
+    if (tertiary) {
+      if (pet.images.tertiary?.public_id) {
+        await cloudinary.uploader.destroy(pet.images.tertiary.public_id);
+      }
+      pet.images.tertiary = { url: tertiary.path, public_id: tertiary.filename };
+    }
+
+    await pet.save();
+    res.status(200).json(pet);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
 };
+
 
 const patchPet = async (req, res) => {
     try {
@@ -169,12 +161,18 @@ const deletePet = async (req, res) => {
             return res.status(403).json({ error: "Unauthorized access to pet" });
         }
 
-        if (record.images && record.images.length > 0) {
-            for (const img of record.images) {
-                await cloudinary.uploader.destroy(img.public_id);
-            }
+        // Delete all Cloudinary images
+        const imagesToDelete = [
+            record.images?.primary?.public_id,
+            record.images?.secondary?.public_id,
+            record.images?.tertiary?.public_id
+        ].filter(Boolean);
+
+        for (const publicId of imagesToDelete) {
+            await cloudinary.uploader.destroy(publicId);
         }
 
+        // Try to delete the folder (it must be empty)
         const folderName = `pets/${record.name?.toLowerCase().replace(/\s+/g, '-')}-${record._id}`;
         try {
             await cloudinary.api.delete_folder(folderName);
@@ -182,8 +180,10 @@ const deletePet = async (req, res) => {
             console.warn(`Warning: Folder '${folderName}' could not be deleted - ${folderErr.message}`);
         }
 
+        // Delete pet from DB
         await petModel.findByIdAndDelete(id);
-        res.status(200).json({ message: "Pet and associated images have been deleted" });
+
+        res.status(200).json({ message: "Pet and images deleted successfully" });
     } catch (error) {
         res.status(500).json({ error: error.message });
     }
@@ -204,18 +204,12 @@ const deletePetPhoto = async (req, res) => {
 
         let deleted = false;
 
-        // Check if it's the primary image
-        if (record.images.primary?.public_id === publicId) {
-            await cloudinary.uploader.destroy(publicId);
-            record.images.primary = undefined;
-            deleted = true;
-        } else {
-            // Try deleting from secondary images
-            const index = record.images.secondary.findIndex(img => img.public_id === publicId);
-            if (index !== -1) {
+        for (const key of ["primary", "secondary", "tertiary"]) {
+            if (record.images[key]?.public_id === publicId) {
                 await cloudinary.uploader.destroy(publicId);
-                record.images.secondary.splice(index, 1);
+                record.images[key] = undefined;
                 deleted = true;
+                break;
             }
         }
 
