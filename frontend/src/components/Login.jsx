@@ -9,7 +9,6 @@ export default function Login() {
     const [error, setError] = useState("");
     const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
-    const API = import.meta.env.VITE_API_URL;
 
     const quotes = [
         "Give Love a Home — Adopt from the Pound.",

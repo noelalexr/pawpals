@@ -50,6 +50,8 @@ const PublicDashboard = () => {
     const applyFilters = (searchText, species, gender, ageRange, city) => {
         let filteredData = [...pets];
 
+        filteredData = filteredData.filter(pet => pet.isAdopted === false);
+
         if (species) {
             filteredData = filteredData.filter(
                 (pet) => pet.species.toLowerCase() === species.toLowerCase()
@@ -271,7 +273,7 @@ const PublicDashboard = () => {
                             <div className="group">
                                 <div className="overflow-hidden rounded-t-lg bg-black">
                                     <img
-                                        src={pet.images[0].url}
+                                        src={pet.images.primary.url}
                                         // alt={product.name}
                                         className="md:w-[300px] md:h-[300px] w-[150px] h-[150px] object-cover rounded-t-lg group-hover:scale-115 group-active:scale-115 ease-in-out duration-500"
 
