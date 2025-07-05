@@ -136,9 +136,9 @@ export default function AddPet() {
         }
     };
 
-    if (loading) {
-        return <LoaderPage />;
-    }
+    // if (loading) {
+    //     return <LoaderPage />;
+    // }
 
 
 
