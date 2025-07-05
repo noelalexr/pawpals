@@ -165,6 +165,13 @@ const deletePet = async (req, res) => {
             }
         }
 
+        const folderName = `pets/${record.name?.toLowerCase().replace(/\s+/g, '-')}-${record._id}`;
+        try {
+            await cloudinary.api.delete_folder(folderName);
+        } catch (folderErr) {
+            console.warn(`Warning: Folder '${folderName}' could not be deleted - ${folderErr.message}`);
+        }
+
         await petModel.findByIdAndDelete(id);
         res.status(200).json({ message: "Pet and associated images have been deleted" });
     } catch (error) {
