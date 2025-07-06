@@ -159,7 +159,7 @@ const PrivateDashboard = () => {
                 </div>
                 <button onClick={handleLogout} className='py-2 px-3 text-xs rounded-sm text-white font-semibold bg-gray-400 hover:bg-gray-500 active:bg-gray-500 transition-colors ease-in-out duration-300 cursor-pointer'>Logout</button>
             </div>
-            <div className="bg-[#4B7FBB] py-1 text-center text-white px-5"><span className="text-sm my-auto">Logged in as </span><b className="truncate overflow-hidden whitespace-nowrap max-w-[100%] inline-block align-middle">{`${kennelName}`}</b></div>
+            <div className="bg-[#4B7FBB] py-1 text-center text-white px-5"><span className="text-xs my-auto">Logged in as </span><b className="truncate overflow-hidden whitespace-nowrap max-w-[100%] inline-block align-middle text-sm">{`${kennelName}`}</b></div>
             <div className="flex justify-end md:px-[15%] pt-3 pb-1 text-[#4B7FBB] text-sm">
                 <button onClick={() => navigate("/private-dashboard/adopted-pets")} className="hover:underline cursor-pointer hover:text-red-700 active:text-red-700 mx-2 md:text-md text-sm">
                     <span>Navigate to <b>Adopted Pets Page </b></span>

@@ -52,7 +52,7 @@ export default function DevLogin() {
             const data = await res.json();
             if (!res.ok) throw new Error(data.message || "Login failed");
 
-            navigate("/developerdashboard");
+            navigate("/dev/dashboard");
         } catch (err) {
             setError(err.message || "Server error");
         } finally {
