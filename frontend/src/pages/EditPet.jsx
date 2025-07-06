@@ -113,7 +113,7 @@ export default function EditPet() {
     const handleImageChange = (e, index = null, type = "secondary") => {
         const file = e.target.files[0];
         if (!file || file.size > MAX_FILE_SIZE) {
-            alert("Image must be 10MB or less");
+            toast.warning("Image must be 10MB or less");
             return;
         }
 
@@ -346,7 +346,7 @@ export default function EditPet() {
                                                         e.stopPropagation();
                                                         setsecondaryImage(null);
                                                     }}
-                                                    className="absolute -top-0 -right-0 bg-gray-400 text-white text-xs w-7 h-7 rounded-full hover:bg-red-600 z-30 cursor-pointer"
+                                                    className="absolute -top-0 -right-0 bg-red-600 text-white text-xs w-7 h-7 rounded-full hover:bg-red-700 active:bg-red-700 transition-colors duration-300 ease-in-out z-30 cursor-pointer"
                                                 >
                                                     ✕
                                                 </button>
@@ -361,7 +361,7 @@ export default function EditPet() {
                                                         setToDeleteSecondary((prev) => [...prev, existingSecondary[0].public_id]);
                                                         setExistingSecondary([]);
                                                     }}
-                                                    className="absolute -top-0 -right-0 bg-gray-400 text-white text-xs w-7 h-7 rounded-full hover:bg-red-600 z-30 cursor-pointer"
+                                                    className="absolute -top-0 -right-0 bg-red-600 text-white text-xs w-7 h-7 rounded-full hover:bg-red-700 active:bg-red-700 transition-colors duration-300 ease-in-out z-30 cursor-pointer"
                                                 >
                                                     ✕
                                                 </button>
@@ -385,7 +385,7 @@ export default function EditPet() {
                                                 setsecondaryImage(file);
                                                 setExistingSecondary([]);
                                             } else {
-                                                alert("Image must be 10MB or less");
+                                                toast.warning("Image must be 10MB or less");
                                             }
                                         }}
                                     />
@@ -397,7 +397,7 @@ export default function EditPet() {
                                                 <img src={URL.createObjectURL(tertiaryImage)} className="md:h-50 md:w-50 h-25 w-25 object-cover rounded-sm" />
                                                 <button
                                                     type="button"
-                                                    className="absolute -top-0 -right-0 bg-gray-400 text-white text-xs w-7 h-7 rounded-full hover:bg-red-600 z-30 cursor-pointer"
+                                                    className="absolute -top-0 -right-0 bg-red-600 text-white text-xs w-7 h-7 rounded-full hover:bg-red-700 active:bg-red-700 transition-colors duration-300 ease-in-out z-30 cursor-pointer"
                                                     onClick={(e) => {
                                                         e.stopPropagation();
                                                         setTertiaryImage(null);
@@ -411,7 +411,7 @@ export default function EditPet() {
                                                 <img src={existingTertiary.url} className="md:h-50 md:w-50 h-25 w-25 object-cover rounded-sm" />
                                                 <button
                                                     type="button"
-                                                    className="absolute -top-0 -right-0 bg-gray-400 text-white text-xs w-7 h-7 rounded-full hover:bg-red-600 z-30 cursor-pointer"
+                                                    className="absolute -top-0 -right-0 bg-red-600 text-white text-xs w-7 h-7 rounded-full hover:bg-red-700 active:bg-red-700 transition-colors duration-300 ease-in-out z-30 cursor-pointer"
                                                     onClick={(e) => {
                                                         e.stopPropagation();
                                                         setToDeleteTertiary((prev) => [...prev, existingTertiary.public_id]);
@@ -440,7 +440,7 @@ export default function EditPet() {
                                                 setTertiaryImage(file);
                                                 setExistingTertiary(null);
                                             } else {
-                                                alert("Image must be 10MB or less");
+                                                toast.warning("Image must be 10MB or less");
                                             }
                                         }}
                                     />
