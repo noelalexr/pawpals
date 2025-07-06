@@ -1,9 +1,12 @@
-import { Configuration, OpenAIApi } from "openai";
+import { OpenAI } from "openai";
 import Pet from "../models/petSchema.js";
+import dotenv from "dotenv"
 
-const openai = new OpenAIApi(new Configuration({
+dotenv.config()
+
+const openai = new OpenAI({
     apiKey: process.env.OPENAI_API_KEY
-}));
+});
 
 const recommendPet = async (req, res) => {
     const { message } = req.body;

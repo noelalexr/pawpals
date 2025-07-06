@@ -27,13 +27,14 @@ export default function EditPet() {
     });
 
     const [primaryImage, setPrimaryImage] = useState(null);
-    const [secondaryImages, setSecondaryImages] = useState([null, null]); // new uploads
+    const [secondaryImage, setsecondaryImage] = useState(null);
+    const [tertiaryImage, setTertiaryImage] = useState(null);
     const [existingPrimary, setExistingPrimary] = useState(null);
     const [existingSecondary, setExistingSecondary] = useState([]);
+    const [existingTertiary, setExistingTertiary] = useState(null);
 
-    const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
+    const MAX_FILE_SIZE = 10 * 1024 * 1024;
 
-    // Fetch existing pet data
     useEffect(() => {
         (async () => {
             try {
@@ -60,7 +61,8 @@ export default function EditPet() {
                 });
 
                 setExistingPrimary(data.images?.primary || null);
-                setExistingSecondary(data.images?.secondary || []);
+                setExistingSecondary(data.images?.secondary ? [data.images.secondary] : []);
+                setExistingTertiary(data.images?.tertiary || null);
             } catch (err) {
                 toast.error("Could not load pet data");
                 console.error(err);
@@ -99,19 +101,17 @@ export default function EditPet() {
         }
     };
 
-    const handleImageChange = (e, index = null) => {
+    const handleImageChange = (e, index = null, type = "secondary") => {
         const file = e.target.files[0];
-        if (!file) return;
-
-        if (file.size > MAX_FILE_SIZE) {
+        if (!file || file.size > MAX_FILE_SIZE) {
             alert("Image must be 10MB or less");
             return;
         }
 
-        if (index === null) {
-            setPrimaryImage(file);
-        } else {
-            setSecondaryImages((prev) => {
+        if (type === "primary") setPrimaryImage(file);
+        else if (type === "tertiary") setTertiaryImage(file);
+        else {
+            setsecondaryImage((prev) => {
                 const updated = [...prev];
                 updated[index] = file;
                 return updated;
@@ -132,11 +132,23 @@ export default function EditPet() {
         }
     };
 
+    const handleDeleteTertiary = async (publicId) => {
+        try {
+            const res = await fetch(`${import.meta.env.VITE_MY_PETS_API}/${id}/photos/${publicId}`, {
+                method: "DELETE",
+                credentials: "include",
+            });
+            if (!res.ok) throw new Error("Delete failed");
+            setExistingTertiary(null);
+        } catch (err) {
+            toast.error("Failed to delete image");
+        }
+    };
+
     const handleSubmit = async (e) => {
         e.preventDefault();
 
         try {
-            // Update text data
             const res = await fetch(`${import.meta.env.VITE_MY_PETS_API}/${id}`, {
                 method: "PATCH",
                 headers: { "Content-Type": "application/json" },
@@ -145,14 +157,12 @@ export default function EditPet() {
             });
             if (!res.ok) throw new Error("Failed to update pet");
 
-            // Upload new images if any
             const formData = new FormData();
-            if (primaryImage) formData.append("images", primaryImage);
-            secondaryImages.forEach((img) => {
-                if (img) formData.append("images", img);
-            });
+            if (primaryImage) formData.append("primary", primaryImage);
+            if (secondaryImage) formData.append("secondary", secondaryImage);
+            if (tertiaryImage) formData.append("tertiary", tertiaryImage);
 
-            if (formData.has("images")) {
+            if (formData.has("primary") || formData.has("secondary") || formData.has("tertiary")) {
                 const imgRes = await fetch(`${import.meta.env.VITE_MY_PETS_API}/${id}/images`, {
                     method: "PATCH",
                     credentials: "include",
@@ -184,99 +194,48 @@ export default function EditPet() {
         }
     };
 
-
     return (
-        <form onSubmit={handleSubmit}>
-            {/* Basic Info */}
+        <form onSubmit={handleSubmit} className="space-y-4">
             <div><label>Name: </label><input name="name" value={form.name} onChange={handleFormChange} required /></div>
             <div><label>Age: </label><input type="number" name="age" value={form.age} onChange={handleFormChange} required /></div>
             <div><label>Arrival Date: </label><input type="date" name="arrivalDate" value={form.arrivalDate} onChange={handleFormChange} required /></div>
             <div><label>Breed: </label><input name="breed" value={form.breed} onChange={handleFormChange} required /></div>
-            <div>
-                <label>Species: </label>
-                <select name="species" value={form.species} onChange={handleFormChange}>
-                    <option value="dog">Dog</option>
-                    <option value="cat">Cat</option>
-                    <option value="bird">Bird</option>
-                </select>
-            </div>
-            <div>
-                <label>Gender: </label>
-                <select name="gender" value={form.gender} onChange={handleFormChange}>
-                    <option value="male">Male</option>
-                    <option value="female">Female</option>
-                    <option value="undetermined">Undetermined</option>
-                </select>
-            </div>
+            <div><label>Species: </label><select name="species" value={form.species} onChange={handleFormChange}><option value="dog">Dog</option><option value="cat">Cat</option><option value="bird">Bird</option></select></div>
+            <div><label>Gender: </label><select name="gender" value={form.gender} onChange={handleFormChange}><option value="male">Male</option><option value="female">Female</option><option value="undetermined">Undetermined</option></select></div>
             <div><label>Description: </label><textarea name="description" value={form.description} onChange={handleFormChange} required /></div>
             <div><label>Adoption Fee: </label><input name="adoptionFee" type="number" value={form.adoptionFee} onChange={handleFormChange} required /></div>
-
-            {/* Medical */}
             <div><label>Vaccinated: </label><input type="checkbox" name="medical.vaccinated" checked={form.medical.vaccinated} onChange={handleFormChange} /></div>
             <div><label>Tick & Flea Control: </label><input type="checkbox" name="medical.parasiteControl.tickAndFlea" checked={form.medical.parasiteControl.tickAndFlea} onChange={handleFormChange} /></div>
             <div><label>Heartworm: </label><input type="checkbox" name="medical.parasiteControl.heartworm" checked={form.medical.parasiteControl.heartworm} onChange={handleFormChange} /></div>
             <div><label>Neutered: </label><input type="checkbox" name="medical.parasiteControl.neutered" checked={form.medical.parasiteControl.neutered} onChange={handleFormChange} /></div>
             <div><label>Special Assistance: </label><input type="checkbox" name="specialAssistance" checked={form.specialAssistance} onChange={handleFormChange} /></div>
 
-            {/* Images */}
             <div>
                 <label>Primary Image:</label>
                 <div onClick={() => document.getElementById("edit-primary-upload").click()} style={{ border: "1px solid black", padding: "10px", cursor: "pointer" }}>
-                    {primaryImage ? (
-                        <img src={URL.createObjectURL(primaryImage)} alt="Primary" width="100" />
-                    ) : existingPrimary ? (
-                        <img src={existingPrimary.url} alt="Existing Primary" width="100" />
-                    ) : (
-                        <span>Click to upload primary image</span>
-                    )}
+                    {primaryImage ? <img src={URL.createObjectURL(primaryImage)} width="100" /> : existingPrimary ? <img src={existingPrimary.url} width="100" /> : <span>Click to upload primary image</span>}
                 </div>
-                <input
-                    id="edit-primary-upload"
-                    type="file"
-                    accept="image/*"
-                    style={{ display: "none" }}
-                    onChange={(e) => handleImageChange(e)}
-                />
+                <input id="edit-primary-upload" type="file" accept="image/*" style={{ display: "none" }} onChange={(e) => handleImageChange(e, null, "primary")} />
             </div>
 
             <div>
-                <label>Secondary Images:</label>
-                {[0, 1].map((index) => {
-                    const existing = existingSecondary[index];
-                    const uploaded = secondaryImages[index];
+                <label>Secondary Image:</label>
+                <div onClick={() => document.getElementById("edit-secondary-upload").click()} style={{ border: "1px solid black", padding: "10px", cursor: "pointer" }} >
+                    {secondaryImage ? (<img src={URL.createObjectURL(secondaryImage)} width="100" />) : existingSecondary[0] ? (<><img src={existingSecondary[0].url} width="100" /><button type="button" onClick={(e) => { e.stopPropagation(); handleDeleteSecondary(existingSecondary[0].public_id); }}>🗑️</button></>) : (<span>Click to upload secondary image</span>)}
+                </div>
+                <input id="edit-secondary-upload" type="file" accept="image/*" style={{ display: "none" }} onChange={(e) => setsecondaryImage(e.target.files[0])} />
+            </div>
 
-                    return (
-                        <div key={index} onClick={() => document.getElementById(`edit-secondary-${index}`).click()} style={{ border: "1px solid gray", padding: "10px", cursor: "pointer" }}>
-                            {uploaded ? (
-                                <>
-                                    <img src={URL.createObjectURL(uploaded)} alt={`Secondary ${index + 1}`} width="100" />
-                                    <button type="button" onClick={(e) => { e.stopPropagation(); setSecondaryImages((prev) => { const u = [...prev]; u[index] = null; return u; }); }}>🗑️</button>
-                                </>
-                            ) : existing ? (
-                                <>
-                                    <img src={existing.url} alt={`Existing ${index + 1}`} width="100" />
-                                    <button type="button" onClick={(e) => { e.stopPropagation(); handleDeleteSecondary(existing.public_id); }}>🗑️</button>
-                                </>
-                            ) : (
-                                <span>Click to upload image {index + 2}</span>
-                            )}
-                            <input
-                                id={`edit-secondary-${index}`}
-                                type="file"
-                                accept="image/*"
-                                style={{ display: "none" }}
-                                onChange={(e) => handleImageChange(e, index)}
-                            />
-                        </div>
-                    );
-                })}
+            <div>
+                <label>Tertiary Image:</label>
+                <div onClick={() => document.getElementById("edit-tertiary-upload").click()} style={{ border: "1px solid black", padding: "10px", cursor: "pointer" }}>
+                    {tertiaryImage ? <img src={URL.createObjectURL(tertiaryImage)} width="100" /> : existingTertiary ? <><img src={existingTertiary.url} width="100" /><button type="button" onClick={(e) => { e.stopPropagation(); handleDeleteTertiary(existingTertiary.public_id); }}>🗑️</button></> : <span>Click to upload tertiary image</span>}
+                </div>
+                <input id="edit-tertiary-upload" type="file" accept="image/*" style={{ display: "none" }} onChange={(e) => handleImageChange(e, null, "tertiary")} />
             </div>
 
             <button type="submit">Update Pet</button>
-            <button type="button" onClick={handleDeletePet} style={{ marginLeft: "10px", background: "red", color: "white" }}>
-                Delete Pet
-            </button>
+            <button type="button" onClick={handleDeletePet} style={{ marginLeft: "10px", background: "red", color: "white" }}>Delete Pet</button>
         </form>
     );
 }
-

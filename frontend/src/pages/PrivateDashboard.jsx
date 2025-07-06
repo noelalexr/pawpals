@@ -321,7 +321,7 @@ const PrivateDashboard = () => {
                             <div className="group">
                                 <div className="overflow-hidden rounded-t-lg bg-black">
                                     <img
-                                        src={pet.images.primary.url}
+                                        src={pet.images?.primary?.url}
                                         // alt={product.name}
                                         className="md:w-[300px] md:h-[300px] w-[150px] h-[150px] object-cover rounded-t-lg group-hover:scale-115 group-active:scale-115 ease-in-out duration-500"
 
