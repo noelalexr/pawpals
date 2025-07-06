@@ -17,8 +17,8 @@ export async function authLoader() {
             return redirect("/login");
         }
 
-        return null; // Auth success
+        return null;
     } catch {
-        return redirect("/login"); // Fallback on error
+        return redirect("/login");
     }
 }

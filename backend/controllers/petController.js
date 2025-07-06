@@ -78,45 +78,45 @@ const readMyPet = async (req, res) => {
 };
 
 const patchPetImages = async (req, res) => {
-  try {
-    const id = req.params.id;
-    const pet = await petModel.findById(id);
-    if (!pet) return res.status(404).json({ error: "Pet not found" });
+    try {
+        const id = req.params.id;
+        const pet = await petModel.findById(id);
+        if (!pet) return res.status(404).json({ error: "Pet not found" });
 
-    if (pet.kennel.toString() !== req.user.userId) {
-      return res.status(403).json({ error: "Unauthorized" });
+        if (pet.kennel.toString() !== req.user.userId) {
+            return res.status(403).json({ error: "Unauthorized" });
+        }
+
+        const primary = req.files?.primary?.[0];
+        const secondary = req.files?.secondary?.[0];
+        const tertiary = req.files?.tertiary?.[0];
+
+        if (primary) {
+            if (pet.images.primary?.public_id) {
+                await cloudinary.uploader.destroy(pet.images.primary.public_id);
+            }
+            pet.images.primary = { url: primary.path, public_id: primary.filename };
+        }
+
+        if (secondary) {
+            if (pet.images.secondary?.public_id) {
+                await cloudinary.uploader.destroy(pet.images.secondary.public_id);
+            }
+            pet.images.secondary = { url: secondary.path, public_id: secondary.filename };
+        }
+
+        if (tertiary) {
+            if (pet.images.tertiary?.public_id) {
+                await cloudinary.uploader.destroy(pet.images.tertiary.public_id);
+            }
+            pet.images.tertiary = { url: tertiary.path, public_id: tertiary.filename };
+        }
+
+        await pet.save();
+        res.status(200).json(pet);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
     }
-
-    const primary = req.files?.primary?.[0];
-    const secondary = req.files?.secondary?.[0];
-    const tertiary = req.files?.tertiary?.[0];
-
-    if (primary) {
-      if (pet.images.primary?.public_id) {
-        await cloudinary.uploader.destroy(pet.images.primary.public_id);
-      }
-      pet.images.primary = { url: primary.path, public_id: primary.filename };
-    }
-
-    if (secondary) {
-      if (pet.images.secondary?.public_id) {
-        await cloudinary.uploader.destroy(pet.images.secondary.public_id);
-      }
-      pet.images.secondary = { url: secondary.path, public_id: secondary.filename };
-    }
-
-    if (tertiary) {
-      if (pet.images.tertiary?.public_id) {
-        await cloudinary.uploader.destroy(pet.images.tertiary.public_id);
-      }
-      pet.images.tertiary = { url: tertiary.path, public_id: tertiary.filename };
-    }
-
-    await pet.save();
-    res.status(200).json(pet);
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
 };
 
 
@@ -125,7 +125,6 @@ const patchPet = async (req, res) => {
         const id = req.params.id;
         const newData = req.body;
         const pet = await petModel.findById(id);
-
         if (!pet) {
             return res.status(404).json({ error: "Pet not found" });
         }
