@@ -9,6 +9,7 @@ import birdsIcon from "../assets/images/icons/bird.png"
 import maleIcon from "../assets/images/icons/male.png"
 import femaleIcon from "../assets/images/icons/female.png"
 import downArrowIcon from "../assets/images/icons/down-arrow.png"
+import aboutUsIcon from "../assets/images/icons/about-us.png"
 
 //CONTEXTS
 import { PublicPetContext } from "../contexts/PublicPetContext.jsx";
@@ -16,17 +17,21 @@ import { PublicPetContext } from "../contexts/PublicPetContext.jsx";
 //PAGES
 import LoaderPage from "./LoaderPage.jsx";
 
+//LOADERS
+import { fetchLoggedinKennel } from "../loaders/dataLoader";
+
 
 const PublicDashboard = () => {
+    const navigate = useNavigate();
     const [search, setSearch] = useState("");
     const [selectedSpecies, setSelectedSpecies] = useState("");
     const [selectedGender, setSelectedGender] = useState("");
     const [selectedAgeRange, setSelectedAgeRange] = useState("");
     const [selectedCity, setSelectedCity] = useState("")
     const [filteredPets, setFilteredPets] = useState([]);
-    const navigate = useNavigate();
     const { pets, loading, error } = useContext(PublicPetContext);
     const [showScrollTop, setShowScrollTop] = useState(false);
+    const [kennel, setKennel] = useState("");
 
     useEffect(() => {
         const handleScroll = () => {
@@ -40,6 +45,23 @@ const PublicDashboard = () => {
     const scrollToTop = () => {
         window.scrollTo({ top: 0, behavior: "smooth" });
     };
+
+    useEffect(() => {
+        const getKennelName = async () => {
+            const user = await fetchLoggedinKennel();
+            if (user) setKennel(user);
+        };
+        getKennelName();
+    }, []);
+
+    const handleKennelLoginClick = () => {
+        if (kennel) {
+            navigate("/private-dashboard");
+        } else {
+            navigate("/login");
+        }
+    };
+
 
     const ageRanges = [
         { label: "All Ages", value: "" },
@@ -126,7 +148,7 @@ const PublicDashboard = () => {
                     <h1 className='outfit text-lg font-bold my-auto'><span className='text-[#3B6FA1]'>Paw</span><span className='text-gray-700'>Pals</span></h1>
                     <img src={pawIcon} alt="paw" className='w-5 h-5 m-auto' />
                 </div>
-                <button onClick={() => navigate("/login")} className='py-2 px-3 text-xs rounded-sm text-white font-semibold bg-[#4B7FBB] hover:bg-[#416da0] active:bg-[#416da0] transition-colors ease-in-out duration-300 cursor-pointer'>Kennel Login</button>
+                <button onClick={handleKennelLoginClick} className='py-2 px-3 text-xs rounded-sm rounded-l-full text-white font-semibold bg-[#4B7FBB] hover:bg-[#416da0] active:bg-[#416da0] transition-colors ease-in-out duration-300 cursor-pointer'>Kennel Login</button>
             </div>
             <div className="flex flex-col md:mx-[18%] mx-5 mt-3">
                 <div className="flex gap-2">
@@ -293,11 +315,22 @@ const PublicDashboard = () => {
                     ))}
                 </div>
             )}
+
+            <div className={`fixed right-0 md:right-5 transition-all duration-300 z-50 ${showScrollTop ? "bottom-18" : "bottom-5"}`}>
+                <button
+                    onClick={() => navigate("/about-us")}
+                    className="group flex flex-row bg-[#4B7FBB] text-white p-3 md:rounded-full rounded-l-full shadow-lg hover:bg-[#406b9c] active:bg-[#406b9c] transition-all ease-in-out duration-300 cursor-pointer"
+                >
+                    <p className="text-xs opacity-0 max-w-0 group-hover:opacity-100 group-hover:max-w-[80px] group-hover:px-2 transition-all duration-450 ease-in-out whitespace-nowrap my-auto">About us</p>
+                    <img src={aboutUsIcon} alt="about us icon" className="w-6" />
+                </button>
+            </div>
+
             {showScrollTop && (
-                <div className="fixed bottom-5 md:right-5 right-0 z-100">
+                <div className="fixed bottom-5 right-0 md:right-5 z-40">
                     <button
                         onClick={scrollToTop}
-                        className="bg-[#4B7FBB] text-white p-3 md:rounded-full rounded-l-full shadow-lg hover:bg-[#406b9c] active:bg-[#406b9c] transition-all ease-in-out duration-300 z-5 cursor-pointer"
+                        className="bg-[#4B7FBB] text-white p-3 md:rounded-full rounded-l-full shadow-lg hover:bg-[#406b9c] active:bg-[#406b9c] transition-all ease-in-out duration-300 cursor-pointer"
                         title="Back to top"
                     >
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6">
@@ -306,6 +339,7 @@ const PublicDashboard = () => {
                     </button>
                 </div>
             )}
+
         </div>
 
     )

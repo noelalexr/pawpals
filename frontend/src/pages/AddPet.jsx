@@ -74,7 +74,7 @@ export default function AddPet() {
         if (!file) return;
 
         if (file.size > MAX_FILE_SIZE) {
-            alert("Image must be less than or equal to 10MB.");
+            toast.warning("Image must be 10MB or less");
             return;
         }
 
@@ -228,7 +228,7 @@ export default function AddPet() {
                                         {secondaryImage ? (
                                             <div className="relative">
                                                 <img src={URL.createObjectURL(secondaryImage)} alt="Secondary" className="md:h-50 md:w-50 h-25 w-25 object-cover rounded-sm" />
-                                                <button type="button" onClick={(e) => { e.stopPropagation(); handleDeleteImage("secondary"); }} className="absolute -top-0 -right-0 bg-gray-400 text-white text-xs w-7 h-7 rounded-full hover:bg-red-600 z-30 cursor-pointer">✕</button>
+                                                <button type="button" onClick={(e) => { e.stopPropagation(); handleDeleteImage("secondary"); }} className="absolute -top-0 -right-0 bg-red-600 text-white text-xs w-7 h-7 rounded-full hover:bg-red-700 active:bg-red-700 transition-colors duration-300 ease-in-out z-30 cursor-pointer">✕</button>
                                             </div>
                                         ) : (
                                             <div className="text-gray-300 text-xs text-center font-bold">
@@ -245,7 +245,7 @@ export default function AddPet() {
                                         {tertiaryImage ? (
                                             <div className="relative">
                                                 <img src={URL.createObjectURL(tertiaryImage)} alt="Tertiary" className="md:h-50 md:w-50 h-25 w-25 object-cover rounded-sm" />
-                                                <button type="button" onClick={(e) => { e.stopPropagation(); handleDeleteImage("tertiary"); }} className="absolute -top-0 -right-0 bg-gray-400 text-white text-xs w-7 h-7 rounded-full hover:bg-red-600 z-30 cursor-pointer">✕</button>
+                                                <button type="button" onClick={(e) => { e.stopPropagation(); handleDeleteImage("tertiary"); }} className="absolute -top-0 -right-0 bg-red-600 text-white text-xs w-7 h-7 rounded-full hover:bg-red-700 active:bg-red-700 transition-colors duration-300 ease-in-out z-30 cursor-pointer">✕</button>
                                             </div>
                                         ) : (
                                             <div className="text-gray-300 text-xs text-center font-bold">

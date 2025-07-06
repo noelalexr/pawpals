@@ -22,6 +22,7 @@ import EditPet from "./pages/EditPet";
 import AdoptedPets from "./pages/AdoptedPets"
 import AddPet from "./pages/AddPet";
 import DeveloperDashboard from "./pages/DeveloperDashboard"
+import AboutUs from "./pages/AboutUs";
 
 const router = createBrowserRouter(
     [
@@ -46,12 +47,8 @@ const router = createBrowserRouter(
                     element: <PetDetails />,
                 },
                 {
-                    path: "/dev/login",
-                    element: <DevLogin />,
-                },
-                {
-                    path: "/dev/signup",
-                    element: <DevSignup />,
+                    path: "/about-us",
+                    element: <AboutUs />,
                 },
             ]
         },
