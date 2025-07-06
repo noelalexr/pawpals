@@ -50,7 +50,7 @@ const PetDetails = () => {
 
 
                         {petDetails.images?.secondary?.url && (
-                            <div className="bg-gray-100 md:p-4 p-3 md:pb-3 pb-2 -rotate-5 mt-8 shadow-gray-700 shadow-lg hover:scale-125 hover:rotate-0 transition-all duration-300 z-1 hover:z-5">
+                            <div className="bg-gray-100 md:p-4 p-3 md:pb-3 pb-2 -rotate-5 md:mt-8 shadow-gray-700 shadow-lg hover:scale-125 hover:rotate-0 transition-all duration-300 z-1 hover:z-5">
                                 <img src={petDetails.images.secondary.url} alt={petDetails.name} className="md:w-50 md:h-50 w-35 h-35 object-cover border-1 border-gray-400" />
                                 <p className="md:pt-3 pt-2 text-[9px] text-gray-400 text-right">posted: {photoStyleDate}</p>
                             </div>
