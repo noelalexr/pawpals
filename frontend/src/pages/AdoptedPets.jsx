@@ -1,4 +1,4 @@
-import { useState, useEffect, useContext } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router";
 import { toast } from "react-toastify";
 
@@ -9,7 +9,6 @@ import catsIcon from "../assets/images/icons/cat.png"
 import birdsIcon from "../assets/images/icons/bird.png"
 import maleIcon from "../assets/images/icons/male.png"
 import femaleIcon from "../assets/images/icons/female.png"
-import downArrowIcon from "../assets/images/icons/down-arrow.png"
 
 //PAGES
 import LoaderPage from "./LoaderPage.jsx";
@@ -20,6 +19,7 @@ import { fetchLoggedinKennel } from "../loaders/dataLoader";
 
 
 const AdoptedPets = () => {
+    const navigate = useNavigate();
     const [search, setSearch] = useState("");
     const [selectedSpecies, setSelectedSpecies] = useState("");
     const [selectedGender, setSelectedGender] = useState("");
@@ -28,14 +28,15 @@ const AdoptedPets = () => {
     const [myPets, setMyPets] = useState([]);
     const [loading, setLoading] = useState(true);
     const [kennelName, setKennelName] = useState("");
-    const navigate = useNavigate();
-    // const { myPets, loading, error } = useContext(PrivatePetContext);
+    const [showScrollTop, setShowScrollTop] = useState(false);
 
     useEffect(() => {
         const loadMyPets = async () => {
             try {
                 const data = await fetchMyPets();
-                const availablePets = data.filter(pet => pet.isAdopted === true);
+                const availablePets = data
+                    .filter(pet => pet.isAdopted === true)
+                    .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
                 setMyPets(availablePets);
             } catch (err) {
                 console.error("Failed to load my pets:", err);
@@ -51,11 +52,20 @@ const AdoptedPets = () => {
             const user = await fetchLoggedinKennel();
             if (user) setKennelName(user.name);
         };
-
         getKennelName();
     }, []);
 
+    useEffect(() => {
+        const handleScroll = () => {
+            setShowScrollTop(window.scrollY > 300);
+        };
+        window.addEventListener("scroll", handleScroll);
+        return () => window.removeEventListener("scroll", handleScroll);
+    }, []);
 
+    const scrollToTop = () => {
+        window.scrollTo({ top: 0, behavior: "smooth" });
+    };
 
     const ageRanges = [
         { label: "All Ages", value: "" },
@@ -148,7 +158,7 @@ const AdoptedPets = () => {
             </div>
             <div className="bg-[#4B7FBB] py-1 text-center text-white px-5"><span className="text-sm my-auto">Logged in as </span><b className="truncate overflow-hidden whitespace-nowrap max-w-[100%] inline-block align-middle">{`${kennelName}`}</b></div>
             <div className="flex justify-end md:px-[15%] pt-3 pb-1 text-[#4B7FBB] text-sm">
-                <button onClick={() => navigate("/private-dashboard")} className=" hover:underline cursor-pointer hover:text-green-700 md:text-md text-sm mx-2">
+                <button onClick={() => navigate("/private-dashboard")} className=" hover:underline cursor-pointer hover:text-green-700 active:text-green-700 md:text-md text-sm mx-2">
                     <span>Go back to <b>Availabe Pets Page </b></span>
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-5 inline my-auto">
                         <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" />
@@ -183,14 +193,9 @@ const AdoptedPets = () => {
                             <button
                                 onClick={() => handleSpeciesClick("Dog")}
                                 className={`flex-none rounded-xl md:w-17 md:h-17 w-15 h-15 cursor-pointer duration-300 ease-in-out
-                                    ${selectedSpecies === "Dog" ? "bg-[#4B7FBB]" : "bg-[#d7e3f4] hover:bg-[#c2d4ee]"}`}
+                                    ${selectedSpecies === "Dog" ? "bg-[#4B7FBB]" : "bg-[#d7e3f4] hover:bg-[#4B7FBB] active:bg-[#4B7FBB]"}`}
                             >
                                 <img
-                                    // src={brand.logo?.url.replace("/upload/", "/upload/w_500,/")}
-                                    // alt={brand.name}
-                                    // className="w-[50px] mx-auto"
-
-                                    //TEMPORARY
                                     src={dogsIcon}
                                     className="md:w-[35px] w-[30px] mx-auto"
                                 />
@@ -201,7 +206,7 @@ const AdoptedPets = () => {
                             <button
                                 onClick={() => handleSpeciesClick("Cat")}
                                 className={`flex-none rounded-xl md:w-17 md:h-17 w-15 h-15 cursor-pointer duration-300 ease-in-out
-                                    ${selectedSpecies === "Cat" ? "bg-[#4B7FBB]" : "bg-[#d7e3f4] hover:bg-[#c2d4ee]"}`}
+                                    ${selectedSpecies === "Cat" ? "bg-[#4B7FBB]" : "bg-[#d7e3f4] hover:bg-[#4B7FBB] active:bg-[#4B7FBB]"}`}
                             >
                                 <img
                                     src={catsIcon}
@@ -214,7 +219,7 @@ const AdoptedPets = () => {
                             <button
                                 onClick={() => handleSpeciesClick("Bird")}
                                 className={`flex-none rounded-xl md:w-17 md:h-17 w-15 h-15 cursor-pointer duration-300 ease-in-out
-                                    ${selectedSpecies === "Bird" ? "bg-[#4B7FBB]" : "bg-[#d7e3f4] hover:bg-[#c2d4ee]"}`}
+                                    ${selectedSpecies === "Bird" ? "bg-[#4B7FBB]" : "bg-[#d7e3f4] hover:bg-[#4B7FBB] active:bg-[#4B7FBB]"}`}
                             >
                                 <img
                                     src={birdsIcon}
@@ -227,13 +232,11 @@ const AdoptedPets = () => {
 
                     <div className="w-[3px] h-23 my-auto bg-gray-300 rounded-full mx-2"></div>
 
-
-
                     <div className="flex flex-col justify-center gap-2 items-center py-2 md:mx-3 mx-[5px]">
                         <button
                             onClick={() => handleGenderClick("Male")}
                             className={`flex justify-center gap-3 py-[3px] px-[4px] text-xs w-25 rounded-md cursor-pointer transition-colors duration-300
-                            ${selectedGender === "Male" ? "bg-[#4B7FBB] text-white" : "bg-[#d7e3f4] hover:bg-[#c2d4ee] text-gray-600"}`}
+                            ${selectedGender === "Male" ? "bg-[#4B7FBB] text-white" : "bg-[#d7e3f4] hover:bg-[#4B7FBB] text-gray-600 hover:text-white active:bg-[#4B7FBB] active:text-white"}`}
                         >
                             <p className="my-auto pl-1">Male</p>
                             <img src={maleIcon} alt="male" className="w-5" />
@@ -241,7 +244,7 @@ const AdoptedPets = () => {
                         <button
                             onClick={() => handleGenderClick("Female")}
                             className={`flex justify-center gap-3 py-[3px] px-[4px] text-xs w-25 rounded-md cursor-pointer transition-colors duration-300
-                            ${selectedGender === "Female" ? "bg-[#4B7FBB] text-white" : "bg-[#d7e3f4] hover:bg-[#c2d4ee] text-gray-600"}`}
+                            ${selectedGender === "Female" ? "bg-[#4B7FBB] text-white" : "bg-[#d7e3f4] hover:bg-[#4B7FBB] text-gray-600 hover:text-white active:bg-[#4B7FBB] active:text-white"}`}
                         >
                             <p className="my-auto pl-1">Female</p>
                             <img src={femaleIcon} alt="female" className="w-5" />
@@ -249,21 +252,17 @@ const AdoptedPets = () => {
                         <button
                             onClick={() => handleGenderClick("Unknown")}
                             className={`flex justify-center gap-3 py-[5px] px-[4px] text-xs w-25 rounded-md cursor-pointer transition-colors duration-300
-                            ${selectedGender === "Unknown" ? "bg-[#4B7FBB] text-white" : "bg-[#d7e3f4] hover:bg-[#c2d4ee] text-gray-600"}`}
+                            ${selectedGender === "Unknown" ? "bg-[#4B7FBB] text-white" : "bg-[#d7e3f4] hover:bg-[#4B7FBB] text-gray-600 hover:text-white active:bg-[#4B7FBB] active:text-white"}`}
                         >
                             <p className="my-auto">Unknown Sex</p>
                         </button>
                     </div>
-
                 </div>
-
-
-
 
                 <div className="flex gap-2 justify-center mt-3">
                     <p className="text-sm text-[#4B7FBB] my-auto">Filter by Age:</p>
                     <select
-                        className="px-3 py-2 rounded-lg appearance-none focus:outline-none my-auto text-gray-600 text-sm focus:bg-[#c2d4ee] hover:bg-[#c2d4ee] cursor-pointer transition-colors duration-300 text-center bg-[#d7e3f4]"
+                        className="px-3 py-2 rounded-lg appearance-none focus:outline-none my-auto text-gray-600 text-sm focus:bg-[#4B7FBB] hover:bg-[#4B7FBB] hover:text-white active:bg-[#4B7FBB] active:text-white focus:text-white cursor-pointer transition-colors duration-300 text-center bg-[#d7e3f4]"
                         value={selectedAgeRange}
                         onChange={(e) => setSelectedAgeRange(e.target.value)}
                     >
@@ -275,13 +274,11 @@ const AdoptedPets = () => {
                     </select>
                 </div>
 
-
             </div>
             <div className="flex justify-center md:gap-3 gap-2 mb-3 mt-7 mx-2">
                 <div className="bg-red-600 md:w-[25%] w-[25%] h-[2px] rounded-full my-auto"></div>
                 <p className="md:text-2xl text-red-700 text-center">Adopted Pets</p>
                 <div className="bg-red-600 md:w-[25%] w-[25%] h-[2px] rounded-full my-auto"></div>
-
             </div>
 
             {filteredMyPets.length === 0 ? (
@@ -289,7 +286,6 @@ const AdoptedPets = () => {
             ) : (
 
                 <div className="flex flex-wrap justify-center md:px-[15%]">
-                    {/* {filtered.map((product) => ( */}
                     {filteredMyPets.map((pet) => (
                         <Link
                             to={`/private-dashboard/pets/mine/${pet._id}`}
@@ -299,19 +295,11 @@ const AdoptedPets = () => {
                             <div className="group">
                                 <div className="overflow-hidden rounded-t-lg bg-black">
                                     <img
-                                        src={pet.images[0].url}
-                                        // alt={product.name}
-                                        className="md:w-[300px] md:h-[300px] w-[150px] h-[150px] object-cover rounded-t-lg group-hover:scale-115 group-active:scale-115 ease-in-out duration-500"
-
-                                    // TEMPORARY
-                                    // src="https://images.unsplash.com/photo-1583511655826-05700d52f4d9?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTh8fHBldHN8ZW58MHx8MHx8fDA%3D"
+                                        src={pet.images?.primary?.url}
+                                        className="md:w-[300px] md:h-[300px] w-[150px] h-[150px] object-cover rounded-t-lg group-hover:scale-106 group-active:scale-106 ease-in-out duration-500"
                                     />
                                 </div>
                                 <div className="bg-white p-2 md:px-5 rounded-b-lg z-1 group-hover:bg-[#4B7FBB] group-active:bg-[#4B7FBB] transition-colors duration-300 flex justify-between">
-                                    {/* <h3 className="text-lg font-bold group-hover:text-white group-active:text-white">{pet.name}</h3>
-                                <p className="text-sm [#4B7FBB] group-active:text-white">{pet.breed}</p> */}
-
-                                    {/* TEMPORARY */}
                                     <div>
                                         <p className="font-semibold group-active:text-white group-hover:text-white transition-colors duration-300">{pet.name}</p>
                                         <p className="md:text-sm text-xs group-active:text-white group-hover:text-white transition-colors duration-300 text-gray-400">{pet.breed}</p>
@@ -330,7 +318,19 @@ const AdoptedPets = () => {
                             </div>
                         </Link>
                     ))}
-                    {/* ))} */}
+                </div>
+            )}
+            {showScrollTop && (
+                <div className="fixed bottom-5 md:right-5 right-0 z-100">
+                    <button
+                        onClick={scrollToTop}
+                        className="bg-[#4B7FBB] text-white p-3 md:rounded-full rounded-l-full shadow-lg hover:bg-[#406b9c] active:bg-[#406b9c] transition-all ease-in-out duration-300 z-5 cursor-pointer"
+                        title="Back to top"
+                    >
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6">
+                            <path strokeLinecap="round" strokeLinejoin="round" d="m4.5 15.75 7.5-7.5 7.5 7.5" />
+                        </svg>
+                    </button>
                 </div>
             )}
         </div>

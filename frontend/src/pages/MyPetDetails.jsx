@@ -3,20 +3,10 @@ import { useParams, useNavigate } from "react-router";
 import { toast } from "react-toastify";
 
 //ICONS
-import facebookIcon from "../assets/images/icons/facebook.png";
-import instagramIcon from "../assets/images/icons/instagram.png";
-import tiktokIcon from "../assets/images/icons/tiktok.png";
-import pinBlueIcon from "../assets/images/icons/pin-blue.png"
-import pinGrayIcon from "../assets/images/icons/pin-gray.png"
-import emailBlueIcon from "../assets/images/icons/email-blue.png"
-import webBlueIcon from "../assets/images/icons/website-blue.png"//ICONS
 import pawIcon from "../assets/images/icons/paw.png";
 
 //PAGES
 import LoaderPage from "./LoaderPage";
-
-//CONTEXTS
-import { PublicPetContext } from "../contexts/PublicPetContext";
 
 //LOADERS
 import { fetchMyPetDetails } from "../loaders/dataLoader.js"
@@ -27,15 +17,6 @@ const PetDetails = () => {
     const [myPetDetails, setMyPetDetails] = useState([]);
     const [loading, setLoading] = useState(true);
     const { id } = useParams();
-
-
-
-    // const { pets } = useContext(PublicPetContext);
-
-    // const petDetails = pets.find((pet) => String(pet._id) === id);
-    // if (!petDetails) return <p className="text-center text-red-600">Pet not found.</p>;
-
-
 
     useEffect(() => {
         loadMyPetDetails();
@@ -77,73 +58,67 @@ const PetDetails = () => {
         }
     };
 
-    console.log(myPetDetails)
-
     if (loading) {
         return <LoaderPage />;
     }
 
-
     return (
-        <div className="bg-gradient-to-b from-[#c1d4e9] to-[#4B7FBB] min-h-screen md:p-5 flex justify-center text-sm">
-            <div className="relative bg-white px-5 py-5 md:p-10 min-w-screen md:min-w-[0] md:max-w-[70%] md:rounded-sm">
+        <div className="bg-gradient-to-br from-[#5895da] to-[#426fa3] min-h-screen md:p-5 flex justify-center text-sm">
+            <div className="relative bg-white px-5 py-8 md:p-12 min-w-screen md:min-w-[0] md:w-170 md:rounded-sm">
                 <div className='absolute flex gap-1 md:right-5 md:top-4 right-3 top-2'>
                     <h1 className='outfit md:text-sm text-xs font-bold my-auto'><span className='text-[#3B6FA1]'>Paw</span><span className='text-gray-700'>Pals</span></h1>
                     <img src={pawIcon} alt="paw" className='md:w-4 md:h-4 w-3 h-3 m-auto' />
                 </div>
-                <div className="relative flex flex-col justify-center items-center mb-8">
-                    <div onClick={() => navigate(-1)} className="absolute top-1/2 transform -translate-y-1/2 left-0 rounded-full text-[#4B7FBB] p-3 hover:bg-gray-300 active:bg-gray-300 ease-in-out duration-300 cursor-pointer">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6">
-                            <path strokeLinecap="round" strokeLinejoin="round" d="M10.5 19.5 3 12m0 0 7.5-7.5M3 12h18" />
-                        </svg>
-                    </div>
-
+                <div onClick={() => navigate(-1)} className="absolute top-10 left-10 rounded-full text-[#4B7FBB] p-3 hover:bg-gray-200 active:bg-gray-200 ease-in-out duration-300 cursor-pointer">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6">
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M10.5 19.5 3 12m0 0 7.5-7.5M3 12h18" />
+                    </svg>
+                </div>
+                <div className="flex justify-end items-center mb-8">
                     <div>
                         <button
                             onClick={handleAdoptedButton}
-                            className="bg-gray-200 px-5 py-3 rounded-full md:text-lg cursor-pointer transition-colors duration-300 hover:bg-gray-300"
+                            className="bg-gray-200 px-5 py-3 rounded-xs rounded-bl-3xl md:text-lg cursor-pointer transition-colors duration-300 hover:bg-gray-300 active:bg-gray-300"
                         >Mark as <span className={`${myPetDetails.isAdopted ? "text-green-600" : "text-red-600"}`}>{myPetDetails.isAdopted ? "Available" : "Adopted"}</span>
                         </button>
                     </div>
                 </div>
                 <div className="border-3 border-[#4B7FBB5d] pb-8 pt-5 px-8 rounded-xl">
-
                     <p className="text-md font-semibold pb-1 text-center">Images</p>
-                    <div className="md:flex flex-wrap justify-center gap-10">
+                    <div className="md:flex flex-col justify-center gap-5">
                         <div className="pb-5 md:pb-0">
                             <p className="text-center text-[#4B7FBB] pb-2">Primary Image</p>
                             <img src={myPetDetails.images.primary.url} alt={myPetDetails.name} className="w-60 h-60 mx-auto object-cover rounded-lg border-2 border-gray-300" />
                         </div>
-                        <div className="bg-gray-100 pb-4 pt-2 px-4 rounded-lg my-auto">
-                            <p className="text-center text-[#4B7FBB] pb-2">Secondary Image</p>
-                            <div className="flex justify-center items-center">
-                                {myPetDetails.images?.secondary?.url ? (
-                                    <img
-                                        src={myPetDetails.images.secondary.url}
-                                        alt={myPetDetails.name}
-                                        className="w-30 h-30 md:w-45 md:h-45 object-cover rounded-lg border-2 border-gray-300"
-                                    />
-                                ) : (
-                                    <div className="w-30 h-30 md:w-45 md:h-45 bg-gray-300 rounded-lg flex items-center justify-center text-gray-400 text-xs">
-                                        No Image
-                                    </div>
-                                )}
-                            </div>
-                        </div>
-                        <div className="bg-gray-100 pb-4 pt-2 px-4 rounded-lg my-auto">
-                            <p className="text-center text-[#4B7FBB] pb-2">Tertiary Image</p>
-                            <div className="flex justify-center items-center">
-                                {myPetDetails.images?.tertiary?.url ? (
-                                    <img
-                                        src={myPetDetails.images.tertiary.url}
-                                        alt={myPetDetails.name}
-                                        className="w-30 h-30 md:w-45 md:h-45 object-cover rounded-lg border-2 border-gray-300"
-                                    />
-                                ) : (
-                                    <div className="w-30 h-30 md:w-45 md:h-45 bg-gray-300 rounded-lg flex items-center justify-center text-gray-400 text-xs">
-                                        No Image
-                                    </div>
-                                )}
+                        <div>
+                            <p className="text-center text-[#4B7FBB] pb-2">Secondary Images</p>
+                            <div className="flex gap-3 justify-center">
+                                <div className="flex justify-center items-center">
+                                    {myPetDetails.images?.secondary?.url ? (
+                                        <img
+                                            src={myPetDetails.images.secondary.url}
+                                            alt={myPetDetails.name}
+                                            className="w-30 h-30 md:w-45 md:h-45 object-cover rounded-lg border-2 border-gray-300"
+                                        />
+                                    ) : (
+                                        <div className="w-30 h-30 md:w-45 md:h-45 bg-gray-100 rounded-lg flex items-center justify-center text-gray-400 text-xs">
+                                            No Image
+                                        </div>
+                                    )}
+                                </div>
+                                <div className="flex justify-center items-center">
+                                    {myPetDetails.images?.tertiary?.url ? (
+                                        <img
+                                            src={myPetDetails.images.tertiary.url}
+                                            alt={myPetDetails.name}
+                                            className="w-30 h-30 md:w-45 md:h-45 object-cover rounded-lg border-2 border-gray-300"
+                                        />
+                                    ) : (
+                                        <div className="w-30 h-30 md:w-45 md:h-45 bg-gray-100 rounded-lg flex items-center justify-center text-gray-400 text-xs">
+                                            No Image
+                                        </div>
+                                    )}
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -152,7 +127,7 @@ const PetDetails = () => {
                     <p className="text-md font-semibold pb-1">Description</p>
                     <p className="px-5">{myPetDetails.description}</p>
                 </div>
-                <div className="bg-[#4b7fbb5c] md:w-[85%] h-[2px] rounded-full mx-auto mt-10 mb-7"></div>
+                <div className="bg-[#4b7fbb5c] w-[75%] h-[2px] rounded-full mx-auto mt-10 mb-7"></div>
                 <div className=" pb-5 px-5 text-center md:flex flex-row justify-center gap-5">
                     <div className="bg-gray-100 px-7 py-5 rounded-md flex flex-col justify-center">
                         <p className="text-md font-semibold pb-1">Basic Information</p>
@@ -185,7 +160,7 @@ const PetDetails = () => {
                         </div>
                     </div>
                 </div>
-                <button onClick={() => navigate(`/private-dashboard/pets/mine/${id}/edit`)} className="bg-[#4B7FBB] hover:bg-[#406c9e] text-white py-3 mt-10 rounded-lg w-[100%] block mx-auto cursor-pointer transition-colors duration-300 text-lg">Edit pet details</button>
+                <button onClick={() => navigate(`/private-dashboard/pets/mine/${id}/edit`)} className="bg-[#4B7FBB] hover:bg-[#406c9e] active:bg-[#406c9e] text-white py-3 mt-10 rounded-lg w-[100%] block mx-auto cursor-pointer transition-colors duration-300 text-lg">Edit pet details</button>
             </div>
         </div>
     )
