@@ -40,7 +40,7 @@ const PetDetails = () => {
                         className="md:rotate-4 md:rounded-2xl w-[100%] h-75 md:w-120 md:h-120 my-auto object-cover md:z-3 md:shadow-gray-700 shadow-lg md:hover:scale-105 md:hover:rotate-0 transition-all duration-300"
                     />
                 )}
-                <div onClick={() => navigate("/")} className="absolute md:top-10 md:left-10 top-2 left-2 rounded-full text-white bg-[#4B7FBB] p-3 hover:bg-[#3d699b] active:bg-[#3d699b] ease-in-out duration-300 cursor-pointer z-5 shadow-md shadow-black/30">
+                <div onClick={() => navigate("/")} className="absolute md:top-10 md:left-10 top-2 left-2 rounded-full text-[#4B7FBB] bg-white p-3 hover:bg-gray-300 active:bg-gray-300 ease-in-out duration-300 cursor-pointer z-5 shadow-md shadow-black/30">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6">
                         <path strokeLinecap="round" strokeLinejoin="round" d="M10.5 19.5 3 12m0 0 7.5-7.5M3 12h18" />
                     </svg>
