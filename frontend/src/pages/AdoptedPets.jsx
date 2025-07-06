@@ -138,7 +138,7 @@ const AdoptedPets = () => {
     }
 
     return (
-        <div className='min-h-screen bg-gradient-to-b from-white to-gray-200 bg-fixed'>
+        <div className='min-h-screen bg-gradient-to-b from-gray-50 to-gray-200 bg-fixed'>
             <div className='flex justify-between py-3 md:px-[15%] px-2 bg-white border-1 border-b-[#4b7fbb42]'>
                 <div className='flex gap-1'>
                     <h1 className='outfit text-lg font-bold my-auto'><span className='text-[#3B6FA1]'>Paw</span><span className='text-gray-700'>Pals</span></h1>
@@ -155,7 +155,7 @@ const AdoptedPets = () => {
                     </svg>
                 </button>
             </div>
-            <div className="relative flex gap-5 justify-center items-center md:w-[65%] md:mx-auto bg-[#e7eef7] rounded-lg py-2 px-3 mb-3 mt-2 mx-5 border-2 border-[#e7eef7] focus-within:border-[#4B7FBB] focus-within:bg-white transition-colors duration-300 text-xs">
+            <div className="relative flex gap-5 justify-center items-center md:w-[65%] md:mx-auto bg-white rounded-lg py-2 px-3 mb-3 mt-2 mx-5 border-2 border-white focus-within:border-[#4B7FBB] focus-within:bg-white transition-colors duration-300 text-xs">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6 text-gray-400">
                     <path strokeLinecap="round" strokeLinejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
                 </svg>
@@ -183,7 +183,7 @@ const AdoptedPets = () => {
                             <button
                                 onClick={() => handleSpeciesClick("Dog")}
                                 className={`flex-none rounded-xl md:w-17 md:h-17 w-15 h-15 cursor-pointer duration-300 ease-in-out
-                                    ${selectedSpecies === "Dog" ? "bg-[#4B7FBB]" : "bg-[#e7eef7] hover:bg-[#dce3ee]"}`}
+                                    ${selectedSpecies === "Dog" ? "bg-[#4B7FBB]" : "bg-[#d7e3f4] hover:bg-[#c2d4ee]"}`}
                             >
                                 <img
                                     // src={brand.logo?.url.replace("/upload/", "/upload/w_500,/")}
@@ -201,7 +201,7 @@ const AdoptedPets = () => {
                             <button
                                 onClick={() => handleSpeciesClick("Cat")}
                                 className={`flex-none rounded-xl md:w-17 md:h-17 w-15 h-15 cursor-pointer duration-300 ease-in-out
-                                    ${selectedSpecies === "Cat" ? "bg-[#4B7FBB]" : "bg-[#e7eef7] hover:bg-[#dce3ee]"}`}
+                                    ${selectedSpecies === "Cat" ? "bg-[#4B7FBB]" : "bg-[#d7e3f4] hover:bg-[#c2d4ee]"}`}
                             >
                                 <img
                                     src={catsIcon}
@@ -214,7 +214,7 @@ const AdoptedPets = () => {
                             <button
                                 onClick={() => handleSpeciesClick("Bird")}
                                 className={`flex-none rounded-xl md:w-17 md:h-17 w-15 h-15 cursor-pointer duration-300 ease-in-out
-                                    ${selectedSpecies === "Bird" ? "bg-[#4B7FBB]" : "bg-[#e7eef7] hover:bg-[#dce3ee]"}`}
+                                    ${selectedSpecies === "Bird" ? "bg-[#4B7FBB]" : "bg-[#d7e3f4] hover:bg-[#c2d4ee]"}`}
                             >
                                 <img
                                     src={birdsIcon}
@@ -233,7 +233,7 @@ const AdoptedPets = () => {
                         <button
                             onClick={() => handleGenderClick("Male")}
                             className={`flex justify-center gap-3 py-[3px] px-[4px] text-xs w-25 rounded-md cursor-pointer transition-colors duration-300
-                            ${selectedGender === "Male" ? "bg-[#4B7FBB] text-white" : "bg-[#e7eef7] hover:bg-[#dce3ee] text-gray-600"}`}
+                            ${selectedGender === "Male" ? "bg-[#4B7FBB] text-white" : "bg-[#d7e3f4] hover:bg-[#c2d4ee] text-gray-600"}`}
                         >
                             <p className="my-auto pl-1">Male</p>
                             <img src={maleIcon} alt="male" className="w-5" />
@@ -241,7 +241,7 @@ const AdoptedPets = () => {
                         <button
                             onClick={() => handleGenderClick("Female")}
                             className={`flex justify-center gap-3 py-[3px] px-[4px] text-xs w-25 rounded-md cursor-pointer transition-colors duration-300
-                            ${selectedGender === "Female" ? "bg-[#4B7FBB] text-white" : "bg-[#e7eef7] hover:bg-[#dce3ee] text-gray-600"}`}
+                            ${selectedGender === "Female" ? "bg-[#4B7FBB] text-white" : "bg-[#d7e3f4] hover:bg-[#c2d4ee] text-gray-600"}`}
                         >
                             <p className="my-auto pl-1">Female</p>
                             <img src={femaleIcon} alt="female" className="w-5" />
@@ -249,7 +249,7 @@ const AdoptedPets = () => {
                         <button
                             onClick={() => handleGenderClick("Unknown")}
                             className={`flex justify-center gap-3 py-[5px] px-[4px] text-xs w-25 rounded-md cursor-pointer transition-colors duration-300
-                            ${selectedGender === "Unknown" ? "bg-[#4B7FBB] text-white" : "bg-[#e7eef7] hover:bg-[#dce3ee] text-gray-600"}`}
+                            ${selectedGender === "Unknown" ? "bg-[#4B7FBB] text-white" : "bg-[#d7e3f4] hover:bg-[#c2d4ee] text-gray-600"}`}
                         >
                             <p className="my-auto">Unknown Sex</p>
                         </button>
@@ -263,7 +263,7 @@ const AdoptedPets = () => {
                 <div className="flex gap-2 justify-center mt-3">
                     <p className="text-sm text-[#4B7FBB] my-auto">Filter by Age:</p>
                     <select
-                        className="px-3 py-2 rounded-lg appearance-none focus:outline-none my-auto text-gray-600 text-sm focus:bg-[#dce3ee] hover:bg-[#dce3ee] cursor-pointer transition-colors duration-300 text-center bg-[#e7eef7]"
+                        className="px-3 py-2 rounded-lg appearance-none focus:outline-none my-auto text-gray-600 text-sm focus:bg-[#c2d4ee] hover:bg-[#c2d4ee] cursor-pointer transition-colors duration-300 text-center bg-[#d7e3f4]"
                         value={selectedAgeRange}
                         onChange={(e) => setSelectedAgeRange(e.target.value)}
                     >
