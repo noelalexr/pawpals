@@ -68,6 +68,9 @@ export default function AddPet() {
 
     const handleImageChange = (e, type) => {
         const file = e.target.files[0];
+
+        e.target.value = null;
+
         if (!file) return;
 
         if (file.size > MAX_FILE_SIZE) {

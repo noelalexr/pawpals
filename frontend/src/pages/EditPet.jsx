@@ -216,7 +216,7 @@ export default function EditPet() {
             setToDeleteTertiary([]);
 
             toast.success("Pet updated!");
-            navigate("/private-dashboard");
+            navigate(-1);
         } catch (err) {
             console.error(err);
             toast.error("Error updating pet");
@@ -380,6 +380,7 @@ export default function EditPet() {
                                         className="hidden"
                                         onChange={(e) => {
                                             const file = e.target.files[0];
+                                            e.target.value = null;
                                             if (file && file.size <= MAX_FILE_SIZE) {
                                                 setsecondaryImage(file);
                                                 setExistingSecondary([]);
@@ -434,6 +435,7 @@ export default function EditPet() {
                                         className="hidden"
                                         onChange={(e) => {
                                             const file = e.target.files[0];
+                                            e.target.value = null;
                                             if (file && file.size <= MAX_FILE_SIZE) {
                                                 setTertiaryImage(file);
                                                 setExistingTertiary(null);
