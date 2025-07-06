@@ -1,9 +1,19 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 
+//ICONS
+import pawIcon from "../assets/images/icons/paw.png";
+
+//PAGES
+import LoaderPage from "./LoaderPage";
+
 export default function AddPet() {
     const navigate = useNavigate();
+    const [loading, setLoading] = useState(false);
+    const [primaryImage, setPrimaryImage] = useState(null);
+    const [secondaryImage, setSecondaryImage] = useState(null);
+    const [tertiaryImage, setTertiaryImage] = useState(null);
     const [form, setForm] = useState({
         name: "",
         age: "",
@@ -24,15 +34,10 @@ export default function AddPet() {
         specialAssistance: false,
     });
 
-    const [primaryImage, setPrimaryImage] = useState(null);
-    const [secondaryImage, setSecondaryImage] = useState(null);
-    const [tertiaryImage, setTertiaryImage] = useState(null);
-
     const MAX_FILE_SIZE = 10 * 1024 * 1024;
 
     const handleFormChange = (e) => {
         const { name, value, type, checked } = e.target;
-
         if (name.includes("medical.parasiteControl")) {
             const key = name.split(".")[2];
             setForm((prev) => ({
@@ -63,6 +68,9 @@ export default function AddPet() {
 
     const handleImageChange = (e, type) => {
         const file = e.target.files[0];
+
+        e.target.value = null;
+
         if (!file) return;
 
         if (file.size > MAX_FILE_SIZE) {
@@ -89,6 +97,8 @@ export default function AddPet() {
             return;
         }
 
+        setLoading(true);
+
         try {
             const res = await fetch(`${import.meta.env.VITE_PETS_API}`, {
                 method: "POST",
@@ -113,94 +123,146 @@ export default function AddPet() {
 
             if (!imgRes.ok) throw new Error("Image upload failed");
 
-            toast.success("Pet added successfully!");
+            toast.success("Pet posted successfully!");
             navigate("/private-dashboard");
         } catch (err) {
             console.error(err);
-            toast.error("Error adding pet.");
+            toast.error("Error posting pet");
+        } finally {
+            setLoading(false);
         }
     };
 
+    if (loading) {
+        return <LoaderPage />;
+    }
+
+
     return (
-        <form onSubmit={handleSubmit}>
-            <div><label>Name: </label><input name="name" value={form.name} onChange={handleFormChange} required /></div>
-            <div><label>Age: </label><input type="number" name="age" value={form.age} onChange={handleFormChange} required /></div>
-            <div><label>Arrival Date: </label><input type="date" name="arrivalDate" value={form.arrivalDate} onChange={handleFormChange} required /></div>
-            <div><label>Breed: </label><input name="breed" value={form.breed} onChange={handleFormChange} required /></div>
-            <div>
-                <label>Species: </label>
-                <select name="species" value={form.species} onChange={handleFormChange}>
-                    <option value="dog">Dog</option>
-                    <option value="cat">Cat</option>
-                    <option value="bird">Bird</option>
-                </select>
-            </div>
-            <div>
-                <label>Gender: </label>
-                <select name="gender" value={form.gender} onChange={handleFormChange}>
-                    <option value="male">Male</option>
-                    <option value="female">Female</option>
-                    <option value="undetermined">Undetermined</option>
-                </select>
-            </div>
-            <div><label>Description: </label><textarea name="description" value={form.description} onChange={handleFormChange} required /></div>
-            <div><label>Adoption Fee: </label><input name="adoptionFee" type="number" value={form.adoptionFee} onChange={handleFormChange} required /></div>
-
-            <div><label>Vaccinated: </label><input type="checkbox" name="medical.vaccinated" checked={form.medical.vaccinated} onChange={handleFormChange} /></div>
-            <div><label>Tick & Flea Control: </label><input type="checkbox" name="medical.parasiteControl.tickAndFlea" checked={form.medical.parasiteControl.tickAndFlea} onChange={handleFormChange} /></div>
-            <div><label>Heartworm: </label><input type="checkbox" name="medical.parasiteControl.heartworm" checked={form.medical.parasiteControl.heartworm} onChange={handleFormChange} /></div>
-            <div><label>Neutered: </label><input type="checkbox" name="medical.parasiteControl.neutered" checked={form.medical.parasiteControl.neutered} onChange={handleFormChange} /></div>
-            <div><label>Special Assistance: </label><input type="checkbox" name="specialAssistance" checked={form.specialAssistance} onChange={handleFormChange} /></div>
-
-            {/* Primary */}
-            <div>
-                <label>Primary Image:</label>
-                <div onClick={() => document.getElementById("primary-upload").click()} style={{ border: "1px solid black", padding: "10px", cursor: "pointer" }}>
-                    {primaryImage ? (
-                        <>
-                            <img src={URL.createObjectURL(primaryImage)} alt="Primary" width="100" />
-                            <button type="button" onClick={(e) => { e.stopPropagation(); handleDeleteImage("primary"); }}>🗑️</button>
-                        </>
-                    ) : (
-                        <span>Click to upload primary image</span>
-                    )}
+        <div className="min-h-screen bg-gradient-to-br from-[#5895da] to-[#426fa3] md:p-10 bg-fixed flex justify-center text-sm">
+            <form onSubmit={handleSubmit} className="relative bg-white px-5 py-5 md:p-10 md:min-w-[0] w-[100vw] md:w-170 md:rounded-sm">
+                <div className='absolute flex gap-1 md:right-5 md:top-4 right-3 top-2'>
+                    <p className='outfit md:text-sm text-xs font-bold my-auto'><span className='text-[#3B6FA1]'>Paw</span><span className='text-gray-700'>Pals</span></p>
+                    <img src={pawIcon} alt="paw" className='md:w-4 md:h-4 w-3 h-3 m-auto' />
                 </div>
-                <input id="primary-upload" type="file" accept="image/*" style={{ display: "none" }} onChange={(e) => handleImageChange(e, "primary")} />
-            </div>
-
-            {/* Secondary */}
-            <div>
-                <label>Secondary Image:</label>
-                <div onClick={() => document.getElementById("secondary-upload").click()} style={{ border: "1px solid gray", padding: "10px", cursor: "pointer" }}>
-                    {secondaryImage ? (
-                        <>
-                            <img src={URL.createObjectURL(secondaryImage)} alt="Secondary" width="100" />
-                            <button type="button" onClick={(e) => { e.stopPropagation(); handleDeleteImage("secondary"); }}>🗑️</button>
-                        </>
-                    ) : (
-                        <span>Click to upload secondary image</span>
-                    )}
+                <div className="relative">
+                    <div onClick={() => navigate("/private-dashboard")} className="absolute top-1/2 transform -translate-y-1/2 left-0 rounded-full text-[#4B7FBB] p-3 hover:bg-gray-200 active:bg-gray-200 ease-in-out duration-300 cursor-pointer">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6">
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M10.5 19.5 3 12m0 0 7.5-7.5M3 12h18" />
+                        </svg>
+                    </div>
+                    <p className="text-center font-semibold text-2xl mb-8">Post a Pet</p>
                 </div>
-                <input id="secondary-upload" type="file" accept="image/*" style={{ display: "none" }} onChange={(e) => handleImageChange(e, "secondary")} />
-            </div>
-
-            {/* Tertiary */}
-            <div>
-                <label>Tertiary Image:</label>
-                <div onClick={() => document.getElementById("tertiary-upload").click()} style={{ border: "1px solid gray", padding: "10px", cursor: "pointer" }}>
-                    {tertiaryImage ? (
-                        <>
-                            <img src={URL.createObjectURL(tertiaryImage)} alt="Tertiary" width="100" />
-                            <button type="button" onClick={(e) => { e.stopPropagation(); handleDeleteImage("tertiary"); }}>🗑️</button>
-                        </>
-                    ) : (
-                        <span>Click to upload tertiary image</span>
-                    )}
+                <div className="flex justify-center md:gap-10 gap-5">
+                    <div className="flex flex-col">
+                        <p className="text-[#4B7FBB] text-xs font-semibold pb-1">Name</p>
+                        <input name="name" value={form.name} onChange={handleFormChange} required className="outline-none border-2 border-gray-200 focus:border-[#4B7FBB] px-3 py-1 rounded-sm transition-colors duration-300 w-[100%] mb-2" />
+                        <p className="text-[#4B7FBB] text-xs font-semibold pb-1">Age</p>
+                        <input type="number" name="age" value={form.age} onChange={handleFormChange} required className="outline-none border-2 border-gray-200 focus:border-[#4B7FBB] px-3 py-1 rounded-sm transition-colors duration-300 w-[100%] mb-2" />
+                        <p className="text-[#4B7FBB] text-xs font-semibold pb-1">Breed</p>
+                        <input name="breed" value={form.breed} onChange={handleFormChange} required className="outline-none border-2 border-gray-200 focus:border-[#4B7FBB] px-3 py-1 rounded-sm transition-colors duration-300 w-[100%] mb-2" />
+                        <p className="text-[#4B7FBB] text-xs font-semibold pb-1">Adoption Fee</p>
+                        <input name="adoptionFee" type="number" value={form.adoptionFee} onChange={handleFormChange} required className="outline-none border-2 border-gray-200 focus:border-[#4B7FBB] px-3 py-1 rounded-sm transition-colors duration-300 w-[100%] mb-2" />
+                    </div>
+                    <div className="flex flex-col">
+                        <p className="text-[#4B7FBB] text-xs font-semibold pb-1">Arrival Date</p>
+                        <input type="date" name="arrivalDate" value={form.arrivalDate} onChange={handleFormChange} required className="bg-gray-100 px-3 py-1 mb-3 hover:bg-gray-200 active:bg-gray-200 transition-colors duration-300 cursor-pointer rounded-sm" />
+                        <p className="text-[#4B7FBB] text-xs font-semibold pb-1">Species</p>
+                        <select name="species" value={form.species} onChange={handleFormChange} className="bg-gray-100 px-3 py-1 mb-3 hover:bg-gray-200 active:bg-gray-200 transition-colors duration-300 cursor-pointer rounded-sm">
+                            <option value="dog">Dog</option>
+                            <option value="cat">Cat</option>
+                            <option value="bird">Bird</option>
+                        </select>
+                        <p className="text-[#4B7FBB] text-xs font-semibold pb-1">Gender</p>
+                        <select name="gender" value={form.gender} onChange={handleFormChange} className="bg-gray-100 px-3 py-1 mb-3 hover:bg-gray-200 active:bg-gray-200 transition-colors duration-300 cursor-pointer rounded-sm">
+                            <option value="male">Male</option>
+                            <option value="female">Female</option>
+                            <option value="undetermined">Undetermined</option>
+                        </select>
+                    </div>
                 </div>
-                <input id="tertiary-upload" type="file" accept="image/*" style={{ display: "none" }} onChange={(e) => handleImageChange(e, "tertiary")} />
-            </div>
+                <p className="text-[#4B7FBB] text-xs font-semibold pt-2 pb-1 text-center">Description</p>
+                <textarea name="description" value={form.description} onChange={handleFormChange} required className="w-[80%] outline-none border-2 border-gray-200 focus:border-[#4B7FBB] px-3 py-1 rounded-sm transition-colors duration-300 block mx-auto min-h-30" />
+                <div className="flex flex-row gap-10 justify-center py-7">
+                    <div>
+                        <p className="text-[#4B7FBB] text-xs font-semibold pb-1">Special Assistance</p>
+                        <label className="cursor-pointer"><input type="checkbox" name="specialAssistance" checked={form.specialAssistance} onChange={handleFormChange} className="cursor-pointer" /> Needed</label>
+                        <p className="text-[#4B7FBB] text-xs font-semibold pb-1 pt-2">Medical Details</p>
+                        <label className="cursor-pointer"><input type="checkbox" name="medical.vaccinated" checked={form.medical.vaccinated} onChange={handleFormChange} className="cursor-pointer" /> Vaccinated</label>
+                    </div>
+                    <div className="flex flex-col">
+                        <p className="text-[#4B7FBB] text-xs font-semibold pb-1">Parasite Control</p>
+                        <label className="cursor-pointer"><input type="checkbox" name="medical.parasiteControl.tickAndFlea" checked={form.medical.parasiteControl.tickAndFlea} onChange={handleFormChange} className="cursor-pointer" /> Tick & Flea</label>
+                        <label className="cursor-pointer"><input type="checkbox" name="medical.parasiteControl.heartworm" checked={form.medical.parasiteControl.heartworm} onChange={handleFormChange} className="cursor-pointer" /> Heartworm</label>
+                        <label className="cursor-pointer"><input type="checkbox" name="medical.parasiteControl.neutered" checked={form.medical.parasiteControl.neutered} onChange={handleFormChange} className="cursor-pointer" /> Neutered</label>
+                    </div>
+                </div>
 
-            <button type="submit">Add Pet</button>
-        </form>
+                {/* Primary */}
+                <div className="border-3 border-[#406c9e5d] pb-5 pt-3 px-5 rounded-lg">
+                    <p className="text-lg font-semibold pb-3 text-center">Images</p>
+                    <p className="text-gray-300 text-xs text-center pb-4 font-bold">Click image container below to add or replace existing images</p>
+                    <div className="flex flex-col md:flex-wrap gap-5 justify-center">
+                        <div>
+                            <p className="text-[#4B7FBB] text-xs font-semibold text-center pb-3">Primary Image</p>
+                            <div onClick={() => document.getElementById("primary-upload").click()} className="relative rounded-lg md:h-72 md:w-72 h-62 w-62 bg-gray-100 hover:bg-gray-200 active:bg-gray-200 transition-colors duration-300 overflow-hidden flex items-center justify-center p-1 mb-2 m-auto cursor-pointer">
+                                {primaryImage ? (
+                                    <>
+                                        <img src={URL.createObjectURL(primaryImage)} alt="Primary" className="md:h-70 md:w-70 h-60 w-60 object-cover rounded-sm" />
+                                    </>
+                                ) : (
+                                    <div className="text-gray-300 text-xs text-center font-bold">
+                                        <p>Upload here</p>
+                                        <p>(Required)</p>
+                                    </div>
+                                )}
+                            </div>
+                            <input id="primary-upload" type="file" accept="image/*" className="hidden" onChange={(e) => handleImageChange(e, "primary")} />
+                        </div>
+                        <div>
+                            <p className="text-[#4B7FBB] text-xs font-semibold text-center pb-3">Secondary Images</p>
+                            <div className="flex flex-row gap-5 justify-center">
+                                {/* Secondary */}
+                                <div>
+                                    <div onClick={() => document.getElementById("secondary-upload").click()} className="relative rounded-lg md:h-52 md:w-52 h-27 w-27 bg-gray-100 hover:bg-gray-200 active:bg-gray-200 transition-colors duration-300 overflow-hidden flex items-center justify-center p-1 mb-2 mx-auto cursor-pointer" >
+                                        {secondaryImage ? (
+                                            <div className="relative">
+                                                <img src={URL.createObjectURL(secondaryImage)} alt="Secondary" className="md:h-50 md:w-50 h-25 w-25 object-cover rounded-sm" />
+                                                <button type="button" onClick={(e) => { e.stopPropagation(); handleDeleteImage("secondary"); }} className="absolute -top-0 -right-0 bg-gray-400 text-white text-xs w-7 h-7 rounded-full hover:bg-red-600 z-30 cursor-pointer">✕</button>
+                                            </div>
+                                        ) : (
+                                            <div className="text-gray-300 text-xs text-center font-bold">
+                                                <p>Upload here</p>
+                                                <p>(Optional)</p>
+                                            </div>
+                                        )}
+                                    </div>
+                                    <input id="secondary-upload" type="file" accept="image/*" className="hidden" onChange={(e) => handleImageChange(e, "secondary")} />
+                                </div>
+                                {/* Tertiary */}
+                                <div>
+                                    <div onClick={() => document.getElementById("tertiary-upload").click()} className="relative rounded-lg md:h-52 md:w-52 h-27 w-27 bg-gray-100 hover:bg-gray-200 active:bg-gray-200 transition-colors duration-300 overflow-hidden flex items-center justify-center p-1 mb-2 mx-auto cursor-pointer">
+                                        {tertiaryImage ? (
+                                            <div className="relative">
+                                                <img src={URL.createObjectURL(tertiaryImage)} alt="Tertiary" className="md:h-50 md:w-50 h-25 w-25 object-cover rounded-sm" />
+                                                <button type="button" onClick={(e) => { e.stopPropagation(); handleDeleteImage("tertiary"); }} className="absolute -top-0 -right-0 bg-gray-400 text-white text-xs w-7 h-7 rounded-full hover:bg-red-600 z-30 cursor-pointer">✕</button>
+                                            </div>
+                                        ) : (
+                                            <div className="text-gray-300 text-xs text-center font-bold">
+                                                <p>Upload here</p>
+                                                <p>(Optional)</p>
+                                            </div>
+                                        )}
+                                    </div>
+                                    <input id="tertiary-upload" type="file" accept="image/*" className="hidden" onChange={(e) => handleImageChange(e, "tertiary")} />
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <button type="submit" className="bg-[#4B7FBB] hover:bg-[#406c9e] active:bg-[#406c9e] text-white py-3 rounded-lg cursor-pointer transition-colors duration-300 text-lg mt-10 w-[100%]">Post Pet</button>
+            </form>
+        </div>
     );
 }

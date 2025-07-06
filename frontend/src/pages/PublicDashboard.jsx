@@ -26,6 +26,20 @@ const PublicDashboard = () => {
     const [filteredPets, setFilteredPets] = useState([]);
     const navigate = useNavigate();
     const { pets, loading, error } = useContext(PublicPetContext);
+    const [showScrollTop, setShowScrollTop] = useState(false);
+
+    useEffect(() => {
+        const handleScroll = () => {
+            setShowScrollTop(window.scrollY > 300);
+        };
+
+        window.addEventListener("scroll", handleScroll);
+        return () => window.removeEventListener("scroll", handleScroll);
+    }, []);
+
+    const scrollToTop = () => {
+        window.scrollTo({ top: 0, behavior: "smooth" });
+    };
 
     const ageRanges = [
         { label: "All Ages", value: "" },
@@ -88,7 +102,8 @@ const PublicDashboard = () => {
             );
         }
 
-        setFilteredPets(filteredData);
+        const shuffledPets = filteredData.sort(() => Math.random() - 0.5);
+        setFilteredPets(shuffledPets);
     };
 
     useEffect(() => {
@@ -105,8 +120,8 @@ const PublicDashboard = () => {
     }
 
     return (
-        <div className='min-h-screen bg-gradient-to-b from-white to-gray-200 bg-fixed'>
-            <div className='flex justify-between py-3 md:px-[15%] px-2 bg-white border-1 border-b-[#4b7fbb42]'>
+        <div className='relative min-h-screen bg-gradient-to-b from-gray-50 to-gray-200 bg-fixed'>
+            <div className='flex justify-between py-3 md:px-[15%] px-2 bg-white border-1 border-b-[#4b7fbb53]'>
                 <div className='flex gap-1'>
                     <h1 className='outfit text-lg font-bold my-auto'><span className='text-[#3B6FA1]'>Paw</span><span className='text-gray-700'>Pals</span></h1>
                     <img src={pawIcon} alt="paw" className='w-5 h-5 m-auto' />
@@ -119,14 +134,14 @@ const PublicDashboard = () => {
                     <img src={downArrowIcon} alt="arrow-down" className="w-3 my-auto" />
                 </div>
                 <select
-                    className="px-3 py-1 rounded-lg appearance-none focus:outline-none focus:bg-[#dce3ee] hover:bg-[#dce3ee] cursor-pointer transition-colors duration-300 text-xl"
+                    className="px-5 py-1 mb-2 rounded-full appearance-none focus:outline-none focus:bg-gray-300 bg-gray-200 hover:bg-gray-300 active:bg-gray-300 cursor-pointer transition-colors duration-300 text-xl"
                     value={selectedCity}
                     onChange={(e) => {
                         const value = e.target.value;
                         setSelectedCity(value);
                     }}
                 >
-                    <option value="" className="appearance-none text-sm">All Cities</option>
+                    <option value="" className="appearance-none text-sm rounded-2xl">All Cities</option>
                     {uniqueCities.map((city, idx) => (
                         <option key={idx} value={city} className="text-sm">
                             {city}
@@ -134,7 +149,7 @@ const PublicDashboard = () => {
                     ))}
                 </select>
             </div>
-            <div className="relative flex gap-5 justify-center items-center md:w-[65%] md:mx-auto bg-[#e7eef7] rounded-lg py-2 px-3 mb-3 mt-2 mx-5 border-2 border-[#e7eef7] focus-within:border-[#4B7FBB] focus-within:bg-white transition-colors duration-300 text-xs">
+            <div className="relative flex gap-5 justify-center items-center md:w-[65%] md:mx-auto bg-white rounded-lg py-2 px-3 mb-3 mt-2 mx-5 border-2 border-white focus-within:border-[#4B7FBB] focus-within:bg-white transition-colors duration-300 text-xs">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6 text-gray-400">
                     <path strokeLinecap="round" strokeLinejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
                 </svg>
@@ -162,14 +177,9 @@ const PublicDashboard = () => {
                             <button
                                 onClick={() => handleSpeciesClick("Dog")}
                                 className={`flex-none rounded-xl md:w-17 md:h-17 w-15 h-15 cursor-pointer duration-300 ease-in-out
-                                    ${selectedSpecies === "Dog" ? "bg-[#4B7FBB]" : "bg-[#e7eef7] hover:bg-[#dce3ee]"}`}
+                                    ${selectedSpecies === "Dog" ? "bg-[#4B7FBB]" : "bg-[#d7e3f4] hover:bg-[#4B7FBB] active:bg-[#4B7FBB]"}`}
                             >
                                 <img
-                                    // src={brand.logo?.url.replace("/upload/", "/upload/w_500,/")}
-                                    // alt={brand.name}
-                                    // className="w-[50px] mx-auto"
-
-                                    //TEMPORARY
                                     src={dogsIcon}
                                     className="md:w-[35px] w-[30px] mx-auto"
                                 />
@@ -180,7 +190,7 @@ const PublicDashboard = () => {
                             <button
                                 onClick={() => handleSpeciesClick("Cat")}
                                 className={`flex-none rounded-xl md:w-17 md:h-17 w-15 h-15 cursor-pointer duration-300 ease-in-out
-                                    ${selectedSpecies === "Cat" ? "bg-[#4B7FBB]" : "bg-[#e7eef7] hover:bg-[#dce3ee]"}`}
+                                    ${selectedSpecies === "Cat" ? "bg-[#4B7FBB]" : "bg-[#d7e3f4] hover:bg-[#4B7FBB] active:bg-[#4B7FBB]"}`}
                             >
                                 <img
                                     src={catsIcon}
@@ -193,7 +203,7 @@ const PublicDashboard = () => {
                             <button
                                 onClick={() => handleSpeciesClick("Bird")}
                                 className={`flex-none rounded-xl md:w-17 md:h-17 w-15 h-15 cursor-pointer duration-300 ease-in-out
-                                    ${selectedSpecies === "Bird" ? "bg-[#4B7FBB]" : "bg-[#e7eef7] hover:bg-[#dce3ee]"}`}
+                                    ${selectedSpecies === "Bird" ? "bg-[#4B7FBB]" : "bg-[#d7e3f4] hover:bg-[#4B7FBB] active:bg-[#4B7FBB]"}`}
                             >
                                 <img
                                     src={birdsIcon}
@@ -203,16 +213,12 @@ const PublicDashboard = () => {
                             <p className="text-xs text-gray-600">Birds</p>
                         </div>
                     </div>
-
                     <div className="w-[3px] h-23 my-auto bg-gray-300 rounded-full mx-2"></div>
-
-
-
                     <div className="flex flex-col justify-center gap-2 items-center py-2 md:mx-3 mx-[5px]">
                         <button
                             onClick={() => handleGenderClick("Male")}
                             className={`flex justify-center gap-3 py-[3px] px-[4px] text-xs w-25 rounded-md cursor-pointer transition-colors duration-300
-                            ${selectedGender === "Male" ? "bg-[#4B7FBB] text-white" : "bg-[#e7eef7] hover:bg-[#dce3ee] text-gray-600"}`}
+                            ${selectedGender === "Male" ? "bg-[#4B7FBB] text-white" : "bg-[#d7e3f4] hover:bg-[#4B7FBB] hover:text-white active:bg-[#4B7FBB] active:text-white"}`}
                         >
                             <p className="my-auto pl-1">Male</p>
                             <img src={maleIcon} alt="male" className="w-5" />
@@ -220,7 +226,7 @@ const PublicDashboard = () => {
                         <button
                             onClick={() => handleGenderClick("Female")}
                             className={`flex justify-center gap-3 py-[3px] px-[4px] text-xs w-25 rounded-md cursor-pointer transition-colors duration-300
-                            ${selectedGender === "Female" ? "bg-[#4B7FBB] text-white" : "bg-[#e7eef7] hover:bg-[#dce3ee] text-gray-600"}`}
+                            ${selectedGender === "Female" ? "bg-[#4B7FBB] text-white" : "bg-[#d7e3f4] hover:bg-[#4B7FBB] hover:text-white active:bg-[#4B7FBB] active:text-white"}`}
                         >
                             <p className="my-auto pl-1">Female</p>
                             <img src={femaleIcon} alt="female" className="w-5" />
@@ -228,21 +234,16 @@ const PublicDashboard = () => {
                         <button
                             onClick={() => handleGenderClick("Undetermined")}
                             className={`flex justify-center gap-3 py-[5px] px-[4px] text-xs w-25 rounded-md cursor-pointer transition-colors duration-300
-                            ${selectedGender === "Undetermined" ? "bg-[#4B7FBB] text-white" : "bg-[#e7eef7] hover:bg-[#dce3ee] text-gray-600"}`}
+                            ${selectedGender === "Undetermined" ? "bg-[#4B7FBB] text-white" : "bg-[#d7e3f4] hover:bg-[#4B7FBB] hover:text-white active:bg-[#4B7FBB] active:text-white"}`}
                         >
                             <p className="my-auto">Unknown Sex</p>
                         </button>
                     </div>
-
                 </div>
-
-
-
-
                 <div className="flex gap-2 justify-center mt-3">
                     <p className="text-sm text-[#4B7FBB] my-auto">Filter by Age:</p>
                     <select
-                        className="p-2 rounded-lg appearance-none focus:outline-none my-auto text-gray-600 text-sm focus:bg-[#dce3ee] hover:bg-[#dce3ee] cursor-pointer transition-colors duration-300 text-center bg-[#e7eef7]"
+                        className="p-2 rounded-lg appearance-none focus:outline-none my-auto text-gray-600 text-sm focus:bg-[#4B7FBB] hover:bg-[#4B7FBB] active:bg-[#4B7FBB] hover:text-white active:text-white focus:text-white cursor-pointer transition-colors duration-300 text-center bg-[#d7e3f4]"
                         value={selectedAgeRange}
                         onChange={(e) => setSelectedAgeRange(e.target.value)}
                     >
@@ -253,17 +254,12 @@ const PublicDashboard = () => {
                         ))}
                     </select>
                 </div>
-
-
             </div>
-
-
             {filteredPets.length === 0 ? (
                 <p className="text-center text-gray-400 mt-20">No pet available</p>
             ) : (
 
                 <div className="flex flex-wrap justify-center md:px-[15%]">
-                    {/* {filtered.map((product) => ( */}
                     {filteredPets.map((pet) => (
                         <Link
                             to={`/pets/${pet._id}`}
@@ -274,23 +270,14 @@ const PublicDashboard = () => {
                                 <div className="overflow-hidden rounded-t-lg bg-black">
                                     <img
                                         src={pet.images.primary.url}
-                                        // alt={product.name}
-                                        className="md:w-[300px] md:h-[300px] w-[150px] h-[150px] object-cover rounded-t-lg group-hover:scale-115 group-active:scale-115 ease-in-out duration-500"
-
-                                    // TEMPORARY
-                                    // src="https://images.unsplash.com/photo-1583511655826-05700d52f4d9?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTh8fHBldHN8ZW58MHx8MHx8fDA%3D"
+                                        className="md:w-[300px] md:h-[300px] w-[150px] h-[150px] object-cover rounded-t-lg group-hover:scale-106 group-active:scale-106 ease-in-out duration-500"
                                     />
                                 </div>
                                 <div className="bg-white p-2 md:px-5 rounded-b-lg z-1 group-hover:bg-[#4B7FBB] group-active:bg-[#4B7FBB] transition-colors duration-300 flex justify-between">
-                                    {/* <h3 className="text-lg font-bold group-hover:text-white group-active:text-white">{pet.name}</h3>
-                                <p className="text-sm [#4B7FBB] group-active:text-white">{pet.breed}</p> */}
-
-                                    {/* TEMPORARY */}
                                     <div>
                                         <p className="font-semibold group-active:text-white group-hover:text-white transition-colors duration-300">{pet.name}</p>
                                         <p className="md:text-sm text-xs group-active:text-white group-hover:text-white transition-colors duration-300 text-gray-400">{pet.breed}</p>
                                     </div>
-
                                     <div className="flex items-center space-x-2">
                                         {pet.gender.toLowerCase() === "male" ? (
                                             <img src={maleIcon} alt="male" className="w-6 h-6" />
@@ -304,7 +291,19 @@ const PublicDashboard = () => {
                             </div>
                         </Link>
                     ))}
-                    {/* ))} */}
+                </div>
+            )}
+            {showScrollTop && (
+                <div className="fixed bottom-5 md:right-5 right-0 z-100">
+                    <button
+                        onClick={scrollToTop}
+                        className="bg-[#4B7FBB] text-white p-3 md:rounded-full rounded-l-full shadow-lg hover:bg-[#406b9c] active:bg-[#406b9c] transition-all ease-in-out duration-300 z-5 cursor-pointer"
+                        title="Back to top"
+                    >
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6">
+                            <path strokeLinecap="round" strokeLinejoin="round" d="m4.5 15.75 7.5-7.5 7.5 7.5" />
+                        </svg>
+                    </button>
                 </div>
             )}
         </div>

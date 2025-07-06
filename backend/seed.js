@@ -127,7 +127,7 @@ const seed = async () => {
                     facebook: "https://www.facebook.com/AKFanimalrescue/",
                     instagram: "https://www.instagram.com/akfanimalrescue/"
                 },
-                documents: [ "business-permit.pdf", "pound-registration-certificate.pdf", "veterinary-health-certificate.pdf", "dti.pdf" ],
+                documents: ["business-permit.pdf", "pound-registration-certificate.pdf", "veterinary-health-certificate.pdf", "dti.pdf"],
                 isApproved: true
             },
             {
@@ -144,7 +144,7 @@ const seed = async () => {
                     facebook: "https://www.facebook.com/PAWSsionProject",
                     tiktok: "https://www.tiktok.com/@pawssionproject"
                 },
-                documents: [ "veterinary-health-certificate.pdf", "dti.pdf" ],
+                documents: ["veterinary-health-certificate.pdf", "dti.pdf"],
                 isApproved: true
             }
         ];
@@ -164,7 +164,7 @@ const seed = async () => {
                     facebook: "https://www.facebook.com/",
                     instagram: "https://www.instagram.com/"
                 },
-                documents: [ "business-permit.pdf, pound-registration-certificate.pdf", "veterinary-health-certificate.pdf" ],
+                documents: ["business-permit.pdf, pound-registration-certificate.pdf", "veterinary-health-certificate.pdf"],
                 isApproved: false
             },
             {
@@ -181,12 +181,12 @@ const seed = async () => {
                     facebook: "https://www.facebook.com/",
                     tiktok: "https://www.tiktok.com/"
                 },
-                documents: [ "business-permit.pdf, animal-welfare-act-compliance-certificate.pdf", "veterinary-health-certificate.pdf" ],
+                documents: ["business-permit.pdf, animal-welfare-act-compliance-certificate.pdf", "veterinary-health-certificate.pdf"],
                 isApproved: false
             }
         ];
 
-        for(const kennelData of [...mockApprovedKennelsData, ...unapprovedKennels]){
+        for (const kennelData of [...mockApprovedKennelsData, ...unapprovedKennels]) {
 
             const exists = await Kennel.findOne({ email: kennelData.email });
 
@@ -212,6 +212,8 @@ const seed = async () => {
                         url: "https://res.cloudinary.com/dwspjzkcz/image/upload/v1751287094/buddy-123235-1.jpg",
                         public_id: "buddy-123235-1"
                     },
+                    secondary: null,
+                    tertiary: null
                 },
                 isAdopted: false,
                 adoptionFee: 500,
@@ -219,7 +221,7 @@ const seed = async () => {
                     vaccinated: true,
                     parasiteControl: {
                         tickAndFlea: true,
-                        heartworn: true,
+                        heartworm: true,
                         neutered: true
                     }
                 },
@@ -240,25 +242,21 @@ const seed = async () => {
                         public_id: "bantay-1234123-1"
                     },
                     secondary: {
-                        type: [
-                            {
-                                url: "https://res.cloudinary.com/dwspjzkcz/image/upload/v1751287219/bantay-1234123-2.png",
-                                public_id: "bantay-1234123-2"
-                            },
-                            {
-                                url: "https://res.cloudinary.com/dwspjzkcz/image/upload/v1751513943/bantay-1234123-3.png",
-                                public_id: "bantay-1234123-3"
-                            }
-                        ]
+                        url: "https://res.cloudinary.com/dwspjzkcz/image/upload/v1751287219/bantay-1234123-2.png",
+                        public_id: "bantay-1234123-2"
+                    },
+                    tertiary: {
+                        url: "https://res.cloudinary.com/dwspjzkcz/image/upload/v1751513943/bantay-1234123-3.png",
+                        public_id: "bantay-1234123-3"
                     }
-                },     
+                },
                 isAdopted: false,
                 adoptionFee: 400,
                 medical: {
                     vaccinated: true,
                     parasiteControl: {
                         tickAndFlea: true,
-                        heartworn: true,
+                        heartworm: true,
                         neutered: false
                     }
                 },
@@ -274,10 +272,12 @@ const seed = async () => {
                 gender: "female",
                 description: "Alpha male Aspin",
                 images: {
-                    primary:{
+                    primary: {
                         url: "https://res.cloudinary.com/dwspjzkcz/image/upload/v1751287091/llao-1676890101262-1.avif",
                         public_id: "llao-1676890101262-1"
-                    }
+                    },
+                    secondary: null,
+                    tertiary: null
                 },
                 isAdopted: false,
                 adoptionFee: 450,
@@ -285,7 +285,7 @@ const seed = async () => {
                     vaccinated: false,
                     parasiteControl: {
                         tickAndFlea: true,
-                        heartworn: true,
+                        heartworm: true,
                         neutered: false
                     }
                 },
@@ -306,13 +306,10 @@ const seed = async () => {
                         public_id: "coco-1644767-1"
                     },
                     secondary: {
-                        type: [
-                            {
-                            url: "https://res.cloudinary.com/dwspjzkcz/image/upload/v1751287091/coco-1644767-2.png",
-                            public_id: "coco-1644767-2"
-                            },
-                        ]
-                    }
+                        url: "https://res.cloudinary.com/dwspjzkcz/image/upload/v1751287091/coco-1644767-2.png",
+                        public_id: "coco-1644767-2"
+                    },
+                    tertiary: null
                 },
                 isAdopted: false,
                 adoptionFee: 500,
@@ -320,7 +317,7 @@ const seed = async () => {
                     vaccinated: true,
                     parasiteControl: {
                         tickAndFlea: false,
-                        heartworn: false,
+                        heartworm: false,
                         neutered: false
                     }
                 },
@@ -341,13 +338,10 @@ const seed = async () => {
                         public_id: "dyagwar-203424-1"
                     },
                     secondary: {
-                        type:[
-                            {
-                                url: "https://res.cloudinary.com/dwspjzkcz/image/upload/v1751287104/dyagwar-203424-2.png",
-                                public_id: "dyagwar-203424-2"
-                            }
-                        ]
-                    }
+                        url: "https://res.cloudinary.com/dwspjzkcz/image/upload/v1751287104/dyagwar-203424-2.png",
+                        public_id: "dyagwar-203424-2"
+                    },
+                    tertiary: null
                 },
                 isAdopted: false,
                 adoptionFee: 300,
@@ -355,7 +349,7 @@ const seed = async () => {
                     vaccinated: true,
                     parasiteControl: {
                         tickAndFlea: false,
-                        heartworn: false,
+                        heartworm: false,
                         neutered: true
                     }
                 },
@@ -376,16 +370,12 @@ const seed = async () => {
                         public_id: "dobby-29452-1"
                     },
                     secondary: {
-                        type: [
-                            {
-                                url: "https://res.cloudinary.com/dwspjzkcz/image/upload/v1751594438/dobby-29452-2.png",
-                                public_id: "dobby-29452-2"
-                            },
-                            {
-                                url: "https://res.cloudinary.com/dwspjzkcz/image/upload/v1751594544/dobby-29452-3.png",
-                                public_id: "dobby-29452-3"
-                            }
-                        ]
+                        url: "https://res.cloudinary.com/dwspjzkcz/image/upload/v1751594438/dobby-29452-2.png",
+                        public_id: "dobby-29452-2"
+                    },
+                    tertiary: {
+                        url: "https://res.cloudinary.com/dwspjzkcz/image/upload/v1751594544/dobby-29452-3.png",
+                        public_id: "dobby-29452-3"
                     }
                 },
                 isAdopted: false,
@@ -394,7 +384,7 @@ const seed = async () => {
                     vaccinated: true,
                     parasiteControl: {
                         tickAndFlea: false,
-                        heartworn: false,
+                        heartworm: false,
                         neutered: true
                     }
                 },
@@ -415,16 +405,12 @@ const seed = async () => {
                         public_id: "chichi-123987-1"
                     },
                     secondary: {
-                        type: [
-                            {
-                                url: "https://res.cloudinary.com/dwspjzkcz/image/upload/v1751594569/chichi-123987-2.png",
-                                public_id: "chichi-123987-2"
-                            },
-                            {
-                                url: "https://res.cloudinary.com/dwspjzkcz/image/upload/v1751594602/chichi-123987-3.png",
-                                public_id: "chichi-123987-3"
-                            }
-                        ]
+                        url: "https://res.cloudinary.com/dwspjzkcz/image/upload/v1751594569/chichi-123987-2.png",
+                        public_id: "chichi-123987-2"
+                    },
+                    tertiary: {
+                        url: "https://res.cloudinary.com/dwspjzkcz/image/upload/v1751594602/chichi-123987-3.png",
+                        public_id: "chichi-123987-3"
                     }
                 },
                 isAdopted: false,
@@ -433,7 +419,7 @@ const seed = async () => {
                     vaccinated: true,
                     parasiteControl: {
                         tickAndFlea: true,
-                        heartworn: true,
+                        heartworm: true,
                         neutered: false
                     }
                 },
@@ -449,21 +435,17 @@ const seed = async () => {
                 gender: "male",
                 description: "Extremely Intelligent Bengal",
                 images: {
-                    primary:{
+                    primary: {
                         url: "https://res.cloudinary.com/dwspjzkcz/image/upload/v1751594608/benjie-9138094-1.png",
                         public_id: "benjie-9138094-1"
                     },
                     secondary: {
-                        type:[
-                            {
-                                url: "https://res.cloudinary.com/dwspjzkcz/image/upload/v1751594613/benjie-9138094-2.png",
-                                public_id: "benjie-9138094-2"
-                            },
-                            {
-                                url: "https://res.cloudinary.com/dwspjzkcz/image/upload/v1751594634/benjie-9138094-3.png",
-                                public_id: "benjie-9138094-3"
-                            }
-                        ]
+                        url: "https://res.cloudinary.com/dwspjzkcz/image/upload/v1751594613/benjie-9138094-2.png",
+                        public_id: "benjie-9138094-2"
+                    },
+                    tertiary: {
+                        url: "https://res.cloudinary.com/dwspjzkcz/image/upload/v1751594634/benjie-9138094-3.png",
+                        public_id: "benjie-9138094-3"
                     }
                 },
                 isAdopted: false,
@@ -472,7 +454,7 @@ const seed = async () => {
                     vaccinated: true,
                     parasiteControl: {
                         tickAndFlea: false,
-                        heartworn: false,
+                        heartworm: false,
                         neutered: false
                     }
                 },
@@ -490,19 +472,15 @@ const seed = async () => {
                 images: {
                     primary: {
                         url: "https://res.cloudinary.com/dwspjzkcz/image/upload/v1751594641/mr.-smee-123982-1.png",
-                        public_id: "mr.-smee-123982-1"  
+                        public_id: "mr.-smee-123982-1"
                     },
                     secondary: {
-                        type: [
-                            {
-                                url: "https://res.cloudinary.com/dwspjzkcz/image/upload/v1751594644/mr.-smee-123982-2.png",
-                                public_id: "mr.-smee-123982-2"
-                            },
-                            {
-                                url: "https://res.cloudinary.com/dwspjzkcz/image/upload/v1751594664/mr.-smee-123982-3.png",
-                                public_id: "mr.-smee-123982-3"
-                            }
-                        ]
+                        url: "https://res.cloudinary.com/dwspjzkcz/image/upload/v1751594644/mr.-smee-123982-2.png",
+                        public_id: "mr.-smee-123982-2"
+                    },
+                    tertiary: {
+                        url: "https://res.cloudinary.com/dwspjzkcz/image/upload/v1751594664/mr.-smee-123982-3.png",
+                        public_id: "mr.-smee-123982-3"
                     }
                 },
                 isAdopted: false,
@@ -511,7 +489,7 @@ const seed = async () => {
                     vaccinated: true,
                     parasiteControl: {
                         tickAndFlea: false,
-                        heartworn: false,
+                        heartworm: false,
                         neutered: false
                     }
                 },
@@ -532,16 +510,12 @@ const seed = async () => {
                         public_id: "raggy-9817231-1"
                     },
                     secondary: {
-                        type: [
-                            {
-                                url: "https://res.cloudinary.com/dwspjzkcz/image/upload/v1751594694/raggy-9817231-2.png",
-                                public_id: "raggy-9817231-2"
-                            },
-                            {
-                                url: "https://res.cloudinary.com/dwspjzkcz/image/upload/v1751594717/raggy-9817231-3.png",
-                                public_id: "raggy-9817231-3"
-                            }
-                        ]
+                        url: "https://res.cloudinary.com/dwspjzkcz/image/upload/v1751594694/raggy-9817231-2.png",
+                        public_id: "raggy-9817231-2"
+                    },
+                    tertiary: {
+                        url: "https://res.cloudinary.com/dwspjzkcz/image/upload/v1751594717/raggy-9817231-3.png",
+                        public_id: "raggy-9817231-3"
                     }
                 },
                 isAdopted: false,
@@ -550,14 +524,16 @@ const seed = async () => {
                     vaccinated: true,
                     parasiteControl: {
                         tickAndFlea: true,
-                        heartworn: true,
+                        heartworm: true,
                         neutered: false
                     }
                 },
                 specialAssistance: false,
                 kennel: kennels[3]?._id
-            },
+            }
+
         ];
+
 
         for (const petData of mockPetsData) {
             const exists = await Pet.findOne({ name: petData.name });
