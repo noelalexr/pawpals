@@ -6,7 +6,7 @@ const petSchema = new mongoose.Schema({
     arrivalDate: { type: Date, required: true },
     breed: { type: String, required: true },
     species: { type: String, required: true, enum: ["dog", "cat", "bird"] },
-    gender: { type: String, required: true, enum: ["male", "female", "undetermined"] },
+    gender: { type: String, required: true, enum: ["male", "female", "unknown"] },
     description: { type: String, required: true },
     images: {
         primary: { url: String, public_id: String },
