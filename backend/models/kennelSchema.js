@@ -21,6 +21,7 @@ const kennelSchema = new mongoose.Schema({
                 required: true 
             }
         ],
+        role: { type: String, default: "kennel" },
         isApproved: { type: Boolean, default: false },
     },
     { timestamps: true }

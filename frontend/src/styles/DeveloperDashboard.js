@@ -58,6 +58,15 @@ const styles = {
     cursor: "pointer",
     border: "none",
   },
+  registertButton: {
+    backgroundColor: "#749CC9",
+    color: "white",
+    padding: "0.5rem 1rem",
+    borderRadius: "0.375rem",
+    fontWeight: "600",
+    cursor: "pointer",
+    border: "none",
+  },
   searchInput: {
     width: "100%",
     padding: "0.5rem 1rem",

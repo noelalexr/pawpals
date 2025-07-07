@@ -22,9 +22,9 @@ router.get("/kennels", auth, verifyDeveloper, listAllKennels);
 router.get("/kennels/pending", auth, verifyDeveloper, listPendingKennels);
 
 // Approve kennel
-router.patch("/kennel/:id/approve", auth, verifyDeveloper, approveKennel);
+router.patch("/kennels/:id/approve", auth, verifyDeveloper, approveKennel);
 
 // Reject & delete kennel
-router.patch("/kennel/:id/reject", auth, verifyDeveloper, rejectKennel);
+router.patch("/kennels/:id/reject", auth, verifyDeveloper, rejectKennel);
 
 export default router;

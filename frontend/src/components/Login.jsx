@@ -141,7 +141,7 @@ export default function Login() {
 
                     <p style={styles.signupText}>
                         Are you a developer?{" "}
-                        <Link to="/dev/login" style={styles.highlight}>
+                        <Link to="/dev-login" style={styles.highlight}>
                             Log in here
                         </Link>
                     </p>

@@ -3,35 +3,28 @@ import { useState } from "react";
 const Chatbot = () => {
     const [open, setOpen] = useState(false);
     const [input, setInput] = useState("");
-    const [messages, setMessages] = useState([
-        { from: "bot", text: "Hello! I'm here to help you find a pet!" },
-    ]);
+    const [userName, setUsername] = useState("User");
+    const [messages, setMessages] = useState([]);
 
     const handleSend = async () => {
-        if (!input.trim()) return;
+        if(input.trim() !== ""){
+            const userMessage = { from: "user", text: input };
+            setMessages((prev) => [...prev, userMessage]);
+            setInput("");
 
-        const userMessage = { from: "user", text: input };
-        setMessages((prev) => [...prev, userMessage]);
-        setInput("");
-
-        try {
-            const response = await fetch("/api/chat", {
+            const response = await fetch("http://localhost:3000/api/chatbot/chat", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ message: input }),
+                body: JSON.stringify({ userMessage: input }),
             });
 
             const data = await response.json();
+            const aiResponse = {
+                from: "ai",
+                text: data.aiResponse,
+            };
 
-            setMessages((prev) => [
-                ...prev,
-                { from: "bot", text: data.reply || "Sorry, I didn't get that." },
-            ]);
-        } catch (error) {
-            setMessages((prev) => [
-                ...prev,
-                { from: "bot", text: "Oops! Something went wrong." },
-            ]);
+            setMessages((prev) => [...prev, aiResponse]);
         }
     };
 
@@ -69,7 +62,7 @@ const Chatbot = () => {
                             value={input}
                             onChange={(e) => setInput(e.target.value)}
                             onKeyDown={handleKeyDown}
-                            placeholder="Ask me something..."
+                            placeholder={`Ask me something, ${userName} 🐕🐈🐦`}
                             className="w-full border rounded px-2 py-1"
                         />
                         <button
@@ -85,7 +78,7 @@ const Chatbot = () => {
                     onClick={() => setOpen(true)}
                     className="bg-blue-600 text-white px-4 py-2 rounded-full shadow-lg"
                 >
-                    💬 I can help you find a pet!
+                    💬 I can help you find a pet! 🐕🐈🐦
                 </button>
             )}
         </div>

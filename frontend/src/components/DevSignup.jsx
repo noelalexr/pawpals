@@ -4,6 +4,8 @@ import signupImage from "../assets/images/form-assets/pawpal_signup.jpg";
 import styles from "../styles/signupStyles";
 
 export default function DevSignup() {
+    const navigate = useNavigate()
+
     const [formData, setFormData] = useState({
         name: "",
         email: "",
@@ -55,7 +57,7 @@ export default function DevSignup() {
 
         setLoading(true);
         try {
-            const response = await fetch("http://localhost:3000/api/dev/register", {
+            const response = await fetch(`${import.meta.env.VITE_DEV_REGISTER_API}`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -68,7 +70,7 @@ export default function DevSignup() {
 
             if (response.ok) {
                 alert("Developer account registered! You may now login.");
-                navigate("/dev/login");
+                navigate("/dev-login");
             } else {
                 alert(data.message || "Registration failed.");
             }

@@ -58,19 +58,25 @@ const login = async (req, res) => {
             return res.status(400).json({error: "Invalid credentials"});
         };
 
+        if (!user.isApproved) {
+            return res.status(403).json({
+                error: "User not yet approved. For more information, contact us at support@pawpals.org",
+            });
+        }
+
         const passwordMatched = await bcrypt.compare(payload.password, user.password);
         if(!passwordMatched) {
             return res.status(400).json({error: "Invalid Credentials"});
         };
 
         //Generate Token
-        const token = jwt.sign({userId: user._id, name: user.name}, process.env.JWT_SECRET, {expiresIn: "30m"});
+        const token = jwt.sign({userId: user._id, name: user.name, role: user.role}, process.env.JWT_SECRET, {expiresIn: "2h"});
 
         res.cookie("token", token, {
             httpOnly: true,
             secure: process.env.NODE_ENV === "production",
             sameSite: "Strict",
-            maxAge: 86400000 //1 day
+            maxAge: 2 * 60 * 60 * 1000 // 2 hours
         });
 
         res.json({message: "Login successful"});

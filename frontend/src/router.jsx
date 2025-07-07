@@ -12,6 +12,7 @@ import { authLoader } from "./loaders/authLoader";
 //LAYOUTS
 import PublicLayout from "./layouts/PublicLayout";
 import PrivateLayout from "./layouts/PrivateLayout";
+import DeveloperLayout from "./layouts/DeveloperLayout";
 
 //PAGES
 import PublicDashboard from "./pages/PublicDashboard";
@@ -47,15 +48,19 @@ const router = createBrowserRouter(
                     element: <PetDetails />,
                 },
                 {
-                    path: "/about-us",
+                    path: "about-us",
                     element: <AboutUs />,
+                },
+                {
+                    path: "dev-login",
+                    element: <DevLogin />,
                 },
             ]
         },
         {
             path: "/private-dashboard",
             element: <PrivateLayout />,
-            loader: authLoader,
+            loader: () => authLoader("kennel"),
             children: [
                 {
                     index: true,
@@ -81,18 +86,15 @@ const router = createBrowserRouter(
             ]
         },
         {
-            path: "/dev",
-            // element: <PrivateLayout />, ==>>> THISSSSSSSSSS
-            // loader: authLoader,
+            path: "/dev-dashboard",
+            element: <DeveloperLayout />,
+            loader: () => authLoader("developer"),
             children: [
                 {
-                    path: "dashboard",
+                    index: true,
                     element: <DeveloperDashboard />,
                 },
-                {
-                    path: "login",
-                    element: <DevLogin />,
-                },
+
                 {
                     path: "signup",
                     element: <DevSignup />,
