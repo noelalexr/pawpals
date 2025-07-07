@@ -85,7 +85,12 @@ export default function Login() {
 
     return (
         <div style={styles.container}>
-            <div style={styles.innerWrapper}>
+            <div style={styles.innerWrapper} className="relative">
+                <div onClick={() => navigate("/")} className="absolute top-5 left-5 rounded-full text-[#4B7FBB] p-3 hover:bg-gray-200 active:bg-gray-200 ease-in-out duration-300 cursor-pointer">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6">
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M10.5 19.5 3 12m0 0 7.5-7.5M3 12h18" />
+                    </svg>
+                </div>
                 <div style={styles.box}>
                     <h1 style={styles.title}>
                         Welcome to{" "}

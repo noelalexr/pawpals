@@ -183,18 +183,20 @@ export default function AddPet() {
                 </div>
                 <p className="text-[#4B7FBB] text-xs font-semibold pt-2 pb-1 text-center">Description</p>
                 <textarea name="description" value={form.description} onChange={handleFormChange} required className="w-[80%] outline-none border-2 border-gray-200 focus:border-[#4B7FBB] px-3 py-1 rounded-sm transition-colors duration-300 block mx-auto min-h-30" />
-                <div className="flex flex-row gap-10 justify-center py-7">
+                <div className="flex md:flex-row flex-col md:gap-10 gap-5 items-center justify-center py-7">
                     <div>
                         <p className="text-[#4B7FBB] text-xs font-semibold pb-1">Special Assistance</p>
                         <label className="cursor-pointer"><input type="checkbox" name="specialAssistance" checked={form.specialAssistance} onChange={handleFormChange} className="cursor-pointer" /> Needed</label>
-                        <p className="text-[#4B7FBB] text-xs font-semibold pb-1 pt-2">Medical Details</p>
+                    </div>
+                    <div className="flex flex-col">
+                        <p className="text-[#4B7FBB] text-xs font-semibold pb-1">Medical Details</p>
                         <label className="cursor-pointer"><input type="checkbox" name="medical.vaccinated" checked={form.medical.vaccinated} onChange={handleFormChange} className="cursor-pointer" /> Vaccinated</label>
+                        <label className="cursor-pointer"><input type="checkbox" name="medical.parasiteControl.neutered" checked={form.medical.parasiteControl.neutered} onChange={handleFormChange} className="cursor-pointer" /> Neutered</label>
                     </div>
                     <div className="flex flex-col">
                         <p className="text-[#4B7FBB] text-xs font-semibold pb-1">Parasite Control</p>
                         <label className="cursor-pointer"><input type="checkbox" name="medical.parasiteControl.tickAndFlea" checked={form.medical.parasiteControl.tickAndFlea} onChange={handleFormChange} className="cursor-pointer" /> Tick & Flea</label>
                         <label className="cursor-pointer"><input type="checkbox" name="medical.parasiteControl.heartworm" checked={form.medical.parasiteControl.heartworm} onChange={handleFormChange} className="cursor-pointer" /> Heartworm</label>
-                        <label className="cursor-pointer"><input type="checkbox" name="medical.parasiteControl.neutered" checked={form.medical.parasiteControl.neutered} onChange={handleFormChange} className="cursor-pointer" /> Neutered</label>
                     </div>
                 </div>
 
