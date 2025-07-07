@@ -18,7 +18,7 @@ import { PublicPetContext } from "../contexts/PublicPetContext.jsx";
 import LoaderPage from "./LoaderPage.jsx";
 
 //LOADERS
-import { fetchLoggedinKennel } from "../loaders/dataLoader";
+import { fetchLoggedInKennel } from "../loaders/dataLoader";
 
 
 const PublicDashboard = () => {
@@ -48,15 +48,17 @@ const PublicDashboard = () => {
 
     useEffect(() => {
         const getKennelName = async () => {
-            const user = await fetchLoggedinKennel();
+            const user = await fetchLoggedInKennel();
             if (user) setKennel(user);
         };
         getKennelName();
     }, []);
 
     const handleKennelLoginClick = () => {
-        if (kennel) {
+        if (kennel.role === "kennel") {
             navigate("/private-dashboard");
+        } else if (kennel.role === "developer") {
+            navigate("/dev-dashboard");
         } else {
             navigate("/login");
         }

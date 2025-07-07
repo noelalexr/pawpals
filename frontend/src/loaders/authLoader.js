@@ -1,6 +1,6 @@
 import { redirect } from "react-router-dom";
 
-export async function authLoader() {
+export async function authLoader(expectedRole = null) {
     try {
         const response = await fetch(import.meta.env.VITE_VALIDATE_API, {
             method: "GET",
@@ -17,7 +17,12 @@ export async function authLoader() {
             return redirect("/login");
         }
 
-        return null;
+        if (expectedRole && result.user.role !== expectedRole) {
+            return redirect("/");
+        }
+
+        
+        return result.user;
     } catch {
         return redirect("/login");
     }

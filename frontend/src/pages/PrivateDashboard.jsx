@@ -16,7 +16,7 @@ import LoaderPage from "./LoaderPage.jsx";
 
 //LOADERS
 import { fetchMyPets } from "../loaders/dataLoader.js"
-import { fetchLoggedinKennel } from "../loaders/dataLoader";
+import { fetchLoggedInKennel } from "../loaders/dataLoader";
 
 
 const PrivateDashboard = () => {
@@ -64,7 +64,7 @@ const PrivateDashboard = () => {
 
     useEffect(() => {
         const getKennelName = async () => {
-            const user = await fetchLoggedinKennel();
+            const user = await fetchLoggedInKennel();
             if (user) setKennelName(user.name);
         };
 

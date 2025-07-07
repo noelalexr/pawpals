@@ -93,7 +93,7 @@ export default function Signup() {
         setLoading(true);
 
         try {
-            const response = await fetch("http://localhost:3000/api/auth/register", {
+            const response = await fetch(`${import.meta.env.VITE_REGISTER_API}`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -219,14 +219,7 @@ export default function Signup() {
                     <p style={styles.instruction}>
                         Already have an account?{" "}
                         <Link to="/login" style={styles.highlight}>
-                            Go to Login
-                        </Link>
-                    </p>
-
-                    <p style={styles.instruction}>
-                        Are you a developer?{" "}
-                        <Link to="/dev/signup" style={styles.highlight}>
-                            Register here
+                            Login Here
                         </Link>
                     </p>
 

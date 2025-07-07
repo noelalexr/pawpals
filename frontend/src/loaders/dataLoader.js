@@ -40,20 +40,6 @@ export const fetchMyPetDetails = async (id) => {
     }
 };
 
-export const fetchLoggedInKennel = async () => {
-    try {
-        const response = await fetch(`${import.meta.env.VITE_API_URL}/api/kennels/validate`, {
-            method: "GET",
-            credentials: "include",
-        });
-        if (!response.ok) throw new Error("Failed to fetch kennel info");
-        return await response.json();
-    } catch (err) {
-        console.error("Error fetching kennel info:", err);
-        throw err;
-    }
-}
-
 export const fetchPendingKennels = async () => {
     try {
         const res = await fetch(`${import.meta.env.VITE_API_URL}/api/dev/kennels/pending`, {
@@ -67,9 +53,28 @@ export const fetchPendingKennels = async () => {
     }
 };
 
-export const fetchLoggedinKennel = async () => {
+export const fetchLoggedInKennel = async () => {
     try {
         const response = await fetch(`${import.meta.env.VITE_VALIDATE_API}`, {
+            method: "GET",
+            credentials: "include",
+        });
+
+        const result = await response.json();
+        if (!response.ok || !result.valid) {
+            throw new Error("Unauthorized");
+        }
+
+        return result.user;
+    } catch (err) {
+        console.error("Failed to validate user:", err);
+        return null;
+    }
+};
+
+export const fetchLoggedInDev = async () => {
+    try {
+        const response = await fetch(`${import.meta.env.VITE_DEV_VALIDATE_API}`, {
             method: "GET",
             credentials: "include",
         });

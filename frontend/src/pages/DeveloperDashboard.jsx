@@ -9,12 +9,18 @@ export default function DeveloperDashboard() {
   const [search, setSearch] = useState("");
   const [selected, setSelected] = useState(null);
   const navigate = useNavigate();
+  const ensureHttp = (url) => {
+  if (!url) return "#";
+  return url.startsWith("http://") || url.startsWith("https://")
+    ? url
+    : `https://${url}`;
+};
 
   // ✅ Fetch all kennels (pending + approved)
   useEffect(() => {
     const fetchKennels = async () => {
       try {
-        const res = await fetch(`${API}/api/dev/kennels`, {
+        const res = await fetch(`${import.meta.env.VITE_DEV_APPROVAL_API}`, {
           credentials: "include",
         });
 
@@ -40,8 +46,8 @@ export default function DeveloperDashboard() {
   );
 
   const handleAction = async (id, action) => {
-    const url = `${API}/api/dev/kennel/${id}/${action}`;
-    const method = action === "approve" ? "PATCH" : "DELETE";
+    const url = `${import.meta.env.VITE_DEV_APPROVAL_API}/${id}/${action}`;
+    const method = "PATCH";
 
     try {
       const res = await fetch(url, {
@@ -51,17 +57,47 @@ export default function DeveloperDashboard() {
 
       if (!res.ok) throw new Error(`${action} failed`);
 
-      setKennels((prev) =>
-        prev.map((k) =>
-          k._id === id
-            ? {
-                ...k,
-                isApproved: action === "approve",
-                status: action === "approve" ? "approved" : "rejected",
-              }
-            : k
-        )
-      );
+      if (action === "approve") {
+        setKennels((prev) =>
+          prev.map((k) =>
+            k._id === id
+              ? { ...k, isApproved: true, status: "approved" }
+              : k
+          )
+        );
+        if (selected?._id === id) {
+          setSelected((prev) => ({
+            ...prev,
+            isApproved: true,
+            status: "approved",
+          }));
+        }
+      } else if (action === "reject") {
+        const data = await res.json();
+
+        // If backend deleted the kennel → remove from list
+        if (
+          data.message?.includes("deleted") ||
+          data.message?.includes("removed")
+        ) {
+          setKennels((prev) => prev.filter((k) => k._id !== id));
+          setSelected(null);
+        } else {
+          // Still exists → update status
+          setKennels((prev) =>
+            prev.map((k) =>
+              k._id === id ? { ...k, isApproved: false, status: "pending" } : k
+            )
+          );
+          if (selected?._id === id) {
+            setSelected((prev) => ({
+              ...prev,
+              isApproved: false,
+              status: "pending",
+            }));
+          }
+        }
+      }
 
       if (selected && selected._id === id) {
         setSelected((prev) => ({
@@ -77,7 +113,10 @@ export default function DeveloperDashboard() {
 
   const handleLogout = async () => {
     try {
-      await fetch(`${API}/api/dev/logout`, { credentials: "include" });
+      await fetch(`${import.meta.env.VITE_DEV_LOGOUT_API}`, {
+      method: "POST", // 👈 This was missing
+      credentials: "include",
+    });
     } catch (e) {
       console.error("Logout failed:", e);
     } finally {
@@ -88,7 +127,6 @@ export default function DeveloperDashboard() {
   const groupedKennels = {
     pending: filteredKennels.filter((k) => k.status === "pending"),
     approved: filteredKennels.filter((k) => k.status === "approved"),
-    rejected: filteredKennels.filter((k) => k.status === "rejected"),
   };
 
   return (
@@ -99,9 +137,15 @@ export default function DeveloperDashboard() {
             <h1 style={styles.heading}>
               Paw<span style={{ color: "#749CC9" }}>Pals</span> Developer Dashboard
             </h1>
-            <button style={styles.logoutButton} onClick={handleLogout}>
-              Logout
-            </button>
+            <div style={{ display: "flex", gap: "0.5rem", alignItems: "center", whiteSpace: "nowrap" }}>
+              <button style={styles.registertButton} onClick={() => navigate("/dev-dashboard/signup")}>
+                Register Dev
+              </button>
+              <button style={styles.logoutButton} onClick={handleLogout}>
+                Logout
+              </button>
+            </div>
+            
           </div>
 
           <input
@@ -141,23 +185,23 @@ export default function DeveloperDashboard() {
           {selected ? (
             <div>
               <h2 style={styles.detailName}>{selected.name}</h2>
-              <p style={styles.detailText}><strong>Email:</strong> {selected.email}</p>
-              <p style={styles.detailText}><strong>Contact:</strong> {selected.contact}</p>
-              <p style={styles.detailText}><strong>Address:</strong> {selected.location?.fullAddress} ({selected.location?.citySort})</p>
-              <p style={styles.detailText}><strong>Website:</strong> <a href={selected.website} target="_blank" rel="noreferrer">{selected.website}</a></p>
-              <p style={styles.detailText}><strong>Facebook:</strong> <a href={selected.socialLinks?.facebook} target="_blank" rel="noreferrer">{selected.socialLinks?.facebook}</a></p>
-              <p style={styles.detailText}><strong>Instagram:</strong> <a href={selected.socialLinks?.instagram} target="_blank" rel="noreferrer">{selected.socialLinks?.instagram}</a></p>
-              <p style={styles.detailText}><strong>TikTok:</strong> <a href={selected.socialLinks?.tiktok} target="_blank" rel="noreferrer">{selected.socialLinks?.tiktok}</a></p>
-              <p style={styles.detailText}>
+              <div style={styles.detailText}><strong>Email:</strong> {selected.email}</div>
+              <div style={styles.detailText}><strong>Contact:</strong> {selected.contact}</div>
+              <div style={styles.detailText}><strong>Address:</strong> {selected.location?.fullAddress} ({selected.location?.citySort})</div>
+              <div style={styles.detailText}><strong>Website:</strong> <a href={ensureHttp(selected.website)} target="_blank" rel="noreferrer">{selected.website}</a></div>
+              <div style={styles.detailText}><strong>Facebook:</strong> <a href={ensureHttp(selected.socialLinks?.facebook)} target="_blank" rel="noreferrer">{selected.socialLinks?.facebook}</a></div>
+              <div style={styles.detailText}><strong>Instagram:</strong> <a href={ensureHttp(selected.socialLinks?.instagram)} target="_blank" rel="noreferrer">{selected.socialLinks?.instagram}</a></div>
+              <div style={styles.detailText}><strong>TikTok:</strong> <a href={ensureHttp(selected.socialLinks?.tiktok)} target="_blank" rel="noreferrer">{selected.socialLinks?.tiktok}</a></div>
+              <div style={styles.detailText}>
                 <strong>Documents:</strong>{" "}
                 {Array.isArray(selected.documents)
                   ? selected.documents.map((doc, i) => (
                       <div key={i}>
-                        <a href={doc} target="_blank" rel="noreferrer">View Document {i + 1}</a>
+                        <a href={ensureHttp(doc)} target="_blank" rel="noreferrer">View Document {i + 1}</a>
                       </div>
                     ))
-                  : <a href={selected.documents} target="_blank" rel="noreferrer">View</a>}
-              </p>
+                  : <a href={ensureHttp(selected.documents)} target="_blank" rel="noreferrer">View</a>}
+              </div>
               <div style={styles.buttonGroup}>
                 {selected.status !== "approved" && (
                   <button
@@ -167,7 +211,7 @@ export default function DeveloperDashboard() {
                     Approve
                   </button>
                 )}
-                {selected.status !== "rejected" && (
+                {selected.status && (
                   <button
                     style={{ ...styles.button, ...styles.rejectBtn }}
                     onClick={() => handleAction(selected._id, "reject")}

@@ -56,16 +56,16 @@ const loginDev = async (req, res) => {
 
         //JWT token for the dev login
         const token = jwt.sign(
-            { id: developer._id, role: developer.role },
+            { userId: developer._id, name: developer.name, role: developer.role },
             process.env.JWT_SECRET,
-            { expiresIn: "1d" }
+            { expiresIn: "2h" }
         );
 
         res.cookie("token", token, {
             httpOnly: true,
             secure: process.env.NODE_ENV === "production",
-            sameSite: "strict",
-            maxAge: 24 * 60 * 60 * 1000, //1 day
+            sameSite: "Strict",
+            maxAge: 2 * 60 * 60 * 1000 // 2 hours
         });
 
         res.status(200).json({ message: "Login successful" });   

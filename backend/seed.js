@@ -45,6 +45,7 @@ const seed = async () => {
                     facebook: "https://www.facebook.com/pawsphilippines",
                 },
                 documents: ["business-permit.pdf", "dti-registration.pdf"],
+                role: "kennel",
                 isApproved: true
             },
             {
@@ -61,6 +62,7 @@ const seed = async () => {
                     facebook: "https://www.facebook.com/PhilAnimalRescueTeam/",
                 },
                 documents: ["veterinary-health-certificate.pdf", "business-permit.pdf"],
+                role: "kennel",
                 isApproved: true
             },
             {
@@ -77,6 +79,7 @@ const seed = async () => {
                     facebook: "https://www.facebook.com/CARAwelfareph",
                 },
                 documents: ["pound-registration-certificate.pdf", "veterinary-health-certificate.pdf"],
+                role: "kennel",
                 isApproved: true
             },
             {
@@ -94,6 +97,7 @@ const seed = async () => {
                     instagram: "https://www.instagram.com/akfanimalrescue/"
                 },
                 documents: ["business-permit.pdf", "pound-registration-certificate.pdf", "veterinary-health-certificate.pdf", "dti.pdf"],
+                role: "kennel",
                 isApproved: true
             },
             {
@@ -111,6 +115,7 @@ const seed = async () => {
                     tiktok: "https://www.tiktok.com/@pawssionproject"
                 },
                 documents: ["veterinary-health-certificate.pdf", "dti.pdf"],
+                role: "kennel",
                 isApproved: true
             },
             {
@@ -128,6 +133,7 @@ const seed = async () => {
                     instagram: "https://www.instagram.com/akfanimalrescue/"
                 },
                 documents: ["business-permit.pdf", "pound-registration-certificate.pdf", "veterinary-health-certificate.pdf", "dti.pdf"],
+                role: "kennel",
                 isApproved: true
             },
             {
@@ -145,6 +151,7 @@ const seed = async () => {
                     tiktok: "https://www.tiktok.com/@pawssionproject"
                 },
                 documents: ["veterinary-health-certificate.pdf", "dti.pdf"],
+                role: "kennel",
                 isApproved: true
             }
         ];
@@ -165,6 +172,7 @@ const seed = async () => {
                     instagram: "https://www.instagram.com/"
                 },
                 documents: ["business-permit.pdf, pound-registration-certificate.pdf", "veterinary-health-certificate.pdf"],
+                role: "kennel",
                 isApproved: false
             },
             {
@@ -182,6 +190,7 @@ const seed = async () => {
                     tiktok: "https://www.tiktok.com/"
                 },
                 documents: ["business-permit.pdf, animal-welfare-act-compliance-certificate.pdf", "veterinary-health-certificate.pdf"],
+                role: "kennel",
                 isApproved: false
             }
         ];

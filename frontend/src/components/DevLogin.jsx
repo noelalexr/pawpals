@@ -42,7 +42,7 @@ export default function DevLogin() {
 
         setLoading(true);
         try {
-            const res = await fetch("http://localhost:3000/api/developers/login", {
+            const res = await fetch(`${import.meta.env.VITE_DEV_LOGIN_API}`, {
                 method: "POST",
                 credentials: "include",
                 headers: { "Content-Type": "application/json" },
@@ -52,7 +52,7 @@ export default function DevLogin() {
             const data = await res.json();
             if (!res.ok) throw new Error(data.message || "Login failed");
 
-            navigate("/dev/dashboard");
+            navigate("/dev-dashboard");
         } catch (err) {
             setError(err.message || "Server error");
         } finally {
@@ -103,11 +103,6 @@ export default function DevLogin() {
                             {loading ? "Logging in..." : "Log In"}
                         </button>
                     </form>
-
-                    <p style={styles.signupText}>
-                        Don’t have a developer account?{" "}
-                        <Link to="/dev/signup" style={styles.highlight}>Register here</Link>
-                    </p>
 
                     <p style={styles.signupText}>
                         Are you a kennel user?{" "}

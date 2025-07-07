@@ -11,8 +11,7 @@ const verifyDeveloper = async (req, res, next) => {
             return res.status(403).json({ error: "Access denied: Developers only" });
         }
 
-        req.developer = developer; //gets the devs info
-
+        req.developer = developer;
         next();
     } catch (err) {
         res.status(500).json({ error: err.message });
