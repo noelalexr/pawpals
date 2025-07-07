@@ -1,4 +1,4 @@
-import { useContext } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import { useParams, useNavigate } from "react-router";
 
 // ICONS
@@ -10,6 +10,8 @@ import pinGrayIcon from "../assets/images/icons/pin-gray.png";
 import emailBlueIcon from "../assets/images/icons/email-blue.png";
 import webBlueIcon from "../assets/images/icons/website-blue.png";
 import pawIcon from "../assets/images/icons/paw.png";
+import viewsIcon from "../assets/images/icons/views.png";
+import calendarIcon from "../assets/images/icons/calendar.png";
 
 // CONTEXTS
 import { PublicPetContext } from "../contexts/PublicPetContext";
@@ -18,17 +20,51 @@ const PetDetails = () => {
     const navigate = useNavigate();
     const { id } = useParams();
     const { pets } = useContext(PublicPetContext);
-
+    const hasViewed = useRef(false);
+    const [views, setViews] = useState(0);
     const petDetails = pets.find((pet) => String(pet._id) === id);
-    if (!petDetails) return <p className="text-center text-red-600">Pet not found.</p>;
+
+    useEffect(() => {
+        console.log(petDetails)
+        if (petDetails) {
+            setViews(petDetails.views || 0);
+
+            if (!hasViewed.current) {
+                fetch(`${import.meta.env.VITE_PETS_API}/${id}/views`, {
+                    method: 'POST'
+                })
+                    .then((res) => res.json())
+                    .then((data) => {
+                        if (data?.views !== undefined) {
+                            setViews(data.views);
+                        }
+                    })
+                    .catch((err) => console.error("Failed to increment view count", err));
+
+                hasViewed.current = true;
+            }
+        }
+    }, [id, petDetails]);
+
+    if (!petDetails) {
+        return <p className="text-center text-red-600">Pet not found.</p>;
+    }
 
     const createdAt = new Date(petDetails.createdAt);
+
     const photoStyleDate =
         createdAt.getFullYear() +
         '.' + String(createdAt.getMonth() + 1).padStart(2, '0') +
         '.' + String(createdAt.getDate()).padStart(2, '0') +
         ' ' + String(createdAt.getHours()).padStart(2, '0') +
         ':' + String(createdAt.getMinutes()).padStart(2, '0');
+
+    const formattedDate = createdAt
+        .toLocaleDateString("en-US", {
+            year: "numeric",
+            month: "numeric",
+            day: "numeric",
+        });
 
     return (
         <div className="min-h-screen bg-gradient-to-br from-[#5895da] to-[#426fa3] md:p-15 bg-fixed">
@@ -75,7 +111,17 @@ const PetDetails = () => {
                                 </p>
                             </div>
                         </div>
-                        <div className="bg-gray-300 w-[100%] h-[1px] rounded-full my-5"></div>
+                        <div className="flex justify-center gap-7 pt-3">
+                            <div className="flex gap-1">
+                                <img src={viewsIcon} alt="views icon" className="w-4 h-4 my-auto" />
+                                <p className="text-xs text-gray-400 font-semibold">{views} view{views !== 1 ? "s" : ""}</p>
+                            </div>
+                            <div className="flex gap-1">
+                                <img src={calendarIcon} alt="calendar icon" className="w-4 h-4 my-auto" />
+                                <p className="text-xs text-gray-400 font-semibold">{formattedDate}</p>
+                            </div>
+                        </div>
+                        <div className="bg-gray-300 w-[100%] h-[3px] rounded-full my-5"></div>
                         <div className="flex justify-center gap-8">
                             <div className="flex flex-col justify-center items-center bg-gray-300 h-17 w-25 rounded-xl">
                                 <p className="text-sm text-gray-500">Age</p>
@@ -101,7 +147,25 @@ const PetDetails = () => {
                     <p className="text-[#4B7FBB] text-sm">Description</p>
                     <p className="py-2 px-5 text-sm">{petDetails.description}</p>
                 </div>
-                <div className="bg-gray-300 w-[100%] h-[1px] rounded-full my-5"></div>
+                <div className="bg-gray-300 md:w-[70%] h-1 rounded-full my-7 mx-auto"></div>
+                <p className="text-[#4B7FBB] text-2xl pb-6 text-center">Medical Information</p>
+                <div className="text-center md:flex justify-center gap-15">
+                    <div className="flex flex-col justify-center pb-5 mb-auto">
+                        <p className="text-md font-semibold pb-1">Special Assistance</p>
+                        <p><span className="text-[#4B7FBB]">Needed: </span> {petDetails.specialAssistance ? "Yes" : "No"}</p>
+                    </div>
+                    <div className="flex flex-col justify-center pb-5">
+                        <p className="text-md font-semibold pb-1">Medical Details</p>
+                        <p><span className="text-[#4B7FBB]">Vaccinated: </span> {petDetails.medical?.vaccinated ? "Yes" : "No"}</p>
+                        <p><span className="text-[#4B7FBB]">Neutered: </span> {petDetails.medical?.parasiteControl?.neutered ? "Yes" : "No"}</p>
+                    </div>
+                    <div className="flex flex-col justify-center pb-3">
+                        <p className="text-md font-semibold pb-1">Parasite Control</p>
+                        <p><span className="text-[#4B7FBB]">Tick and Flea: </span> {petDetails.medical?.parasiteControl?.tickAndFlea ? "Yes" : "No"}</p>
+                        <p><span className="text-[#4B7FBB]">Heartworm: </span> {petDetails.medical?.parasiteControl?.heartworm ? "Yes" : "No"}</p>
+                    </div>
+                </div>
+                <div className="bg-gray-300 md:w-[70%] h-1 rounded-full my-7 mx-auto"></div>
                 <div className="text-center">
                     <p className="text-[#4B7FBB] text-2xl pb-3">Kennel Information</p>
                     <p className="text-xl font-semibold pt-3">{petDetails.kennel.name}</p>
@@ -112,32 +176,32 @@ const PetDetails = () => {
                     <div className="bg-gray-100 p-5 max-w-120 mx-auto my-5 rounded-xl text-sm">
                         <p className="text-gray-500 pb-3 text-lg">Email and Website</p>
                         <p className="pb-2">
-                            <a href={`mailto:${petDetails.kennel.email}`} className="hover:underline text-[#4B7FBB] active:underline">
-                                <img src={emailBlueIcon} alt="Email Icon" className="w-5 inline-block mx-1 my-auto mr-1" />
-                                {petDetails.kennel.email}
+                            <a href={`mailto:${petDetails.kennel.email}`} className="flex justify-center gap-1 hover:underline text-[#4B7FBB] active:underline">
+                                <img src={emailBlueIcon} alt="Email Icon" className="w-5 inline-block mx-1 my-auto" />
+                                <p className="my-auto">{petDetails.kennel.email}</p>
                             </a>
                         </p>
                         <p>
-                            <a href={petDetails.kennel.website} target="_blank" rel="noopener noreferrer" className="hover:underline text-[#4B7FBB] active:underline">
-                                <img src={webBlueIcon} alt="Website Icon" className="w-5 inline-block mx-1 my-auto mr-1" />
-                                {petDetails.kennel.website}
+                            <a href={petDetails.kennel.website} target="_blank" rel="noopener noreferrer" className="flex justify-center gap-1 hover:underline text-[#4B7FBB] active:underline">
+                                <img src={webBlueIcon} alt="Website Icon" className="w-5 inline-block mx-1 my-auto" />
+                                <p className="my-auto">{petDetails.kennel.website}</p>
                             </a>
                         </p>
-                        <p className="text-gray-500 pb-3 text-lg pt-7">Connect to them via:</p>
-                        <div className="flex gap-2 justify-center">
+                        <p className="text-gray-500 pb-4 text-lg pt-7">Connect to them via:</p>
+                        <div className="flex gap-4 justify-center pb-3">
                             {petDetails.kennel.socialLinks?.facebook && (
                                 <a href={petDetails.kennel.socialLinks.facebook} target="_blank" rel="noopener noreferrer" className="my-auto hover:scale-108 active:scale-108 transition-all duration-300">
-                                    <img src={facebookIcon} alt="facebook" className="w-10" />
+                                    <img src={facebookIcon} alt="facebook" className="w-8" />
                                 </a>
                             )}
                             {petDetails.kennel.socialLinks?.instagram && (
                                 <a href={petDetails.kennel.socialLinks.instagram} target="_blank" rel="noopener noreferrer" className="my-auto hover:scale-108 active:scale-108 transition-all duration-300">
-                                    <img src={instagramIcon} alt="instagram" className="w-[45px]" />
+                                    <img src={instagramIcon} alt="instagram" className="w-8" />
                                 </a>
                             )}
                             {petDetails.kennel.socialLinks?.tiktok && (
                                 <a href={petDetails.kennel.socialLinks.tiktok} target="_blank" rel="noopener noreferrer" className="my-auto hover:scale-108 active:scale-108 transition-all duration-300">
-                                    <img src={tiktokIcon} alt="tiktok" className="w-[47px]" />
+                                    <img src={tiktokIcon} alt="tiktok" className="w-8" />
                                 </a>
                             )}
                         </div>

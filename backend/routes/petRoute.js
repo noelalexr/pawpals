@@ -1,5 +1,5 @@
 import express from "express";
-import { createPet, listPet, listMyPets, readMyPet, patchPetImages, patchPet, deletePet, deletePetPhoto } from "../controllers/petController.js"
+import { createPet, listPet, listMyPets, readMyPet, patchPetImages, patchPet, deletePet, deletePetPhoto, incrementPetViews } from "../controllers/petController.js"
 import { auth } from "../middlewares/authMiddleware.js"
 import { uploadPetImages } from "../middlewares/upload.js";
 
@@ -13,5 +13,6 @@ router.patch("/mine/:id/images", auth, uploadPetImages, patchPetImages); // this
 router.patch("/mine/:id", auth, uploadPetImages, patchPet); // this is for modifying data + image upload
 router.delete("/mine/:id", auth, deletePet);
 router.delete("/mine/:id/photos/:publicId", auth, deletePetPhoto);
+router.post("/:id/views", incrementPetViews);
 
 export default router

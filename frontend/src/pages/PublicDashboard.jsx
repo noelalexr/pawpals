@@ -10,6 +10,7 @@ import maleIcon from "../assets/images/icons/male.png"
 import femaleIcon from "../assets/images/icons/female.png"
 import downArrowIcon from "../assets/images/icons/down-arrow.png"
 import aboutUsIcon from "../assets/images/icons/about-us.png"
+import neuterIcon from "../assets/images/icons/neuter.png"
 
 //CONTEXTS
 import { PublicPetContext } from "../contexts/PublicPetContext.jsx";
@@ -32,6 +33,8 @@ const PublicDashboard = () => {
     const { pets, loading, error } = useContext(PublicPetContext);
     const [showScrollTop, setShowScrollTop] = useState(false);
     const [kennel, setKennel] = useState("");
+    const [selectedNeuterStatus, setSelectedNeuterStatus] = useState("");
+
 
     useEffect(() => {
         const handleScroll = () => {
@@ -85,7 +88,7 @@ const PublicDashboard = () => {
         setSelectedGender(prev => prev === gender ? "" : gender);
     };
 
-    const applyFilters = (searchText, species, gender, ageRange, city) => {
+    const applyFilters = (searchText, species, gender, ageRange, city, neuterStatus) => {
         let filteredData = [...pets];
 
         filteredData = filteredData.filter(pet => pet.isAdopted === false);
@@ -126,13 +129,17 @@ const PublicDashboard = () => {
             );
         }
 
+        if (neuterStatus) {
+            filteredData = filteredData.filter(pet => pet.medical.parasiteControl.neutered === true);
+        }
+
         const shuffledPets = filteredData.sort(() => Math.random() - 0.5);
         setFilteredPets(shuffledPets);
     };
 
     useEffect(() => {
-        applyFilters(search, selectedSpecies, selectedGender, selectedAgeRange, selectedCity);
-    }, [search, selectedSpecies, selectedGender, selectedAgeRange, selectedCity, pets]);
+        applyFilters(search, selectedSpecies, selectedGender, selectedAgeRange, selectedCity, selectedNeuterStatus);
+    }, [search, selectedSpecies, selectedGender, selectedAgeRange, selectedCity, selectedNeuterStatus, pets]);
 
     const handleRemoveFilter = () => {
         setSearch("");
@@ -264,10 +271,21 @@ const PublicDashboard = () => {
                         </button>
                     </div>
                 </div>
-                <div className="flex gap-2 justify-center mt-3">
+                <div className="flex justify-center py-3 gap-2">
+                    <p className="text-xs text-gray-600 my-auto">Neuter Status:</p>
+                    <button
+                        onClick={() => setSelectedNeuterStatus(prev => prev === "neutered" ? "" : "neutered")}
+                        className={`flex justify-center gap-1 py-2 text-xs w-28 rounded-full cursor-pointer transition-colors duration-300
+                            ${selectedNeuterStatus === "neutered" ? "bg-[#4B7FBB] text-white" : "bg-[#d7e3f4] hover:bg-[#4B7FBB] hover:text-white active:bg-[#4B7FBB] active:text-white"}`}
+                    >
+                        <img src={neuterIcon} alt="neutered" className="w-5" />
+                        <p className="my-auto pl-1">Neutered</p>
+                    </button>
+                </div>
+                <div className="flex gap-2 justify-center md:justify-end mt-3 md:mx-[8%]">
                     <p className="text-sm text-[#4B7FBB] my-auto">Filter by Age:</p>
                     <select
-                        className="p-2 rounded-lg appearance-none focus:outline-none my-auto text-gray-600 text-sm focus:bg-[#4B7FBB] hover:bg-[#4B7FBB] active:bg-[#4B7FBB] hover:text-white active:text-white focus:text-white cursor-pointer transition-colors duration-300 text-center bg-[#d7e3f4]"
+                        className="p-1 rounded-full appearance-none focus:outline-none my-auto text-black text-sm focus:bg-gray-300 hover:bg-gray-300 active:bg-gray-300 cursor-pointer transition-colors duration-300 text-center bg-gray-200"
                         value={selectedAgeRange}
                         onChange={(e) => setSelectedAgeRange(e.target.value)}
                     >

@@ -223,4 +223,23 @@ const deletePetPhoto = async (req, res) => {
     }
 };
 
-export { createPet, listPet, listMyPets, readMyPet, patchPetImages, patchPet, deletePet, deletePetPhoto }
+const incrementPetViews = async (req, res) => {
+    try {
+        const pet = await petModel.findByIdAndUpdate(
+            req.params.id,
+            { $inc: { views: 1 } },
+            { new: true }
+        );
+
+        if (!pet) {
+            return res.status(404).json({ error: "Pet not found" });
+        }
+
+        res.status(200).json({ views: pet.views });
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+};
+
+
+export { createPet, listPet, listMyPets, readMyPet, patchPetImages, patchPet, deletePet, deletePetPhoto, incrementPetViews }

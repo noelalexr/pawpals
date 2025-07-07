@@ -150,12 +150,11 @@ const PetDetails = () => {
                         <div className="bg-gray-100 px-7 py-3 rounded-md flex flex-col justify-center mt-5 md:mt-0 w-[100%]">
                             <p className="text-md font-semibold pb-1">Medical Details</p>
                             <p><span className="text-[#4B7FBB]">Vaccinated: </span> {myPetDetails.medical.vaccinated ? "Yes" : "No"}</p>
+                            <p><span className="text-[#4B7FBB]">Neutered: </span> {myPetDetails.medical.parasiteControl.neutered ? "Yes" : "No"}</p>
                         </div>
                         <div className="bg-gray-100 px-7 py-3 rounded-md flex flex-col justify-center mt-5 md:mt-0 w-[100%]">
                             <p className="text-md font-semibold pb-1">Parasite Control</p>
-
                             <p><span className="text-[#4B7FBB]">Tick and Flea: </span> {myPetDetails.medical.parasiteControl.tickAndFlea ? "Yes" : "No"}</p>
-                            <p><span className="text-[#4B7FBB]">Neutered: </span> {myPetDetails.medical.parasiteControl.neutered ? "Yes" : "No"}</p>
                             <p><span className="text-[#4B7FBB]">Heartworm: </span> {myPetDetails.medical.parasiteControl.heartworm ? "Yes" : "No"}</p>
                         </div>
                     </div>
