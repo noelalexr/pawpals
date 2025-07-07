@@ -7,7 +7,6 @@ dotenv.config();
 const url = "https://api.groq.com/openai/v1/chat/completions";
 const apiKey = process.env.GROQ_API_KEY;
 
-// 🔧 Updated system prompt for both trait + filter queries
 const aiContext = {
   role: "system",
   content: `
@@ -79,11 +78,13 @@ const parseAIResponse = async (aiResponse) => {
     }
   });
 
-  species.forEach((speciesType) => {
-    if (responseLowercase.includes(speciesType.toLowerCase())) {
+  for (const speciesType of species) {
+    const pattern = new RegExp(`\\b${speciesType}s?\\b`, "i");
+    if (pattern.test(responseLowercase)) {
       filters.species = speciesType;
+      break; // stop at first match
     }
-  });
+  }
 
   const ageMatch = responseLowercase.match(/\d+\s?years?/);
   if (ageMatch) {
@@ -96,14 +97,12 @@ const parseAIResponse = async (aiResponse) => {
     }
   });
 
-  // Extra: neutered
   if (responseLowercase.includes("neutered")) {
     filters["medical.parasiteControl.neutered"] = true;
   }
 
-  // Extra: hypoallergenic
   if (responseLowercase.includes("hypoallergenic")) {
-    filters.breed = { $in: ["Sphynx", "Russian Blue", "Balinese", "Bengal"] }; // example safe filter
+    filters.breed = { $in: ["Sphynx", "Russian Blue", "Balinese", "Bengal"] };
   }
 
   return filters;
@@ -128,7 +127,6 @@ const handleChat = async (req, res) => {
   const { userMessage } = req.body;
 
   try {
-    // 🧠 Check if this is a trait-related question before anything else
     const lowerMsg = userMessage.toLowerCase();
     const allBreeds = await Pet.distinct("breed");
     const mentionedBreed = allBreeds.find(b => lowerMsg.includes(b.toLowerCase()));
@@ -141,7 +139,6 @@ const handleChat = async (req, res) => {
       }
     }
 
-    // 🗨️ Send message to LLM (stateless)
     const sendData = {
       model: "llama-3.3-70b-versatile",
       messages: [aiContext, { role: "user", content: userMessage }]
@@ -160,13 +157,10 @@ const handleChat = async (req, res) => {
     const data = await response.json();
     const aiReplyRaw = data.choices[0].message;
 
-    // 🕵️ Parse filters
     const filters = await parseAIResponse(aiReplyRaw.content);
 
-    // 🐾 Find pets
     const matchedPets = await Pet.find(filters).limit(5).populate("kennel", "location");
 
-    // 📝 Build reply
     const aiResponse = generatePetReply(matchedPets);
 
     res.json({
