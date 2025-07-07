@@ -24,6 +24,7 @@ import AdoptedPets from "./pages/AdoptedPets"
 import AddPet from "./pages/AddPet";
 import DeveloperDashboard from "./pages/DeveloperDashboard"
 import AboutUs from "./pages/AboutUs";
+import NotFound from "./pages/NotFound"
 
 const router = createBrowserRouter(
     [
@@ -55,6 +56,10 @@ const router = createBrowserRouter(
                     path: "dev-login",
                     element: <DevLogin />,
                 },
+                {
+                    path: "*",
+                    element: <NotFound />
+                },
             ]
         },
         {
@@ -82,6 +87,10 @@ const router = createBrowserRouter(
                     path: "pets/mine/:id/edit",
                     element: <EditPet />,
                 },
+                {
+                    path: "*",
+                    element: <NotFound />
+                },
 
             ]
         },
@@ -94,12 +103,14 @@ const router = createBrowserRouter(
                     index: true,
                     element: <DeveloperDashboard />,
                 },
-
                 {
                     path: "signup",
                     element: <DevSignup />,
                 },
-
+                {
+                    path: "*",
+                    element: <NotFound />
+                },
             ]
         },
     ]

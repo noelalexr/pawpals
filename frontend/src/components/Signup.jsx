@@ -226,7 +226,7 @@ export default function Signup() {
                 </div>
 
 
-                <div style={styles.imageContainer}>
+                <div className="w-[1000px] md:block hidden">
                     <img
                         src={signupImage}
                         alt="Signup Illustration"

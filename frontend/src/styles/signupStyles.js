@@ -7,12 +7,12 @@ const styles = {
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
-        backgroundImage: "url('https://cdn.wallpapersafari.com/3/12/w09t6B.jpg')",
+        background: "linear-gradient(to bottom right, #5895da, #426fa3)",
         backgroundSize: "cover",
         backgroundPosition: "center",
         backgroundRepeat: "no-repeat",
         fontFamily: "sans-serif",
-        padding: 0,
+        padding: "1rem",
     },
     innerWrapper: {
         display: "flex",
@@ -43,6 +43,7 @@ const styles = {
         color: "#1f2937",
         textAlign: "center",
         marginBottom: "0.1rem",
+        paddingTop: "2.2rem",
     },
     highlight: {
         color: "#749cc9",
@@ -92,11 +93,6 @@ const styles = {
         borderRadius: "0.5rem",
         cursor: "pointer",
         transition: "background-color 0.2s",
-    },
-    imageContainer: {
-        width: "1000px",
-        height: "auto",
-        display: "block",
     },
     image: {
         width: "100%",
