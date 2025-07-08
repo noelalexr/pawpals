@@ -12,7 +12,7 @@ const Chatbot = () => {
             setMessages((prev) => [...prev, userMessage]);
             setInput("");
 
-            const response = await fetch("http://localhost:3000/api/chatbot/chat", {
+            const response = await fetch(`${import.meta.env.VITE_CHATBOT_API}`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ userMessage: input }),

@@ -2,7 +2,6 @@ import dotenv from "dotenv";
 import bcrypt from "bcrypt";
 import connectDB from "./configs/db.js";
 
-import Developer from "./models/developerSchema.js";
 import Kennel from "./models/kennelSchema.js";
 import Pet from "./models/petSchema.js";
 
@@ -12,22 +11,9 @@ dotenv.config();
 const seed = async () => {
     await Kennel.deleteMany();
     await Pet.deleteMany();
-    await Developer.deleteMany();
 
     try {
         const hashedPassword = await bcrypt.hash("password123", 10);
-
-        //dev from seed
-        const existingDev = await Developer.findOne({ email: "dev@pawpals.com" });
-
-        if (!existingDev) {
-            await Developer.create({
-                name: "Test Developer",
-                email: "dev@pawpals.com",
-                password: hashedPassword,
-                role: "developer"
-            });
-        }
 
         //mock approved kennels
         const mockApprovedKennelsData = [
@@ -209,99 +195,6 @@ const seed = async () => {
 
         const mockPetsData = [
             {
-                name: "Buddy",
-                age: 3,
-                arrivalDate: new Date("2025-06-30"),
-                breed: "Labrador",
-                species: "dog",
-                gender: "male",
-                description: "Friendly Labrador",
-                images: {
-                    primary: {
-                        url: "https://res.cloudinary.com/dwspjzkcz/image/upload/v1751287094/buddy-123235-1.jpg",
-                        public_id: "buddy-123235-1"
-                    },
-                    secondary: null,
-                    tertiary: null
-                },
-                isAdopted: false,
-                adoptionFee: 500,
-                medical: {
-                    vaccinated: true,
-                    parasiteControl: {
-                        tickAndFlea: true,
-                        heartworm: true,
-                        neutered: true
-                    }
-                },
-                specialAssistance: false,
-                kennel: kennels[0]?._id
-            },
-            {
-                name: "Bantay",
-                age: 4,
-                arrivalDate: new Date("2025-06-20"),
-                breed: "Persian",
-                species: "cat",
-                gender: "male",
-                description: "Fluffy Persian Cat",
-                images: {
-                    primary: {
-                        url: "https://res.cloudinary.com/dwspjzkcz/image/upload/v1751287090/bantay-1234123-1.avif",
-                        public_id: "bantay-1234123-1"
-                    },
-                    secondary: {
-                        url: "https://res.cloudinary.com/dwspjzkcz/image/upload/v1751287219/bantay-1234123-2.png",
-                        public_id: "bantay-1234123-2"
-                    },
-                    tertiary: {
-                        url: "https://res.cloudinary.com/dwspjzkcz/image/upload/v1751513943/bantay-1234123-3.png",
-                        public_id: "bantay-1234123-3"
-                    }
-                },
-                isAdopted: false,
-                adoptionFee: 400,
-                medical: {
-                    vaccinated: true,
-                    parasiteControl: {
-                        tickAndFlea: true,
-                        heartworm: true,
-                        neutered: false
-                    }
-                },
-                specialAssistance: false,
-                kennel: kennels[1]?._id
-            },
-            {
-                name: "Llao",
-                age: 2,
-                arrivalDate: new Date("2025-06-25"),
-                breed: "Aspin",
-                species: "dog",
-                gender: "female",
-                description: "Alpha male Aspin",
-                images: {
-                    primary: {
-                        url: "https://res.cloudinary.com/dwspjzkcz/image/upload/v1751287091/llao-1676890101262-1.avif",
-                        public_id: "llao-1676890101262-1"
-                    },
-                    secondary: null,
-                    tertiary: null
-                },
-                isAdopted: false,
-                adoptionFee: 450,
-                medical: {
-                    vaccinated: false,
-                    parasiteControl: {
-                        tickAndFlea: true,
-                        heartworm: true,
-                        neutered: false
-                    }
-                },
-                specialAssistance: false,
-                kennel: kennels[1]?._id
-            },
-            {
                 name: "Coco",
                 age: 5,
                 arrivalDate: new Date("2025-05-25"),
@@ -332,38 +225,6 @@ const seed = async () => {
                 },
                 specialAssistance: false,
                 kennel: kennels[1]?._id
-            },
-            {
-                name: "Dyagwar",
-                age: 3,
-                arrivalDate: new Date("2025-05-15"),
-                breed: "Bulldog",
-                species: "dog",
-                gender: "male",
-                description: "Gigachad Bulldog",
-                images: {
-                    primary: {
-                        url: "https://res.cloudinary.com/dwspjzkcz/image/upload/v1751287104/dyagwar-203424-1.png",
-                        public_id: "dyagwar-203424-1"
-                    },
-                    secondary: {
-                        url: "https://res.cloudinary.com/dwspjzkcz/image/upload/v1751287104/dyagwar-203424-2.png",
-                        public_id: "dyagwar-203424-2"
-                    },
-                    tertiary: null
-                },
-                isAdopted: false,
-                adoptionFee: 300,
-                medical: {
-                    vaccinated: true,
-                    parasiteControl: {
-                        tickAndFlea: false,
-                        heartworm: false,
-                        neutered: true
-                    }
-                },
-                specialAssistance: false,
-                kennel: kennels[0]?._id
             },
             {
                 name: "Dobby",
@@ -552,7 +413,7 @@ const seed = async () => {
             }
         }
 
-        console.log("Seeding completed (no existing data affected)")
+        console.log("Seeding completed")
         process.exit();
     } catch (err) {
         console.log("Seeding failed", err.message);

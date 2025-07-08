@@ -1,0 +1,52 @@
+# PawPals
+PawPals was made to be a non-profit, local pet adoption database that allows users to find their dream pet in one space. This app was setup to allows for city pounds and trusted kennels and breeders to create and manage their pet listings.
+
+PawPals includes the following features:
+- A space for users to be confident in their decision making and adopting practices by allowing only verified kennels and pounds
+- Easily find pets via filters, search bar, or ai chatbot
+- Individual pet page to view any necessary information about them and the location and contact details of their respective kennels
+- An all in one space to increase reach for kennels and increases chances for pets to be adopted
+- Mobile-first design
+
+- 3 tiers of authorization:
+    - Users:
+        - Only viewing access  
+        - Request to register as a kennel affiliated with PawPals
+
+    - Kennels:
+        - Able to create, edit, and delete pet listings
+        - Creating pet listings includes:
+            - Support for up to 3 photo uploads
+            - Base level medical history check boxes
+            - Checkbox for special assistance
+        - Able to mark a pet as adopted to remove them from public listing
+
+    - Developers:
+        - Able to register other developers into the system
+        - Approve or Reject kennels's request to join and modify kennel status as approved or not
+            - Includes automated mailer to notify kennel of their status
+        - View Kennels registration details including legal documents, address, and contact information
+
+## Requirements
+- A local or online database to store the inputted data
+- A server to launch and implement the app
+- A computer to manage the app and your database
+- Slight technical knowledge to modify the code
+
+## Installation Notes
+- CD into both frontend and backend and type "npm install"
+- In both the frontend and the backend, create a .env with the same information as the env text and fill out the necessary information
+- Use tempDev.js by typing "node tempDev.js" to install a temporary developer account
+    - Email: dev@pawpals.com
+    - Password: password123
+    - DELETE THIS FROM YOUR DATABASE WHEN YOU'VE MADE YOUR OWN ACCOUNT
+- If you want to test the app prior to launch, use seedTesting.js by typing "node seedTesting.js" to fill your database with dummy kennels and pets
+- When youre finished testing, and before launch, use seedClearing.js by typing "node seedClearing.js" to clear your database of ALL the kennels and pets and the temporary dev account
+    - DO NOT USE THIS ONCE APP IS ACTIVE
+
+- To start the app:
+    - In your backend run index.js by typing "node index.js"
+    - In your frontend run type "npm run dev"
+
+- Login with your Dev account and you now have full access and control of the app
+    - Make sure to add a register a real Developer account and delete the Temporary Developer account for security purposes
