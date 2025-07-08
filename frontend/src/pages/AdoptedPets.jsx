@@ -72,7 +72,7 @@ const AdoptedPets = () => {
 
     const ageRanges = [
         { label: "All Ages", value: "" },
-        { label: "Puppy (0-2 years old)", value: "0-2" },
+        { label: "Infant (0-2 years old)", value: "0-2" },
         { label: "Young adult (3-5 years old)", value: "3-5" },
         { label: "Adult (6-10 years old)", value: "6-10" },
         { label: "Senior (11+ years old)", value: "11+" },

@@ -150,16 +150,28 @@ const PetDetails = () => {
                 <div className="bg-gray-300 md:w-[70%] h-1 rounded-full my-7 mx-auto"></div>
                 <p className="text-[#4B7FBB] text-2xl pb-6 text-center">Medical Information</p>
                 <div className="text-center md:flex justify-center gap-15">
+<<<<<<< HEAD
                     <div className="flex flex-col justify-center pb-5 mb-auto">
                         <p className="text-md font-semibold pb-1">Special Assistance</p>
                         <p><span className="text-[#4B7FBB]">Needed: </span> {petDetails.specialAssistance ? "Yes" : "No"}</p>
                     </div>
                     <div className="flex flex-col justify-center pb-5">
+=======
+                    <div className="bg-gray-100 px-7 py-3 rounded-md flex flex-col justify-center pb-5 mb-auto">
+                        <p className="text-md font-semibold pb-1">Special Assistance</p>
+                        <p><span className="text-[#4B7FBB]">Needed: </span> {petDetails.specialAssistance ? "Yes" : "No"}</p>
+                    </div>
+                    <div className="bg-gray-100 px-7 py-3 rounded-md flex flex-col justify-center pb-5">
+>>>>>>> cc94d36eb57bec51f5405c55c5bd6a7a909a5ede
                         <p className="text-md font-semibold pb-1">Medical Details</p>
                         <p><span className="text-[#4B7FBB]">Vaccinated: </span> {petDetails.medical?.vaccinated ? "Yes" : "No"}</p>
                         <p><span className="text-[#4B7FBB]">Neutered: </span> {petDetails.medical?.parasiteControl?.neutered ? "Yes" : "No"}</p>
                     </div>
+<<<<<<< HEAD
                     <div className="flex flex-col justify-center pb-3">
+=======
+                    <div className="bg-gray-100 px-7 py-3 rounded-md flex flex-col justify-center pb-3">
+>>>>>>> cc94d36eb57bec51f5405c55c5bd6a7a909a5ede
                         <p className="text-md font-semibold pb-1">Parasite Control</p>
                         <p><span className="text-[#4B7FBB]">Tick and Flea: </span> {petDetails.medical?.parasiteControl?.tickAndFlea ? "Yes" : "No"}</p>
                         <p><span className="text-[#4B7FBB]">Heartworm: </span> {petDetails.medical?.parasiteControl?.heartworm ? "Yes" : "No"}</p>

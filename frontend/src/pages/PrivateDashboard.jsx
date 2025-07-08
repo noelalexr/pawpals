@@ -74,7 +74,7 @@ const PrivateDashboard = () => {
 
     const ageRanges = [
         { label: "All Ages", value: "" },
-        { label: "Puppy (0-2 years old)", value: "0-2" },
+        { label: "Infant (0-2 years old)", value: "0-2" },
         { label: "Young adult (3-5 years old)", value: "3-5" },
         { label: "Adult (6-10 years old)", value: "6-10" },
         { label: "Senior (11+ years old)", value: "11+" },
@@ -259,9 +259,9 @@ const PrivateDashboard = () => {
                             <img src={femaleIcon} alt="female" className="w-5" />
                         </button>
                         <button
-                            onClick={() => handleGenderClick("Undetermined")}
+                            onClick={() => handleGenderClick("Unknown")}
                             className={`flex justify-center gap-3 py-[5px] px-[4px] text-xs w-25 rounded-md cursor-pointer transition-colors duration-300
-                            ${selectedGender === "Undetermined" ? "bg-[#4B7FBB] text-white" : "bg-[#d7e3f4] hover:bg-[#4B7FBB] text-gray-600 hover:text-white active:bg-[#4B7FBB] active:text-white"}`}
+                            ${selectedGender === "Unknown" ? "bg-[#4B7FBB] text-white" : "bg-[#d7e3f4] hover:bg-[#4B7FBB] text-gray-600 hover:text-white active:bg-[#4B7FBB] active:text-white"}`}
                         >
                             <p className="my-auto">Unknown Sex</p>
                         </button>
@@ -337,7 +337,7 @@ const PrivateDashboard = () => {
                                         ) : pet.gender.toLowerCase() === "female" ? (
                                             <img src={femaleIcon} alt="female" className="w-6 h-6" />
                                         ) : (
-                                            <span className="text-xs text-red-400 text-center font-semibold group-hover:text-white transition-colors duration-300">Unknown<br />Gender</span>
+                                            <span className="text-xs text-red-400 text-center font-semibold group-hover:text-white transition-colors duration-300">Unknown<br />Sex</span>
                                         )}
                                     </div>
                                 </div>

@@ -97,21 +97,21 @@ const AboutUs = () => {
                                 <img src={romanPhoto} alt="roman" className="w-30 border-5 border-[#3b6493] rounded-full cursor-pointer transition-all duration-300 hover:scale-110" onClick={() => window.open('https://www.linkedin.com/in/romgavino/', '_blank')} />
                             </div>
                             <p className="font-semibold pt-1">Roman Gavino</p>
-                            <p className="text-xs text-gray-300">Backend Developer</p>
+                            <p className="text-xs text-gray-300">Fullstack Developer</p>
                         </div>
                         <div className="text-center mx-5 mb-5">
                             <div className="rounded-full overflow-hidden">
                                 <img src={alexanderPhoto} alt="alexander" className="w-30 border-5 border-[#3b6493] rounded-full cursor-pointer transition-all duration-300 hover:scale-110" onClick={() => window.open('https://www.linkedin.com/in/noelalexader/', '_blank')} />
                             </div>
                             <p className="font-semibold pt-1">Alexander Noel</p>
-                            <p className="text-xs text-gray-300">Frontend Developer</p>
+                            <p className="text-xs text-gray-300">Fullstack Developer</p>
                         </div>
                         <div className="text-center mx-5 mb-5">
                             <div className="rounded-full overflow-hidden">
                                 <img src={noelPhoto} alt="noel" className="w-30 border-5 border-[#3b6493] rounded-full cursor-pointer transition-all duration-300 hover:scale-110" onClick={() => window.open('https://www.linkedin.com/in/noel-john-hementera-b2a11312b/', '_blank')} />
                             </div>
                             <p className="font-semibold pt-1">Noel Hementera</p>
-                            <p className="text-xs text-gray-300">Backend Developer</p>
+                            <p className="text-xs text-gray-300">Fullstack Developer</p>
                         </div>
                         <div className="text-center mx-5 mb-5">
                             <div className="rounded-full overflow-hidden">

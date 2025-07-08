@@ -177,7 +177,7 @@ export default function AddPet() {
                         <select name="gender" value={form.gender} onChange={handleFormChange} className="bg-gray-100 px-3 py-1 mb-3 hover:bg-gray-200 active:bg-gray-200 transition-colors duration-300 cursor-pointer rounded-sm">
                             <option value="male">Male</option>
                             <option value="female">Female</option>
-                            <option value="undetermined">Undetermined</option>
+                            <option value="unknown">Unknown</option>
                         </select>
                     </div>
                 </div>
