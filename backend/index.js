@@ -14,6 +14,9 @@ import authRoute from "./routes/authRoute.js";
 import petRoute from "./routes/petRoute.js";
 import cityRoutes from "./routes/cityRoutes.js";
 
+//seed dev account
+import { seedDeveloper } from "./seedDeveloper.js";
+
 dotenv.config();
 const app = express();
 
@@ -48,4 +51,14 @@ connectDB();
 
 app.listen(process.env.PORT, () => {
     console.log(`Server running on port ${process.env.PORT}`);
+});
+
+//seed dev account
+connectDB().then(async () => {
+    if (process.env.NODE_ENV !== "production" || process.env.SEED === "true") {
+        await seedDeveloper();
+    }
+    app.listen(process.env.PORT, () => {
+        console.log(`Server running on port ${process.env.PORT}`);
+    });
 });
