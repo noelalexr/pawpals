@@ -17,7 +17,7 @@ export const seedDeveloper = async () => {
         name: "Dev User",
         email: devEmail,
         password: hashedPassword,
-        role: "develoepr"
+        role: "developer"
     });
 
     console.log("✅ Developer account created");
