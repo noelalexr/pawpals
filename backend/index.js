@@ -17,10 +17,15 @@ import cityRoutes from "./routes/cityRoutes.js";
 dotenv.config();
 const app = express();
 
+const allowedOrigins = [
+    "http://localhost:5173",
+    process.env.CLIENT_PROD
+];
+
 //middleware
 app.use(helmet());
 app.use(cors({
-    origin: "http://localhost:5173",
+    origin: allowedOrigins,
     credentials: true
 }));
 app.use(express.json());
@@ -35,7 +40,7 @@ app.use("/api/chatbot", chatbotRoutes);
 
 //error handling
 app.use((err, req, res, next) => {
-    res.status(err.status || 500).json({  message: err.message });
+    res.status(err.status || 500).json({ message: err.message });
 });
 
 //start server
