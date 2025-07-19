@@ -149,7 +149,7 @@ const PetDetails = () => {
                 </div>
                 <div className="bg-gray-300 md:w-[70%] h-1 rounded-full my-7 mx-auto"></div>
                 <p className="text-[#4B7FBB] text-2xl pb-6 text-center">Medical Information</p>
-                <div className="text-center md:flex justify-center gap-15">
+                <div className="text-center flex md:flex-row flex-col justify-center md:gap-10 gap-5 mx-15 md:mx-0">
                     <div className="bg-gray-100 px-7 py-3 rounded-md flex flex-col justify-center pb-5 mb-auto">
                         <p className="text-md font-semibold pb-1">Special Assistance</p>
                         <p><span className="text-[#4B7FBB]">Needed: </span> {petDetails.specialAssistance ? "Yes" : "No"}</p>
